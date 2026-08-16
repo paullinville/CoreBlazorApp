@@ -1,0 +1,12 @@
+﻿using Midland.Core.ApplicationSecurity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SecurityModel.Common.Models;
+
+public class ApplicationSecurityModel : MidlandApplicationSecurityModel
+{
+}

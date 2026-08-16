@@ -1,0 +1,39 @@
+//This class has been code generated.
+//Do not change the contents of this file because it will be regenerated in the future if the schema
+//changes or new code generation features are added.
+using System;
+using System.ComponentModel.DataAnnotations;
+
+public class RoleActionGroupHolderDto : IRoleActionGroupHolder
+{
+	public RoleActionGroupHolderDto(IRoleActionGroupHolder values)
+	{
+		values?.MapTo(this);
+	}
+
+	public RoleActionGroupHolderDto()
+	{ }
+
+	public int ActionGroupRef { get; set; }
+
+	[Range(typeof(DateTime), "1/1/1753", "12/31/9999 11:59AM")]
+	public DateTime CreateDate { get; set; }
+
+	public int RoleActionGroupHolderRef { get; set; }
+
+	public int RoleRef { get; set; }
+
+	public override bool Equals(object obj)
+	{
+		if (obj is IRoleActionGroupHolder agh)
+		{
+			return agh.RoleActionGroupHolderRef == RoleActionGroupHolderRef;
+		}
+		return false;
+	}
+
+	public override int GetHashCode()
+	{
+		return $"RoleActionGroupHolder{RoleActionGroupHolderRef}".GetHashCode();
+	}
+}

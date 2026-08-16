@@ -1,0 +1,15 @@
+﻿@using Telerik.Blazor.Components
+
+@if (IsLoading)
+{
+    <div class="loader-overlay">
+        <TelerikLoader Size="LoaderSize.Large" Type="LoaderType.InfiniteSpinner" />
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// Controls whether the loader is visible.
+    /// </summary>
+    [Parameter] public bool IsLoading { get; set; }
+}
