@@ -148,6 +148,10 @@ body.dark-theme {
     width: 4.5rem;
 }
 
+.appbar .k-menu .menu-item-selected {
+    font-weight: 700;
+}
+
 .menu-button {
     margin-right: 12px;
 }

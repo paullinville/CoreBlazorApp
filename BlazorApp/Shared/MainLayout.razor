@@ -7,7 +7,11 @@
             <TelerikMenu Data="@MenuItems"
                          TextField="Text"
                          UrlField="Url"
-                         IconField="Icon" />
+                         IconField="Icon">
+                <ItemTemplate Context="item">
+                    <span class="@GetMenuItemClass(item)">@item.Text</span>
+                </ItemTemplate>
+            </TelerikMenu>
         </AppBarSection>
         <AppBarSpacer />
         <AppBarSection Class="theme-switch-section k-d-flex k-align-items-center k-gap-2">

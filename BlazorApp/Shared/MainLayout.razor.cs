@@ -1,10 +1,12 @@
 namespace BlazorApp.Shared;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
-public partial class MainLayout
+public partial class MainLayout : IDisposable
 {
     [Inject] public ThemeService ThemeService { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
 
     public List<MenuItem> MenuItems { get; } =
     [
@@ -16,6 +18,11 @@ public partial class MainLayout
     public string SelectedTheme { get; set; } = "meridian";
 
     public bool IsDarkTheme => SelectedTheme == "meridian-dark";
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -29,6 +36,25 @@ public partial class MainLayout
     {
         SelectedTheme = value ? "meridian-dark" : "meridian";
         await ThemeService.SetThemeAsync(SelectedTheme);
+    }
+
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e) => StateHasChanged();
+
+    private string GetMenuItemClass(MenuItem item)
+    {
+        var relativePath = "/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri).TrimEnd('/');
+        var itemUrl = item.Url.TrimEnd('/');
+        if (itemUrl.Length == 0)
+        {
+            itemUrl = "/";
+        }
+
+        return relativePath == itemUrl ? "menu-item-selected" : string.Empty;
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
     }
 
     public class MenuItem
