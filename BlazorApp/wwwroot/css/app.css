@@ -119,7 +119,11 @@ code {
 html, body {
     margin: 0;
     padding: 0;
+}
+
+body.dark-theme {
     background-color: #6f8094;
+    color: #f2f4f7;
 }
 
 #app {

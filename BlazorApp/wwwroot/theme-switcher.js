@@ -11,5 +11,6 @@
 
         meridian.disabled = isDarkTheme;
         meridianDark.disabled = !isDarkTheme;
+        document.body.classList.toggle("dark-theme", isDarkTheme);
     }
 };
