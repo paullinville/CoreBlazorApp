@@ -1,0 +1,30 @@
+@page "/report-error"
+@using BlazorApp.Shared
+@layout MainLayout
+
+<PageTitle>Report Error</PageTitle>
+
+<h3>Report Error</h3>
+<p>Use the form below to report an issue you encountered while using the application.</p>
+
+<TelerikNotification @ref="@NotificationRef"
+                     HorizontalPosition="@NotificationHorizontalPosition.Center"
+                     VerticalPosition="@NotificationVerticalPosition.Top" />
+
+<EditForm Model="@Report" OnValidSubmit="@SubmitReport">
+    <DataAnnotationsValidator />
+
+    <div class="k-form-field k-mb-4">
+        <label for="report-subject">Subject</label>
+        <TelerikTextBox Id="report-subject" @bind-Value="@Report.Subject" Placeholder="Brief summary of the issue" />
+        <ValidationMessage For="@(() => Report.Subject)" />
+    </div>
+
+    <div class="k-form-field k-mb-4">
+        <label for="report-description">Description</label>
+        <TelerikTextArea Id="report-description" @bind-Value="@Report.Description" Rows="6" Placeholder="What happened? What did you expect to happen?" />
+        <ValidationMessage For="@(() => Report.Description)" />
+    </div>
+
+    <TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" ButtonType="@ButtonType.Submit">Submit Report</TelerikButton>
+</EditForm>

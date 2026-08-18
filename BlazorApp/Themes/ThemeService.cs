@@ -13,4 +13,9 @@ public class ThemeService
     {
         await _js.InvokeVoidAsync("telerikThemeSwitcher.setTheme", theme);
     }
+
+    public async Task<string> GetStoredThemeAsync()
+    {
+        return await _js.InvokeAsync<string>("telerikThemeSwitcher.getStoredTheme");
+    }
 }

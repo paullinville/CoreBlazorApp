@@ -28,7 +28,14 @@ public partial class MainLayout : IDisposable
     {
         if (firstRender)
         {
+            var storedTheme = await ThemeService.GetStoredThemeAsync();
+            if (!string.IsNullOrEmpty(storedTheme))
+            {
+                SelectedTheme = storedTheme;
+            }
+
             await ThemeService.SetThemeAsync(SelectedTheme);
+            StateHasChanged();
         }
     }
 
@@ -39,6 +46,16 @@ public partial class MainLayout : IDisposable
     }
 
     private void OnLocationChanged(object sender, LocationChangedEventArgs e) => StateHasChanged();
+
+    private void OnLockKeyClicked()
+    {
+        NavigationManager.NavigateTo("/security");
+    }
+
+    private void OnReportErrorClicked()
+    {
+        NavigationManager.NavigateTo("/report-error");
+    }
 
     private string GetMenuItemClass(MenuItem item)
     {

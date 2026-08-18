@@ -1,5 +1,6 @@
 ﻿using EATTS.Common.Models;
 using BlazorApp.Models;
+using Midland.Core.Common;
 using RestEase;
 
 namespace BlazorApp.Data;
@@ -29,4 +30,6 @@ public interface IEattsApiRepository
     Task<EntryOccurrenceDetailModel> GetOccurrenceDetail(int occurrenceRef);
 
     Task<List<ContactModel>> GetSupportDefaultContactEdit();
+
+    Task<EattsEntryResultModel> PostLog(EattsEntryModel eattsEntryModel);
 }

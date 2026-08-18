@@ -14,6 +14,27 @@
             </TelerikMenu>
         </AppBarSection>
         <AppBarSpacer />
+        <AppBarSection Class="lock-key-section k-d-flex k-align-items-center">
+            <span class="lock-key-icon" role="button" tabindex="0" title="Security" @onclick="OnLockKeyClicked">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="10" width="9" height="8" rx="1.2" />
+                    <path d="M6.5 10V7.2a2.5 2.5 0 0 1 5 0V10" />
+                    <circle cx="8.5" cy="14" r="1" />
+                    <path d="M13 13.2h6.3" />
+                    <path d="M17 13.2v2.4" />
+                    <path d="M19.3 13.2v3.4" />
+                </svg>
+            </span>
+        </AppBarSection>
+        <AppBarSection Class="report-error-section k-d-flex k-align-items-center">
+            <span class="report-error-icon" role="button" tabindex="0" title="Report Error" @onclick="OnReportErrorClicked">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3.2 21.5 19.8a1 1 0 0 1-.87 1.5H3.37a1 1 0 0 1-.87-1.5L12 3.2Z" />
+                    <line x1="12" y1="9.5" x2="12" y2="14" />
+                    <circle cx="12" cy="17.3" r="1" fill="currentColor" stroke="none" />
+                </svg>
+            </span>
+        </AppBarSection>
         <AppBarSection Class="theme-switch-section k-d-flex k-align-items-center k-gap-2">
             <TelerikSwitch Value="@IsDarkTheme"
                            OnLabel="Dark"
@@ -21,6 +42,8 @@
                            ValueChanged="@(async (bool value) => await OnThemeChanged(value))" />
         </AppBarSection>
     </TelerikAppBar>
+
+    <ErrorNotification />
 
     <main class="k-flex-grow k-p-4">
         @Body

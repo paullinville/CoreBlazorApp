@@ -1,3 +1,11 @@
+:root {
+    --kendo-font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
+}
+
+body {
+    font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
+}
+
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }
@@ -150,6 +158,50 @@ body.dark-theme {
 
 .appbar .k-menu .menu-item-selected {
     font-weight: 700;
+}
+
+.lock-key-section {
+    padding: 0 8px;
+}
+
+.lock-key-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: inherit;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+    .lock-key-icon:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+body.dark-theme .lock-key-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.report-error-section {
+    padding: 0 8px;
+}
+
+.report-error-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: inherit;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+    .report-error-icon:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+body.dark-theme .report-error-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 .menu-button {

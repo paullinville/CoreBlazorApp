@@ -178,4 +178,16 @@ public class EattsRepository : ClientRepositoryBase, IEattsApiRepository
 		}
 		return new List<ContactModel>();
 	}
+
+	public async Task<EattsEntryResultModel> PostLog(EattsEntryModel eattsEntryModel)
+	{
+		await _securityModel.SetAuthorization(_httpClient);
+
+		var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+										.PostLog(eattsEntryModel);
+
+		var found = ProcessResponse(response);
+
+		return found;
+	}
 }

@@ -9,7 +9,7 @@ using Midland.Core.SimpleMessageBus;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-//builder.Configuration.AddJsonFile($"appsettings.{builder.HostEnvironment.Environment}.json", true, true);
+builder.Configuration.AddJsonFile($"appsettings.{builder.HostEnvironment.Environment}.json", true, true);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
@@ -22,7 +22,7 @@ builder.Services.AddSingleton<IUserTokenRequestModel, UserTokenRequestModel>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(settings.ApiHost) });
 
-builder.Services.AddScoped<CredentialsMessageHandler, CredentialsMessageHandler>();
+builder.Services.AddTransient<CredentialsMessageHandler, CredentialsMessageHandler>();
 builder.Services.AddHttpClient<ISecurityModelToken, SecurityModelToken>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/"))
 				.AddHttpMessageHandler<CredentialsMessageHandler>();
 
