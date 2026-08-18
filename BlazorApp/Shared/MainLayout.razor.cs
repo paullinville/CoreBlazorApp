@@ -6,13 +6,16 @@ public partial class MainLayout
 {
     [Inject] public ThemeService ThemeService { get; set; }
 
-    public List<ThemeOption> Themes = new()
-    {
-        new ThemeOption("Meridian", "meridian"),
-        new ThemeOption("Meridian Dark", "meridian-dark")
-    };
+    public List<MenuItem> MenuItems { get; } =
+    [
+        new() { Text = "Home", Url = "/" },
+        new() { Text = "Products", Url = "/products" },
+        new() { Text = "Settings", Url = "/settings" }
+    ];
 
     public string SelectedTheme { get; set; } = "meridian";
+
+    public bool IsDarkTheme => SelectedTheme == "meridian-dark";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -22,11 +25,16 @@ public partial class MainLayout
         }
     }
 
-    private async Task OnThemeChanged(string value)
+    private async Task OnThemeChanged(bool value)
     {
-        SelectedTheme = value;
-        await ThemeService.SetThemeAsync(value);
+        SelectedTheme = value ? "meridian-dark" : "meridian";
+        await ThemeService.SetThemeAsync(SelectedTheme);
     }
 
-    public record ThemeOption(string Text, string Value);
+    public class MenuItem
+    {
+        public string Text { get; set; }
+        public string Url { get; set; }
+        public string Icon { get; set; }
+    }
 }

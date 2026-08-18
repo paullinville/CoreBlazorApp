@@ -3,13 +3,13 @@
         const meridian = document.getElementById("telerik-theme-meridian");
         const meridianDark = document.getElementById("telerik-theme-meridian-dark");
 
-        if (themeName === "meridian") {
-            meridian.disabled = false;
-            meridianDark.disabled = true;
+        if (!meridian || !meridianDark) {
+            return;
         }
-        else if (themeName === "meridian-dark") {
-            meridian.disabled = true;
-            meridianDark.disabled = false;
-        }
+
+        const isDarkTheme = themeName === "meridian-dark";
+
+        meridian.disabled = isDarkTheme;
+        meridianDark.disabled = !isDarkTheme;
     }
 };

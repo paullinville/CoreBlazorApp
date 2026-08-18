@@ -6,16 +6,6 @@
 - User prefers Telerik UI for Blazor package version 12.3.0 in this workspace.
 
 
-
-# **Copilot Instructions (Telerik‑Only)**
-
-## Project Guidelines
-- User is a Senior Software Engineer at a large bank, specializes in backend on Microsoft stack, and maintains both API code and database structures. Tailor assistance with enterprise‑grade backend and data‑focused guidance.
-- User frontend preference: use code‑behind files instead of inline code in Blazor components.
-- User prefers **Telerik UI for Blazor v12.3.0** in this workspace.
-
----
-
 # **Midland Blazor WebAssembly Architecture — Frontend Copilot Instructions (Telerik‑Only)**
 
 ## **Purpose**

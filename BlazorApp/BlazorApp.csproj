@@ -28,4 +28,5 @@
   <ItemGroup>
     <Folder Include="Layout\" />
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties UseCdnSupport="False" UseFontIcons="False" /></VisualStudio></ProjectExtensions>
 </Project>
