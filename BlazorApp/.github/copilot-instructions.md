@@ -6,10 +6,21 @@
 - User prefers Telerik UI for Blazor package version 12.3.0 in this workspace.
 
 
-# **Midland Blazor WebAssembly Architecture — Frontend Copilot Instructions (Generalized)**
+
+# **Copilot Instructions (Telerik‑Only)**
+
+## Project Guidelines
+- User is a Senior Software Engineer at a large bank, specializes in backend on Microsoft stack, and maintains both API code and database structures. Tailor assistance with enterprise‑grade backend and data‑focused guidance.
+- User frontend preference: use code‑behind files instead of inline code in Blazor components.
+- User prefers **Telerik UI for Blazor v12.3.0** in this workspace.
+
+---
+
+# **Midland Blazor WebAssembly Architecture — Frontend Copilot Instructions (Telerik‑Only)**
 
 ## **Purpose**
-These instructions define the **standard frontend architecture** for all Midland Blazor WebAssembly applications.  
+These instructions define the **standard frontend architecture** for all Midland Blazor WebAssembly applications using **Telerik UI exclusively**.
+
 Copilot must follow these rules for *every* project built using this architecture.
 
 This ensures:
@@ -27,19 +38,15 @@ This ensures:
 All Midland Blazor WebAssembly applications are **pure client‑side UI shells** built using:
 
 - **Blazor WebAssembly (latest stable version)**  
-- **Telerik UI for Blazor** (primary UI library)  
-- **MudBlazor** (secondary UI library for layout/dialogs)  
-- **Unified MudBlazor theme synced to Telerik CSS variables**  
+- **Telerik UI for Blazor** (only UI library)  
 - **Code‑behind Blazor components** (`.razor` + `.razor.cs`)  
 - **Common Models** returned by backend APIs  
 - **Base Client Repository** for all API communication  
 - **Publish‑Subscribe Event Bus** for global messaging  
-- **Services wrapping the Base Client Repository**  
+- **Services wrapping the Base Client Repository**
 
-Blazor **never** communicates with APIs directly.
-
-Blazor **never** handles authentication or token logic.
-
+Blazor **never** communicates with APIs directly.  
+Blazor **never** handles authentication or token logic.  
 Blazor **never** contains backend logic.
 
 ---
@@ -50,7 +57,7 @@ Blazor **never** contains backend logic.
 - Common Models  
 - Base Client Repository  
 - Event Bus  
-- UI components (Telerik + MudBlazor)  
+- **Telerik UI components**  
 - Code‑behind components  
 - Services that wrap the Base Client Repository  
 
@@ -78,17 +85,14 @@ All Midland Blazor WASM applications use a **Base Client Repository** as the *si
 
 Copilot must assume:
 
-- All API calls are made through the Base Client Repository  
-- The repository handles HTTP status codes  
-- The repository interprets `MidlandResult<T>`  
-- The repository interprets `MidlandErrorResult`  
-- The repository publishes events to the global event bus  
-- The repository injects all security headers  
-- The repository injects all API headers  
-- The repository manages token lifetime  
-- The repository handles connectivity errors  
-- The repository handles authorization errors  
-- The repository handles server errors  
+- All API calls go through the Base Client Repository  
+- Repository handles HTTP status codes  
+- Repository interprets `MidlandResult<T>`  
+- Repository interprets `MidlandErrorResult`  
+- Repository publishes events to the global event bus  
+- Repository injects all security and API headers  
+- Repository manages token lifetime  
+- Repository handles connectivity, authorization, and server errors  
 
 Copilot must **never** generate:
 
@@ -109,8 +113,6 @@ These already exist and must not be recreated.
 
 # **Publish‑Subscribe Event Bus Rules**
 
-All Midland Blazor WASM applications use a **global event channel bus** for API‑related messaging.
-
 The Base Client Repository publishes events such as:
 
 - `ApiUnauthorizedEvent`  
@@ -126,7 +128,7 @@ Blazor components must:
 
 - Subscribe to event channels  
 - React to events  
-- Display UI notifications (MudBlazor/Telerik)  
+- Display UI notifications (Telerik)  
 - Update UI state based on events  
 
 Blazor components must **not**:
@@ -149,12 +151,12 @@ Copilot must generate:
 
 - Event subscription logic  
 - UI reactions to events  
-- MudBlazor/Telerik notifications based on events  
+- **Telerik notifications** based on events  
 - Services that wrap the Base Client Repository  
 - Code‑behind components that call the repository  
 - Clean async UI flows  
 - Unified error UI triggered by event bus messages  
-- Telerik + MudBlazor UI components  
+- **Telerik UI components only**  
 - Code‑behind Blazor components  
 
 Copilot must generate **UI‑level error handling only**, never API‑level error handling.
@@ -192,8 +194,7 @@ These already exist and must not be recreated.
 
 # **UI Rules**
 
-## **Telerik UI for Blazor**
-Telerik is the **primary UI library**.
+## **Telerik UI for Blazor (Primary and Only UI Library)**
 
 Copilot should prefer Telerik for:
 
@@ -204,45 +205,13 @@ Copilot should prefer Telerik for:
 - Menu  
 - Drawer  
 - Inputs (TextBox, NumericTextBox, DatePicker, etc.)  
-
----
-
-## **MudBlazor**
-MudBlazor is used for:
-
-- Layout  
+- Notifications  
 - Dialogs  
-- Snackbars  
+- Panels  
 - Cards  
-- Utility components  
+- Layout components  
 
-Providers required in `MainLayout.razor`:
-
-```razor
-<MudThemeProvider Theme="@TelerikSyncedMudTheme.Create()">
-    <MudDialogProvider />
-    <MudSnackbarProvider />
-    @Body
-</MudThemeProvider>
-```
-
-Copilot should avoid mixing Telerik and MudBlazor inside the same component unless necessary.
-
----
-
-# **Unified Theming (Telerik + MudBlazor)**
-
-MudBlazor’s theme must **inherit Telerik’s CSS variables** to ensure full compatibility with all Telerik themes.
-
-Copilot must use the unified theme:
-
-```csharp
-var unifiedTheme = TelerikSyncedMudTheme.Create();
-```
-
-Copilot must **not** generate hard‑coded MudBlazor colors.
-
-Copilot must **not** generate Material-style elevation or spacing.
+There are **no secondary UI libraries**.
 
 ---
 
@@ -258,7 +227,7 @@ PageName.razor.cs
 `.razor` file contains:
 
 - Markup  
-- Telerik/MudBlazor components  
+- Telerik components  
 - Minimal inline logic (event bindings only)
 
 `.razor.cs` file contains:
@@ -345,7 +314,7 @@ Midland Blazor WASM applications are **pure client UIs**:
 - Use **Base Client Repository** for all API calls  
 - Use **Event Bus** for all error and status messaging  
 - Use **RestEase clients** indirectly through the repository  
-- Use **Telerik + MudBlazor**  
+- Use **Telerik UI only**  
 - Use **code‑behind components**  
 - Never touch backend concerns  
 - Never generate DTOs, EF, UOW, repositories, binding models, or validation classes  
@@ -354,14 +323,3 @@ Midland Blazor WASM applications are **pure client UIs**:
 - Only consume the Base Client Repository and react to event bus messages  
 
 Copilot must operate strictly within this frontend boundary.
-
----
-
-If you want, I can now produce:
-
-- A **generalized backend Copilot instructions file**  
-- A **Visual Studio project template folder structure**  
-- A **starter project skeleton**  
-- A **developer onboarding guide**  
-
-Just tell me what you want next.

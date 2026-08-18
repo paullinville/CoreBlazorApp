@@ -1,7 +1,6 @@
 using BlazorApp;
 using BlazorApp.Classes;
 using BlazorApp.Data;
-
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Midland.Core.Client;
@@ -33,5 +32,6 @@ builder.Services.AddHttpClient<ISecurityModelApiRepository, SecurityModelApiRepo
 
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
 builder.Services.AddTelerikBlazor();
+builder.Services.AddScoped<ThemeService>();
 
 await builder.Build().RunAsync();
