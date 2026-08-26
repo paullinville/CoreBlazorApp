@@ -6,6 +6,8 @@ public class ClientSettings
 {
     public string ApiHost { get; set; }
 
+    public string SecurityModelHost { get; set; }
+
     public UserTokenRequestModel UserTokenRequestModel { get; set; }
 }
 

@@ -2,11 +2,15 @@ namespace BlazorApp.Shared;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.JSInterop;
+using BlazorApp.Classes;
 
 public partial class MainLayout : IDisposable
 {
     [Inject] public ThemeService ThemeService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
+    [Inject] public IJSRuntime JsRuntime { get; set; }
+    [Inject] public ClientSettings ClientSettings { get; set; }
 
     public List<MenuItem> MenuItems { get; } =
     [
@@ -14,6 +18,23 @@ public partial class MainLayout : IDisposable
         new() { Text = "Products", Url = "/products" },
         new() { Text = "Settings", Url = "/settings" }
     ];
+
+    public List<ReportMenuItem> ReportMenuItems { get; } =
+    [
+        new() { Text = "Sales Summary", Url = "/reports/sales-summary" }
+    ];
+
+    public bool IsReportMenuOpen { get; set; }
+
+    public double ReportMenuTop { get; set; }
+
+    public double ReportMenuLeft { get; set; }
+
+    private ElementReference ReportIconElement { get; set; }
+
+    private DotNetObjectReference<MainLayout>? ReportMenuDotNetReference { get; set; }
+
+    private bool RegisterOutsideClickHandler { get; set; }
 
     public string SelectedTheme { get; set; } = "meridian";
 
@@ -37,24 +58,80 @@ public partial class MainLayout : IDisposable
             await ThemeService.SetThemeAsync(SelectedTheme);
             StateHasChanged();
         }
+
+        if (RegisterOutsideClickHandler && IsReportMenuOpen)
+        {
+            ReportMenuDotNetReference ??= DotNetObjectReference.Create(this);
+            await JsRuntime.InvokeVoidAsync("appLayoutHelper.registerOutsideClick", ReportMenuDotNetReference, "#report-menu", "#report-icon");
+            RegisterOutsideClickHandler = false;
+        }
     }
 
     private async Task OnThemeChanged(bool value)
     {
+        CloseReportMenu();
         SelectedTheme = value ? "meridian-dark" : "meridian";
         await ThemeService.SetThemeAsync(SelectedTheme);
     }
 
-    private void OnLocationChanged(object sender, LocationChangedEventArgs e) => StateHasChanged();
-
-    private void OnLockKeyClicked()
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
     {
-        NavigationManager.NavigateTo("/security");
+        CloseReportMenu();
+        StateHasChanged();
+    }
+
+    private async Task OnLockKeyClicked()
+    {
+        CloseReportMenu();
+
+        // Perform any pre-redirect actions here (logging, auth checks, telemetry, etc.)
+        // before the SecurityModel application is opened in a new tab.
+        await JsRuntime.InvokeVoidAsync("open", ClientSettings.SecurityModelHost, "_blank");
     }
 
     private void OnReportErrorClicked()
     {
+        CloseReportMenu();
         NavigationManager.NavigateTo("/report-error");
+    }
+
+    private async Task ToggleReportMenu()
+    {
+        if (IsReportMenuOpen)
+        {
+            CloseReportMenu();
+            return;
+        }
+
+        var rect = await JsRuntime.InvokeAsync<ElementRect>("appLayoutHelper.getElementRect", ReportIconElement);
+        if (rect is not null)
+        {
+            ReportMenuTop = rect.Bottom + 4;
+            ReportMenuLeft = rect.Left;
+        }
+
+        IsReportMenuOpen = true;
+        RegisterOutsideClickHandler = true;
+    }
+
+    private void CloseReportMenu()
+    {
+        IsReportMenuOpen = false;
+        RegisterOutsideClickHandler = false;
+        _ = JsRuntime.InvokeVoidAsync("appLayoutHelper.unregisterOutsideClick");
+    }
+
+    [JSInvokable]
+    public Task HandleOutsideReportMenuClick()
+    {
+        CloseReportMenu();
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private void OnReportMenuItemClicked(ReportMenuItem item)
+    {
+        CloseReportMenu();
+        NavigationManager.NavigateTo(item.Url);
     }
 
     private string GetMenuItemClass(MenuItem item)
@@ -72,6 +149,23 @@ public partial class MainLayout : IDisposable
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+        ReportMenuDotNetReference?.Dispose();
+    }
+
+    public class ReportMenuItem
+    {
+        public string Text { get; set; }
+        public string Url { get; set; }
+    }
+
+    private class ElementRect
+    {
+        public double Top { get; set; }
+        public double Left { get; set; }
+        public double Bottom { get; set; }
+        public double Right { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
     }
 
     public class MenuItem

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BlazorApp</title>
     <base href="/" />
+    <link rel="icon" type="image/svg+xml" href="images/midfirst-logo.svg" />
 
     <link id="telerik-theme-meridian"
           href="css/meridian-main.css"
@@ -23,10 +24,13 @@
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
+        <div class="loading-progress">
+            <svg class="loading-progress-spinner" viewBox="0 0 100 100" aria-hidden="true">
+                <circle r="40" cx="50" cy="50" />
+                <circle r="40" cx="50" cy="50" />
+            </svg>
+            <img class="loading-progress-logo" src="images/midfirst-logo.svg" alt="MidFirst logo" />
+        </div>
         <div class="loading-progress-text"></div>
     </div>
 
