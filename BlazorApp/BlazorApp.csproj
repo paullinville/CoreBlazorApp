@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.10" PrivateAssets="all" />
     <PackageReference Include="RestEase" Version="1.6.4" />
     <PackageReference Include="Telerik.UI.for.Blazor">
-      <Version>14.1.0</Version>
+      <Version>15.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -28,5 +28,19 @@
   <ItemGroup>
     <Folder Include="Layout\" />
   </ItemGroup>
-  <ProjectExtensions><VisualStudio><UserProperties UseCdnSupport="False" UseFontIcons="False" /></VisualStudio></ProjectExtensions>
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
+    <Compile Remove="Mocks\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\*.json" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
+  </ItemGroup>
+
+
+
+
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties UseCdnSupport="False" UseFontIcons="False" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

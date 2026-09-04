@@ -8,27 +8,54 @@ using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
 
-builder.Configuration.AddJsonFile($"appsettings.{builder.HostEnvironment.Environment}.json", true, true);
+var configLoader = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
+
+// 1. Load required environment.json from wwwroot
+var environmentBytes = await configLoader.GetByteArrayAsync("environment.json");
+using var environmentStream = new MemoryStream(environmentBytes);
+builder.Configuration.AddJsonStream(environmentStream);
+
+// 2. Read required environment value
+var env = builder.Configuration["Environment"] ?? throw new InvalidOperationException("Environment key is missing from environment.json.");
+
+// 3. Load required appsettings.{env}.json from wwwroot
+var envSettingsBytes = await configLoader.GetByteArrayAsync($"appsettings.{env}.json");
+using var envSettingsStream = new MemoryStream(envSettingsBytes);
+builder.Configuration.AddJsonStream(envSettingsStream);
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// 4. Bind settings normally
 var settings = new ClientSettings();
 builder.Configuration.Bind(settings);
 builder.Services.AddSingleton(settings);
 
-//todo the next line is required I believe due to the SecurityModelToken but not sure. Research.
-builder.Services.AddSingleton<IUserTokenRequestModel, UserTokenRequestModel>();
+if (env == "Local" && settings.UseMocks)
+{
+    builder.Services.AddScoped<IEmployeeRepository, MockEmployeeRepository>();
+    builder.Services.AddScoped<IEattsApiRepository, MockEattsRepository>();
+    builder.Services.AddScoped<ISecurityModelApiRepository, MockSecurityModelRepository>();
+}
+else
+{
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(settings.ApiHost) });
+    //todo the next line is required I believe due to the SecurityModelToken. ClientSettings has this as a property, but it is not registered as a service. Research.
+    builder.Services.AddSingleton<IUserTokenRequestModel, UserTokenRequestModel>();
 
-builder.Services.AddTransient<CredentialsMessageHandler, CredentialsMessageHandler>();
-builder.Services.AddHttpClient<ISecurityModelToken, SecurityModelToken>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/"))
-				.AddHttpMessageHandler<CredentialsMessageHandler>();
+    builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(settings.ApiHost) });//TODO is this needed?
 
-builder.Services.AddHttpClient<IEattsApiRepository, EattsRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EATTS/"));
-builder.Services.AddHttpClient<IEmployeeRepository, EmployeeRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EmployeeData/"));
-builder.Services.AddHttpClient<ISecurityModelApiRepository, SecurityModelApiRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/"));
+    builder.Services.AddTransient<CredentialsMessageHandler, CredentialsMessageHandler>();
+    builder.Services.AddHttpClient<ISecurityModelToken, SecurityModelToken>(client => client.BaseAddress = new Uri($"{settings.SecurityModelHost}SecurityModel/"))
+                    .AddHttpMessageHandler<CredentialsMessageHandler>();
+
+    builder.Services.AddHttpClient<IEmployeeRepository, EmployeeRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EmployeeData/"));
+    builder.Services.AddHttpClient<IEattsApiRepository, EattsRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EATTS/"));
+    builder.Services.AddHttpClient<ISecurityModelApiRepository, SecurityModelApiRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/"));
+}
+
 
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
 builder.Services.AddTelerikBlazor();
