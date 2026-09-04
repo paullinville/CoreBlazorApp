@@ -29,15 +29,28 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // 4. Bind settings normally
-var settings = new ClientSettings();
+var settings = new ClientSettings
+{
+    ApplicationName = string.Empty,
+    ApiHost = string.Empty
+};
 builder.Configuration.Bind(settings);
+settings.Environment = env;
 builder.Services.AddSingleton(settings);
 
-if (env == "Local" && settings.UseMocks)
+
+
+if (settings.UseMocks)
 {
-    builder.Services.AddScoped<IEmployeeRepository, MockEmployeeRepository>();
-    builder.Services.AddScoped<IEattsApiRepository, MockEattsRepository>();
-    builder.Services.AddScoped<ISecurityModelApiRepository, MockSecurityModelRepository>();
+#if DEBUG
+        builder.Services.AddScoped<IEmployeeRepository, MockEmployeeRepository>();
+        builder.Services.AddScoped<IEattsApiRepository, MockEattsRepository>();
+        builder.Services.AddScoped<ISecurityModelApiRepository, MockSecurityModelRepository>();
+#else
+    // Release build — mocks removed
+    Console.WriteLine("WARNING: UseMocks=true in Release, but mock repositories are not included.");
+    throw new InvalidOperationException("UseMocks=true in Release, but mock repositories are not included.");
+#endif
 }
 else
 {

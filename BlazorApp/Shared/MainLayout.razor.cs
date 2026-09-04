@@ -40,6 +40,26 @@ public partial class MainLayout : IDisposable
 
     public bool IsDarkTheme => SelectedTheme == "meridian-dark";
 
+    public string? EnvironmentBannerText => ClientSettings.Environment?.Trim().ToLowerInvariant() switch
+    {
+        "development" => "Development",
+        "deployment" => "UAT",
+        _ => null
+    };
+
+    public string EnvironmentBannerColor => ClientSettings.Environment?.Trim().ToLowerInvariant() switch
+    {
+        "development" => "#99FF99",
+        "deployment" => "#9999FF",
+        _ => string.Empty
+    };
+
+    public bool ShowEnvironmentFrame => !string.IsNullOrEmpty(EnvironmentBannerText);
+
+    public string EnvironmentFrameStyle => ShowEnvironmentFrame
+        ? $"--env-accent-color:{EnvironmentBannerColor}; --env-background-color:{(IsDarkTheme ? "#6f8094" : "#ffffff")};"
+        : string.Empty;
+
     protected override void OnInitialized()
     {
         NavigationManager.LocationChanged += OnLocationChanged;
@@ -78,6 +98,13 @@ public partial class MainLayout : IDisposable
     {
         CloseReportMenu();
         StateHasChanged();
+    }
+
+    private Task OnApplicationNameClicked()
+    {
+        CloseReportMenu();
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        return Task.CompletedTask;
     }
 
     private async Task OnLockKeyClicked()

@@ -31,6 +31,8 @@
             </svg>
             <img class="loading-progress-logo" src="images/midfirst-logo.svg" alt="MidFirst logo" />
         </div>
+        <div id="loading-environment-warning" class="loading-environment-warning"></div>
+        <div id="loading-environment-text" class="loading-environment-text" aria-live="polite"></div>
     </div>
 
     <div id="blazor-error-ui">
@@ -40,6 +42,45 @@
     </div>
 
     <script src="theme-switcher.js"></script>
+    <script>
+        (async function () {
+            const textElement = document.getElementById("loading-environment-text");
+            const warningElement = document.getElementById("loading-environment-warning");
+            if (!textElement || !warningElement) {
+                return;
+            }
+
+            try {
+                const response = await fetch("environment.json", { cache: "no-store" });
+                if (!response.ok) {
+                    return;
+                }
+
+                const data = await response.json();
+                const rawEnvironment = (data.environment || data.Environment || "").toString().trim();
+                const environment = rawEnvironment.toLowerCase();
+                const isDebugMode = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+                if (isDebugMode && environment && environment !== "local") {
+                    warningElement.textContent = `You are not running local. You are running against ${rawEnvironment}.`;
+                    warningElement.style.display = "block";
+                }
+
+                if (environment === "development") {
+                    textElement.textContent = "Development";
+                    textElement.style.color = "#99FF99";
+                    textElement.style.display = "block";
+                }
+                else if (environment === "deployment") {
+                    textElement.textContent = "UAT";
+                    textElement.style.color = "#9999FF";
+                    textElement.style.display = "block";
+                }
+            } catch {
+                // keep loading label empty if environment cannot be read
+            }
+        })();
+    </script>
     <script src="_content/Telerik.UI.for.Blazor/js/telerik-blazor.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>

@@ -3,15 +3,34 @@
 <div class="main-layout k-d-flex k-flex-col" style="min-height:100vh">
 
     <TelerikAppBar Class="appbar">
-        <AppBarSection>
-            <TelerikMenu Data="@MenuItems"
-                         TextField="Text"
-                         UrlField="Url"
-                         IconField="Icon">
-                <ItemTemplate Context="item">
-                    <span class="@GetMenuItemClass(item)" @onclick="CloseReportMenu">@item.Text</span>
-                </ItemTemplate>
-            </TelerikMenu>
+        <AppBarSection Class="appbar-brand-section">
+            <div class="appbar-brand k-d-flex k-flex-col k-align-items-start">
+                <span role="button" tabindex="0" title="Reload application" @onclick="OnApplicationNameClicked" style="cursor:pointer; color:#dc6b12; font-size:2em; line-height:1;">
+                    @ClientSettings.ApplicationName
+                </span>
+                <div class="appbar-nav-row">
+                    @if (!string.IsNullOrEmpty(EnvironmentBannerText))
+                    {
+                        <span class="appbar-environment" style="font-size:1.1em; font-weight:600; color:@EnvironmentBannerColor;">
+                            @EnvironmentBannerText
+                        </span>
+                    }
+                    <TelerikMenu Data="@MenuItems"
+                                 TextField="Text"
+                                 UrlField="Url"
+                                 IconField="Icon">
+                        <ItemTemplate Context="item">
+                            <span class="@GetMenuItemClass(item)" @onclick="CloseReportMenu">@item.Text</span>
+                        </ItemTemplate>
+                    </TelerikMenu>
+                </div>
+            </div>
+        </AppBarSection>
+        <AppBarSection Class="mock-notice-section">
+            @if (ClientSettings.UseMocks)
+            {
+                <div class="mock-data-banner">Notice! You are using mock data!</div>
+            }
         </AppBarSection>
         <AppBarSpacer />
 
@@ -68,7 +87,7 @@
 
     <ErrorNotification />
 
-    <main class="content">
+    <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
         @Body
     </main>
 
