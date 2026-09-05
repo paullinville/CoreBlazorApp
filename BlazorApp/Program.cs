@@ -43,9 +43,11 @@ builder.Services.AddSingleton(settings);
 if (settings.UseMocks)
 {
 #if DEBUG
-        builder.Services.AddScoped<IEmployeeRepository, MockEmployeeRepository>();
-        builder.Services.AddScoped<IEattsApiRepository, MockEattsRepository>();
-        builder.Services.AddScoped<ISecurityModelApiRepository, MockSecurityModelRepository>();
+    builder.Services.AddSingleton<IUserTokenRequestModel, UserTokenRequestModel>();
+    builder.Services.AddScoped<IEmployeeRepository, MockEmployeeRepository>();
+    builder.Services.AddScoped<IEattsApiRepository, MockEattsRepository>();
+    builder.Services.AddScoped<ISecurityModelApiRepository, MockSecurityModelRepository>();
+    builder.Services.AddSingleton<ISecurityModelToken, MockSecurityModelToken>();
 #else
     // Release build — mocks removed
     Console.WriteLine("WARNING: UseMocks=true in Release, but mock repositories are not included.");

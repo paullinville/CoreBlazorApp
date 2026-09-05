@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
 using BlazorApp.Classes;
+using BlazorApp.Data;
 
 public partial class MainLayout : IDisposable
 {
@@ -11,6 +12,9 @@ public partial class MainLayout : IDisposable
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IJSRuntime JsRuntime { get; set; }
     [Inject] public ClientSettings ClientSettings { get; set; }
+    [Inject] public IEmployeeRepository EmployeeRepository { get; set; }
+
+    public string? WelcomeText { get; set; }
 
     public List<MenuItem> MenuItems { get; } =
     [
@@ -63,6 +67,12 @@ public partial class MainLayout : IDisposable
     protected override void OnInitialized()
     {
         NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentUser = await EmployeeRepository.CurrentUser;
+        WelcomeText = string.IsNullOrWhiteSpace(currentUser?.FullName) ? null : $"Welcome {currentUser.FullName}";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

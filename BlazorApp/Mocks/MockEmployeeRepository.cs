@@ -1,11 +1,21 @@
 using BlazorApp.Data;
 using EmployeeData.Common.Models;
+using Midland.Core.Client;
+using SecurityModel.Common;
 using System;
 
 namespace BlazorApp.Data;
 
 public class MockEmployeeRepository : IEmployeeRepository
 {
+    private readonly ISecurityModelToken _securityModel;
+    private Task<MidlandUserGeneralModel> _currentUser;
+
+    public MockEmployeeRepository(ISecurityModelToken securityModel)
+    {
+        _securityModel = securityModel;
+    }
+
     private static readonly List<UserSelectModelExpanded> MockSelectionUsers =
     [
         new UserSelectModelExpanded { UserRef = 1001, FullName = "Alex Carter", LastNameFirst = "Carter, Alex", Email = "alex.carter@example.com" },
@@ -35,6 +45,7 @@ public class MockEmployeeRepository : IEmployeeRepository
 
     private static readonly List<MidlandUserGeneralModel> MockUsers =
     [
+        new MidlandUserGeneralModel { UserRef = 49225, UserId = "plinville", FirstName = "Paul", LastName = "Linville", FullName = "Paul Linville", LastNameFirst = "Linville, Paul", Email = "paul.linville@midfirst.com", Status = "A", EmployeeTypeCode = "EMP", ScheduleTypeCode = "FT" },
         new MidlandUserGeneralModel { UserRef = 1001, UserId = "acarter", FirstName = "Alex", LastName = "Carter", FullName = "Alex Carter", LastNameFirst = "Carter, Alex", Email = "alex.carter@example.com", Status = "A", EmployeeTypeCode = "EMP", ScheduleTypeCode = "FT" },
         new MidlandUserGeneralModel { UserRef = 1002, UserId = "jlee", FirstName = "Jordan", LastName = "Lee", FullName = "Jordan Lee", LastNameFirst = "Lee, Jordan", Email = "jordan.lee@example.com", Status = "A", EmployeeTypeCode = "EMP", ScheduleTypeCode = "FT" },
         new MidlandUserGeneralModel { UserRef = 1003, UserId = "srivera", FirstName = "Sam", LastName = "Rivera", FullName = "Sam Rivera", LastNameFirst = "Rivera, Sam", Email = "sam.rivera@example.com", Status = "A", EmployeeTypeCode = "EMP", ScheduleTypeCode = "PT" },
@@ -88,5 +99,25 @@ public class MockEmployeeRepository : IEmployeeRepository
                 (!string.IsNullOrWhiteSpace(user.Email) && user.Email.Contains(name, StringComparison.OrdinalIgnoreCase)))
             .OrderBy(user => user.LastNameFirst)
             .ToList();
+    }
+
+    public Task<MidlandUserGeneralModel> CurrentUser => _currentUser ??= LoadCurrentUserAsync();
+
+    public Task<MidlandUserGeneralModel> GetUser(int userRef)
+    {
+        var user = MockUsers.FirstOrDefault(x => x.UserRef == userRef);
+        return Task.FromResult(user);
+    }
+
+    private async Task<MidlandUserGeneralModel> LoadCurrentUserAsync()
+    {
+        var token = await _securityModel.GetSecurityToken();
+        var userRefValue = token?.Claims.FirstOrDefault(claim => string.Equals(claim.Type, "userRef", StringComparison.OrdinalIgnoreCase))?.Value;
+        if (!int.TryParse(userRefValue, out var userRef))
+        {
+            throw new InvalidOperationException("The security token does not contain a valid userRef claim.");
+        }
+
+        return await GetUser(userRef);
     }
 }
