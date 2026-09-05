@@ -73,5 +73,6 @@ builder.Services.AddTelerikBlazor();
 builder.Services.AddScoped<ThemeService>();
 
 var host = builder.Build();
+//This is how you can force an ISubsciber to be created at startup, so that it can subscribe to the event bus and handle errors globally.
 _ = host.Services.GetRequiredService<ApplicationErrorHandler>();
 await host.RunAsync();
