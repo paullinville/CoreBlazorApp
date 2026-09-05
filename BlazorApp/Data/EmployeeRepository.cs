@@ -14,10 +14,12 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
     private static List<MidlandUserGeneralModel>? FullUsers;
     private static List<UserSelectModelExpanded>? Users;
     private Task<MidlandUserGeneralModel>? _currentUser;
+    private readonly ISecurityModelToken _securityToken;
 
-    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings)
+    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings, ISecurityModelToken securityToken)
         : base(httpClient, bus, clientSettings)
     {
+        _securityToken = securityToken;
     }
 
     public async Task<List<UserSelectModelExpanded>> GetActiveSelectionUsers()
@@ -68,12 +70,12 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
 
     private async Task<MidlandUserGeneralModel> LoadCurrentUserAsync()
     {
-        //var token = await _securityToken.GetSecurityToken();
-        //var userRefValue = token?.Claims.FirstOrDefault(claim => string.Equals(claim.Type, "userRef", StringComparison.OrdinalIgnoreCase))?.Value;
-        //if (!int.TryParse(userRefValue, out var userRef))
-        //{
-        //    throw new InvalidOperationException("The security token does not contain a valid userRef claim.");
-        //}
+        var token = await _securityToken.GetSecurityToken();
+        var userRefValue = token?.Claims.FirstOrDefault(claim => string.Equals(claim.Type, "userRef", StringComparison.OrdinalIgnoreCase))?.Value;
+        if (!int.TryParse(userRefValue, out var userRef))
+        {
+            throw new InvalidOperationException("The security token does not contain a valid userRef claim.");
+        }
 
         return await GetUser(123);
     }
