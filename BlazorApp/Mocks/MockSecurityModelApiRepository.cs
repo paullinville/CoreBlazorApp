@@ -1,10 +1,18 @@
 using BlazorApp.Data;
+using Midland.Core.SimpleMessageBus;
 using SecurityModel.Common.Models;
 
 namespace BlazorApp.Data;
 
 public class MockSecurityModelRepository : ISecurityModelApiRepository
 {
+    private readonly IEventChannelBus _eventBus;
+
+    public MockSecurityModelRepository(IEventChannelBus eventBus)
+    {
+        _eventBus = eventBus;
+    }
+
     private static readonly List<ApplicationSummary> Applications =
     [
         new ApplicationSummary

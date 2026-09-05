@@ -29,7 +29,7 @@
         <AppBarSection Class="mock-notice-section">
             @if (ClientSettings.UseMocks)
             {
-                <div class="mock-data-banner">Notice! You are using mock data!</div>
+                <div class="mock-data-banner">You are using mock data!</div>
             }
         </AppBarSection>
         <AppBarSpacer />
@@ -87,8 +87,6 @@
             }
         </ul>
     }
-
-    <ErrorNotification />
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
         @Body

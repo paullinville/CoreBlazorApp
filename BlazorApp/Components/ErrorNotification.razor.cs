@@ -1,3 +1,4 @@
+using BlazorApp.Data;
 using Microsoft.AspNetCore.Components;
 using Midland.Core.Client;
 using Midland.Core.Common;
@@ -9,18 +10,26 @@ namespace BlazorApp.Components;
 public partial class ErrorNotification : ISubscriber
 {
 	[Parameter]
-	public ErrorResponse Error { get; set; }
+	public ErrorResponse Error { get; set; } = new();
 
-	public TelerikNotification Notification { get; set; }
+	public TelerikNotification Notification { get; set; } = default!;
+
+	private ErrorResponse? LatestErrorResponse { get; set; }
 
 	[Inject]
 	private IEventChannelBus EventChannelBus { get; set; } = default!;
+
+	[Inject]
+	private NavigationManager NavigationManager { get; set; } = default!;
+
+	[Inject]
+	private ErrorReportState ErrorReportState { get; set; } = default!;
 
 	public void ChannelNotification(IChannelEvent Evt)
 	{
 		if (Evt is ApiValidationEvent validation)
 		{
-			ShowErrors(validation.Value);
+			_ = ShowErrors(validation.Value);
 		}
 	}
 
@@ -28,7 +37,12 @@ public partial class ErrorNotification : ISubscriber
 	{
 		if (Evt is ApiValidationEvent validation)
 		{
-			ShowErrors(validation.Value);
+			_ = ShowErrors(validation.Value);
+		}
+
+		if (Evt is ApiErrorEvent error)
+		{
+			_ = ShowErrors(error.Value);
 		}
 	}
 
@@ -40,7 +54,8 @@ public partial class ErrorNotification : ISubscriber
 
 	public Task ChannelNotificationAsync<T>(IChannelEvent<T> Evt)
 	{
-		throw new NotImplementedException();
+		ChannelNotification(Evt);
+		return Task.CompletedTask;
 	}
 
 	public int NotificationOrder()
@@ -48,9 +63,12 @@ public partial class ErrorNotification : ISubscriber
 		return 0;
 	}
 
-	public async Task ShowErrors(ErrorResponse Error)
+	public async Task ShowErrors(ErrorResponse errorResponse)
 	{
-		foreach (var message in Error.Messages.Values())
+		LatestErrorResponse = errorResponse;
+		await InvokeAsync(StateHasChanged);
+
+		foreach (var message in errorResponse.Messages.Values())
 		{
 			Notification.Show(new NotificationModel
 			{
@@ -59,7 +77,8 @@ public partial class ErrorNotification : ISubscriber
 				CloseAfter = 0
 			});
 		}
-		foreach (var error in Error.Errors.Values())
+
+		foreach (var error in errorResponse.Errors.Values())
 		{
 			Notification.Show(new NotificationModel
 			{
@@ -68,6 +87,18 @@ public partial class ErrorNotification : ISubscriber
 				CloseAfter = 0
 			});
 		}
+	}
+
+	private void ReportCurrentError(NotificationModel notificationModel)
+	{
+		if (LatestErrorResponse is null)
+		{
+			return;
+		}
+
+		Notification.Hide(notificationModel);
+		ErrorReportState.SetPendingError(LatestErrorResponse);
+		NavigationManager.NavigateTo("/report-error");
 	}
 
 	protected override void OnInitialized()

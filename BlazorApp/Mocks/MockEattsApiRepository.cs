@@ -1,13 +1,20 @@
 using BlazorApp.Models;
 using EATTS.Common.Models;
 using Midland.Core.Common;
+using Midland.Core.SimpleMessageBus;
 
 namespace BlazorApp.Data;
 
 public class MockEattsRepository : IEattsApiRepository
 {
+    private readonly IEventChannelBus _eventBus;
     private static int _nextApplicationOptionRef = 3;
     private static int _nextContactRef = 3;
+
+    public MockEattsRepository(IEventChannelBus eventBus)
+    {
+        _eventBus = eventBus;
+    }
 
     private static readonly List<ApplicationOptionsGetModel> ApplicationOptions =
     [
