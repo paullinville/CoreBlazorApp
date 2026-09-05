@@ -61,7 +61,7 @@ public partial class MainLayout : IDisposable
     public bool ShowEnvironmentFrame => !string.IsNullOrEmpty(EnvironmentBannerText);
 
     public string EnvironmentFrameStyle => ShowEnvironmentFrame
-        ? $"--env-accent-color:{EnvironmentBannerColor}; --env-background-color:{(IsDarkTheme ? "#6f8094" : "#ffffff")};"
+        ? $"--env-accent-color:{EnvironmentBannerColor}; --env-background-color:{(IsDarkTheme ? "#000000" : "#ffffff")};"
         : string.Empty;
 
     protected override void OnInitialized()
@@ -130,6 +130,12 @@ public partial class MainLayout : IDisposable
     {
         CloseReportMenu();
         NavigationManager.NavigateTo("/report-error");
+    }
+
+    private void OnSearchClicked()
+    {
+        CloseReportMenu();
+        NavigationManager.NavigateTo("/search");
     }
 
     private async Task ToggleReportMenu()

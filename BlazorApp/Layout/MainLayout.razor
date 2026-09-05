@@ -41,6 +41,12 @@
             }
 
             <div class="appbar-actions-row">
+                <a class="search-icon" href="/search" title="Search Grid" @onclick="CloseReportMenu">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="6" />
+                        <path d="M16 16 21 21" />
+                    </svg>
+                </a>
                 <span @ref="ReportIconElement" id="report-icon" class="report-icon" role="button" tabindex="0" title="Reports" @onclick="ToggleReportMenu">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 4.5v15h15" />
@@ -68,6 +74,7 @@
                         <path d="M19.3 13.2v3.4" />
                     </svg>
                 </span>
+
                 <TelerikSwitch Class="theme-switch-section"
                                Value="@IsDarkTheme"
                                OnLabel="Dark"

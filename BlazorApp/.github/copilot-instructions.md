@@ -4,6 +4,11 @@
 - User is a Senior Software Engineer at a large bank, specializes in backend on Microsoft stack, and maintains both API code and database structures. Tailor assistance with enterprise-grade backend and data-focused guidance.
 - User frontend preference: use code-behind files instead of inline code in Blazor components.
 - User prefers Telerik UI for Blazor package version 12.3.0 in this workspace.
+- In this Blazor app, the medium blue-gray page background should apply only when the dark theme is active, not in light mode.
+- This CoreBlazorApp project is intended as base functionality for all other projects — a Visual Studio template will be created from it. Code and config should be kept generic/reusable (avoid hardcoding project-specific values) since it will be templatized.
+- Use the provided orange SVG logo as a shared application resource, not a one-off favicon. Branding assets should be stored as common reusable resources for the template/app.
+- When asked to replace existing UI assets, apply and verify the actual markup change rather than only describing the intended change.
+- Use code-behind files for page logic in this project; keep .razor pages markup-only and move logic to corresponding .razor.cs partial classes.
 
 # Midland Blazor WebAssembly Architecture - Frontend Copilot Instructions (Telerik-Only)
 

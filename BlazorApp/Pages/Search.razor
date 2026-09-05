@@ -1,0 +1,40 @@
+@page "/search"
+
+<PageTitle>Search</PageTitle>
+
+<div class="search-dockmanager-host">
+    <TelerikDockManager Width="100%" Height="100%">
+        <DockManagerPanes>
+            <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Vertical" AllowEmpty="false">
+                <Panes>
+                    <DockManagerContentPane Id="search-criteria-pane" HeaderText="Search Criteria" Size="30%" Closeable="false" AllowFloat="false">
+                        <Content>
+                            <div class="k-form k-form-md">
+                                <div class="k-form-field k-mb-3">
+                                    <label for="search-text">Search Text</label>
+                                    <TelerikTextBox Id="search-text" @bind-Value="SearchText" />
+                                </div>
+                                <div class="k-form-field k-mb-3">
+                                    <label for="search-category">Category</label>
+                                    <TelerikTextBox Id="search-category" @bind-Value="SearchCategory" />
+                                </div>
+                                <TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
+                            </div>
+                        </Content>
+                    </DockManagerContentPane>
+
+                    <DockManagerContentPane Id="search-results-pane" HeaderText="Results" Size="70%" Closeable="false" AllowFloat="false">
+                        <Content>
+                            <TelerikGrid Data="@GridData" Height="100%">
+                                <GridColumns>
+                                    <GridColumn Field="@nameof(SearchResultItem.Primary)" Title="Primary" />
+                                    <GridColumn Field="@nameof(SearchResultItem.Secondary)" Title="Secondary" />
+                                </GridColumns>
+                            </TelerikGrid>
+                        </Content>
+                    </DockManagerContentPane>
+                </Panes>
+            </DockManagerSplitPane>
+        </DockManagerPanes>
+    </TelerikDockManager>
+</div>

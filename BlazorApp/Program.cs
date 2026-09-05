@@ -67,7 +67,7 @@ else
 }
 
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
-builder.Services.AddSingleton<ApplicationErrorHandler>();
+builder.Services.AddScoped<ApplicationErrorHandler>();
 builder.Services.AddScoped<ErrorReportState>();
 builder.Services.AddTelerikBlazor();
 builder.Services.AddScoped<ThemeService>();
