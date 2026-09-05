@@ -182,7 +182,7 @@ Copilot must never generate:
 - Any code that duplicates or replaces the Base Client Repository
 - Any code that duplicates or replaces the Event Bus
 - Any UI-level validation or business-rule handling
-  - Blazor page code-behind must never interpret, inspect, or react to validation or business rule failures directly.
+  - Blazor page code-behind must never attempt to detect, interpret, or handle validation or business rule errors directly.
   - All validation and business rule errors are surfaced exclusively through the Event Bus by the Base Client Repository using ProcessResponse and CheckForErrors.
   - Blazor components may only react to event bus messages such as ApiValidationEvent, ApiErrorEvent, or ResultsMessageEvent.
 
@@ -211,13 +211,45 @@ Copilot should prefer Telerik for:
 
 There are no secondary UI libraries.
 
+## DataAnnotations for Editors and Forms
+Copilot must ensure that all Blazor/Telerik editors — including:
+
+- Inline grid editors  
+- Popup grid editors  
+- Form-based editors  
+- Standalone forms  
+
+use **Data Annotation attributes** from the Common Models for:
+
+- Client-side validation  
+- Display names  
+- Hints/tooltips  
+- Required field indicators  
+- StringLength limits  
+- Range limits  
+- Regex validation  
+- Error messages  
+
+Rules:
+
+- Blazor pages must not implement custom validation logic; they must rely entirely on DataAnnotations applied to Common Models.
+- Telerik components must bind to DataAnnotations automatically using `TelerikForm`, `TelerikValidationMessage`, and `DataAnnotationsValidator`.
+- Inline and popup grid editors must respect DataAnnotations for:
+  - Required fields  
+  - Maximum lengths  
+  - Numeric ranges  
+  - Date ranges  
+  - Regex constraints  
+- Copilot must generate editors that enforce DataAnnotations **before submitting**, preventing invalid data from reaching the Base Client Repository.
+- Copilot must not generate any business-rule validation in Blazor; only DataAnnotations-based UI validation is allowed.
+
 ------------------------------------------------------------
 
 # Component Structure Rules
 
 Copilot must always generate Blazor components using code-behind:
 
-PageName.razor
+PageName.razor  
 PageName.razor.cs
 
 The .razor file contains:
@@ -235,9 +267,6 @@ The .razor.cs file contains:
 - Event bus subscriptions
 - UI state management
 - UI reactions to event bus messages only
-  - Page code-behind must never attempt to detect, interpret, or handle validation or business rule errors.
-  - All validation and business rule logic is handled inside the Base Client Repository via ProcessResponse and CheckForErrors.
-  - The page may show notifications or update UI state only when receiving event bus messages.
 
 ------------------------------------------------------------
 
@@ -306,6 +335,71 @@ Copilot should:
 
 ------------------------------------------------------------
 
+# UI/UX Operator Tool Rules (Merged)
+
+## Dense Layout
+- Default all Telerik components to **Size="Small"**.
+- Use dense spacing (8–12px vertical rhythm).
+- Use compact icons (24–28px).
+- Use dense grid row height (28–32px).
+
+## Layout Rules
+- Application uses a **top AppBar only**.
+- **No left navigation** should be generated.
+- Page-level actions belong in the page header.
+
+## Grid Rules (TelerikGrid)
+- All grids must support:
+  - Column **resizing**
+  - Column **filtering**
+  - Column **sorting**
+  - Paging (20–50 rows)
+  - Dense row height
+  - **Excel export must be available in ALL grids (editable, reporting, search)**  
+    - Export **All Records**  
+    - Export **Current Page**  
+
+### Reporting & Search Result Grids
+- **Never editable**.
+- Must include:
+  - Column filtering
+  - Column sorting
+  - Excel export (All Records + Current Page)
+- Toolbar must follow:  
+  `Search | Clear | Export (All / Page)`
+
+### Editable Grids
+- Use row editing or popup editing.
+- Avoid cell-level editing.
+- Require explicit Save/Cancel.
+- **Editable grids must also include Excel export (All / Page)** for consistency.
+
+## Long Text Columns
+- For fields with `StringLength(100)` or longer:
+  - Display only the **first 75 characters**.
+  - Append a clickable **ellipsis (…)**.
+  - Clicking the ellipsis opens a popup showing the full text.
+
+## Forms
+- Dense spacing.
+- Two-column layout on desktop.
+- Labels always visible.
+- Inline validation messages under fields.
+
+## Dialogs
+- Use compact padding.
+- Esc closes non-destructive dialogs.
+
+## Theming
+- Use a single Telerik theme.
+- Prefer ThemeBuilder for customization.
+
+## Accessibility
+- Do not remove focus outlines.
+- Tab order must follow visual order.
+
+------------------------------------------------------------
+
 # Summary
 
 Midland Blazor WASM applications are pure client UIs:
@@ -313,9 +407,10 @@ Midland Blazor WASM applications are pure client UIs:
 - Use Common Models
 - Use Base Client Repository for all API calls
 - Use Event Bus for all error and status messaging
-- Use RestEase clients indirectly through the repository
 - Use Telerik UI only
 - Use code-behind components
+- Follow dense operator UI rules
+- Follow all grid, truncation, popup, DataAnnotations, and export rules
 - Never touch backend concerns
 - Never generate DTOs, EF, UOW, repositories, binding models, or validation classes
 - Never generate token logic or HttpClient configuration

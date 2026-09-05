@@ -25,7 +25,22 @@
 
                     <DockManagerContentPane Id="search-results-pane" HeaderText="Results" Size="70%" Closeable="false" AllowFloat="false">
                         <Content>
-                            <TelerikGrid Data="@GridData" Height="100%">
+                            <TelerikGrid @ref="SearchResultsGrid" Data="@GridData" Height="100%" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
+                                <GridToolBarTemplate>
+                                    <div style="display: flex; justify-content: flex-end; width: 100%; gap: 0.5rem;">
+                                        <TelerikButton Icon="@SvgIcon.FileExcel" OnClick="@ExportCurrentPageAsync">Export Page</TelerikButton>
+                                        <TelerikButton Icon="@SvgIcon.FileExcel" OnClick="@ExportAllPagesAsync">Export All</TelerikButton>
+                                    </div>
+                                </GridToolBarTemplate>
+                                <GridSettings>
+                                    <GridPagerSettings PageSizes="@(new List<int?> { 10, 25, 50 })" />
+                                </GridSettings>
+                                <GridExport>
+                                    <GridExcelExport FileName="SearchResults" AllPages="@ExportAllPages" />
+                                </GridExport>
+                                <NoDataTemplate>
+                                    No results found.
+                                </NoDataTemplate>
                                 <GridColumns>
                                     <GridColumn Field="@nameof(SearchResultItem.Primary)" Title="Primary" />
                                     <GridColumn Field="@nameof(SearchResultItem.Secondary)" Title="Secondary" />
