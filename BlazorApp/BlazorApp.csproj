@@ -27,7 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\" />
-    <Folder Include="Layout\" />
+    <Folder Include="Shared\" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Release'">
     <Compile Remove="Mocks\**\*.cs" />

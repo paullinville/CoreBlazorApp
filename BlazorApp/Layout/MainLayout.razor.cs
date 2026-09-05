@@ -1,4 +1,4 @@
-namespace BlazorApp.Shared;
+namespace BlazorApp.Layout;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
