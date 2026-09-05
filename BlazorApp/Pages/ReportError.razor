@@ -4,32 +4,36 @@
 
 <PageTitle>Report Error</PageTitle>
 
-<h3>Report Error</h3>
-<p>Use the form below to report an issue you encountered while using the application.</p>
+<div class="dense-page">
+    <h3>Report Error</h3>
+    <p>Use the form below to report an issue you encountered while using the application.</p>
 
-<TelerikNotification @ref="@NotificationRef"
-                     HorizontalPosition="@NotificationHorizontalPosition.Center"
-                     VerticalPosition="@NotificationVerticalPosition.Top" />
+    <TelerikNotification @ref="@NotificationRef"
+                         HorizontalPosition="@NotificationHorizontalPosition.Center"
+                         VerticalPosition="@NotificationVerticalPosition.Top" />
 
-<EditForm Model="@Report" OnValidSubmit="@SubmitReport">
-    <DataAnnotationsValidator />
+    <EditForm Model="@Report" OnValidSubmit="@SubmitReport">
+        <DataAnnotationsValidator />
 
-    <div class="k-form-field k-mb-4">
-        <label for="report-subject">Subject</label>
-        <TelerikTextBox Id="report-subject" @bind-Value="@Report.Subject" Placeholder="Brief summary of the issue" ReadOnly="@(PendingErrorResponse is not null)" />
-        <ValidationMessage For="@(() => Report.Subject)" />
-    </div>
+        <div class="k-form k-form-sm">
+            <div class="k-form-field k-mb-2">
+                <label for="report-subject">Subject</label>
+                <TelerikTextBox Size="ComponentSize.Small" Id="report-subject" @bind-Value="@Report.Subject" Placeholder="Brief summary of the issue" ReadOnly="@(PendingErrorResponse is not null)" />
+                <ValidationMessage For="@(() => Report.Subject)" />
+            </div>
 
-    <div class="k-form-field k-mb-4">
-        <label for="report-description">Description</label>
-        <TelerikTextArea Id="report-description" @bind-Value="@Report.Description" Rows="6" Placeholder="What happened? What did you expect to happen?" ReadOnly="@(PendingErrorResponse is not null)" />
-        <ValidationMessage For="@(() => Report.Description)" />
-    </div>
+            <div class="k-form-field k-mb-2">
+                <label for="report-description">Description</label>
+                <TelerikTextArea Size="ComponentSize.Small" Id="report-description" @bind-Value="@Report.Description" Rows="6" Placeholder="What happened? What did you expect to happen?" ReadOnly="@(PendingErrorResponse is not null)" />
+                <ValidationMessage For="@(() => Report.Description)" />
+            </div>
 
-    <div class="k-form-field k-mb-4">
-        <label for="report-additional-notes">Additional notes (optional)</label>
-        <TelerikTextArea Id="report-additional-notes" @bind-Value="@Report.AdditionalNotes" Rows="4" Placeholder="Include anything else that may help troubleshoot this issue" />
-    </div>
+            <div class="k-form-field k-mb-2">
+                <label for="report-additional-notes">Additional notes (optional)</label>
+                <TelerikTextArea Size="ComponentSize.Small" Id="report-additional-notes" @bind-Value="@Report.AdditionalNotes" Rows="4" Placeholder="Include anything else that may help troubleshoot this issue" />
+            </div>
 
-    <TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" ButtonType="@ButtonType.Submit">Submit Report</TelerikButton>
-</EditForm>
+            <TelerikButton Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" ButtonType="@ButtonType.Submit">Submit Report</TelerikButton>
+        </div>
+    </EditForm>
+</div>

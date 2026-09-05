@@ -9,6 +9,7 @@
 - Use the provided orange SVG logo as a shared application resource, not a one-off favicon. Branding assets should be stored as common reusable resources for the template/app.
 - When asked to replace existing UI assets, apply and verify the actual markup change rather than only describing the intended change.
 - Use code-behind files for page logic in this project; keep .razor pages markup-only and move logic to corresponding .razor.cs partial classes.
+- Unless explicitly specified otherwise, all pages should apply the 'Dense Layout' instructions from the project copilot instructions, including corresponding CSS.
 
 # Midland Blazor WebAssembly Architecture - Frontend Copilot Instructions (Telerik-Only)
 

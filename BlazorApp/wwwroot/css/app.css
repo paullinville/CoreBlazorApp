@@ -421,13 +421,40 @@ body.dark-theme .report-error-icon:hover {
 
 .content {
     flex-grow: 1;
-    padding: 16px;
+    padding: 12px;
     overflow-y: auto;
+}
+
+.dense-page {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dense-page .k-form-field {
+    margin-bottom: 8px;
 }
 
 .search-dockmanager-host {
     height: 100%;
     min-height: 100%;
+}
+
+.search-grid-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 8px;
+}
+
+.dense-grid .k-table-tbody .k-table-row {
+    height: 30px;
+}
+
+.dense-grid .k-table-th,
+.dense-grid .k-table-td {
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .environment-content-frame {

@@ -2,38 +2,38 @@
 
 <PageTitle>Search</PageTitle>
 
-<div class="search-dockmanager-host">
+<div class="dense-page search-dockmanager-host">
     <TelerikDockManager Width="100%" Height="100%">
         <DockManagerPanes>
             <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Vertical" AllowEmpty="false">
                 <Panes>
                     <DockManagerContentPane Id="search-criteria-pane" HeaderText="Search Criteria" Size="30%" Closeable="false" AllowFloat="false">
                         <Content>
-                            <div class="k-form k-form-md">
-                                <div class="k-form-field k-mb-3">
+                            <div class="k-form k-form-sm">
+                                <div class="k-form-field k-mb-2">
                                     <label for="search-text">Search Text</label>
-                                    <TelerikTextBox Id="search-text" @bind-Value="SearchText" />
+                                    <TelerikTextBox Size="ComponentSize.Small" Id="search-text" @bind-Value="SearchText" />
                                 </div>
-                                <div class="k-form-field k-mb-3">
+                                <div class="k-form-field k-mb-2">
                                     <label for="search-category">Category</label>
-                                    <TelerikTextBox Id="search-category" @bind-Value="SearchCategory" />
+                                    <TelerikTextBox Size="ComponentSize.Small" Id="search-category" @bind-Value="SearchCategory" />
                                 </div>
-                                <TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
+                                <TelerikButton Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
                             </div>
                         </Content>
                     </DockManagerContentPane>
 
                     <DockManagerContentPane Id="search-results-pane" HeaderText="Results" Size="70%" Closeable="false" AllowFloat="false">
                         <Content>
-                            <TelerikGrid @ref="SearchResultsGrid" Data="@GridData" Height="100%" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
+                            <TelerikGrid @ref="SearchResultsGrid" Class="dense-grid" Data="@GridData" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
                                 <GridToolBarTemplate>
-                                    <div style="display: flex; justify-content: flex-end; width: 100%; gap: 0.5rem;">
-                                        <TelerikButton Icon="@SvgIcon.FileExcel" OnClick="@ExportCurrentPageAsync">Export Page</TelerikButton>
-                                        <TelerikButton Icon="@SvgIcon.FileExcel" OnClick="@ExportAllPagesAsync">Export All</TelerikButton>
+                                    <div class="search-grid-toolbar">
+                                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportCurrentPageAsync">Export Page</TelerikButton>
+                                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportAllPagesAsync">Export All</TelerikButton>
                                     </div>
                                 </GridToolBarTemplate>
                                 <GridSettings>
-                                    <GridPagerSettings PageSizes="@(new List<int?> { 10, 25, 50 })" />
+                                    <GridPagerSettings PageSizes="@(new List<int?> { 20, 35, 50 })" />
                                 </GridSettings>
                                 <GridExport>
                                     <GridExcelExport FileName="SearchResults" AllPages="@ExportAllPages" />
