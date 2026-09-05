@@ -12,6 +12,10 @@ namespace BlazorApp.Pages;
 
 public partial class ReportError
 {
+    [Inject] public ClientSettings Settings { get; set; } = default!;
+
+    private string PageTitleText => FormatPageTitle("Report Error");
+
     private TelerikNotification NotificationRef { get; set; } = default!;
 
     private ErrorReportModel Report { get; set; } = new();
@@ -91,6 +95,10 @@ public partial class ReportError
             });
         }
     }
+
+    private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)
+        ? pageTitle
+        : $"{Settings.ApplicationName} - {pageTitle}";
 
     private static string BuildDescription(ErrorResponse errorResponse)
     {
