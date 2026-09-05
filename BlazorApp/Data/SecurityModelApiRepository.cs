@@ -10,15 +10,13 @@ namespace BlazorApp.Data;
 
 public class SecurityModelApiRepository : BlazorClientRepositoryBase, ISecurityModelApiRepository
 {
-    public SecurityModelApiRepository(HttpClient httpClient, ISecurityModelToken securityModel, IEventChannelBus eventBus, ClientSettings clientSettings, IEattsApiRepository eattsRepo, IEmployeeRepository empRepo)
-    : base(httpClient, securityModel, eventBus, clientSettings, eattsRepo, empRepo)
+    public SecurityModelApiRepository(HttpClient httpClient, IEventChannelBus eventBus, ClientSettings clientSettings)
+    : base(httpClient, eventBus, clientSettings)
     {
     }
 
     public async Task<string> ApiToken()
     {
-        await SetAuth();
-
         var response = await RestClient.For<ISecurityModelApiClient>(_httpClient).GetApplicationApiTokenv2();
         //var found = ProcessResponse(response).Values().ToList();
         return response.StringContent ?? "";
@@ -26,8 +24,6 @@ public class SecurityModelApiRepository : BlazorClientRepositoryBase, ISecurityM
 
     public async Task<List<ApplicationSummary>> GetApplications()
     {
-        await SetAuth();
-
         var response = await RestClient.For<ISecurityModelApiClient>(_httpClient).GetApplicationSummaryList(null);
         var found = (await ProcessResponse(response)).Values().ToList();
         return found;

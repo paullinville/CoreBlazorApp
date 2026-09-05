@@ -15,8 +15,8 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
     private static List<UserSelectModelExpanded>? Users;
     private Task<MidlandUserGeneralModel>? _currentUser;
 
-    public EmployeeRepository(HttpClient httpClient, ISecurityModelToken securityModel, IEventChannelBus bus, ClientSettings clientSettings, IEattsApiRepository eattsRepo, IEmployeeRepository empRepo)
-        : base(httpClient, securityModel, bus, clientSettings, eattsRepo, empRepo)
+    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings)
+        : base(httpClient, bus, clientSettings)
     {
     }
 
@@ -24,7 +24,6 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
     {
         if (Users == null)
         {
-            await _securityToken.SetAuthorization(_httpClient);
             var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                     .GetUserSummaryList(null);
             Users = await ProcessResponse(response) ?? new List<UserSelectModelExpanded>();
@@ -38,7 +37,6 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
     {
         if (FullUsers == null)
         {
-            await _securityToken.SetAuthorization(_httpClient);
             var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                     .GetUserPaged((new MidlandUserCriteria { Status = 'A', PageNumber = 1, PageSize = int.MaxValue, CostCenterCode = new List<string> { "14130", "12400" } }).ToQueryString());
             FullUsers = (await ProcessResponse(response)).Results ?? new List<MidlandUserGeneralModel>();
@@ -50,8 +48,6 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
 
     public async Task<List<UserSelectModelExpanded>> GetUsersBy(string name)
     {
-        await _securityToken.SetAuthorization(_httpClient);
-
         var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                 .GetUserSummaryList((new MidlandUserListCriteria { Name = name }).ToQueryString());
 
@@ -64,8 +60,6 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
 
     public async Task<MidlandUserGeneralModel> GetUser(int userRef)
     {
-        await _securityToken.SetAuthorization(_httpClient);
-
         var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                 .GetUser(userRef);
 
@@ -74,13 +68,13 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
 
     private async Task<MidlandUserGeneralModel> LoadCurrentUserAsync()
     {
-        var token = await _securityToken.GetSecurityToken();
-        var userRefValue = token?.Claims.FirstOrDefault(claim => string.Equals(claim.Type, "userRef", StringComparison.OrdinalIgnoreCase))?.Value;
-        if (!int.TryParse(userRefValue, out var userRef))
-        {
-            throw new InvalidOperationException("The security token does not contain a valid userRef claim.");
-        }
+        //var token = await _securityToken.GetSecurityToken();
+        //var userRefValue = token?.Claims.FirstOrDefault(claim => string.Equals(claim.Type, "userRef", StringComparison.OrdinalIgnoreCase))?.Value;
+        //if (!int.TryParse(userRefValue, out var userRef))
+        //{
+        //    throw new InvalidOperationException("The security token does not contain a valid userRef claim.");
+        //}
 
-        return await GetUser(userRef);
+        return await GetUser(123);
     }
 }

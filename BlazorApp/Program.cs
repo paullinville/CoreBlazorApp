@@ -55,17 +55,15 @@ if (settings.UseMocks)
 else
 {
     //todo the next line is required I believe due to the SecurityModelToken. ClientSettings has this as a property, but it is not registered as a service. Research.
-    builder.Services.AddSingleton<IUserTokenRequestModel, UserTokenRequestModel>();
-
-    builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(settings.ApiHost) });//TODO is this needed?
-
+    builder.Services.AddSingleton<IUserTokenRequestModel>(sp => sp.GetRequiredService<ClientSettings>().UserTokenRequestModel);
     builder.Services.AddTransient<CredentialsMessageHandler, CredentialsMessageHandler>();
+    builder.Services.AddTransient<UserTokenMessageHandler, UserTokenMessageHandler>();
     builder.Services.AddHttpClient<ISecurityModelToken, SecurityModelToken>(client => client.BaseAddress = new Uri($"{settings.SecurityModelHost}SecurityModel/"))
                     .AddHttpMessageHandler<CredentialsMessageHandler>();
 
-    builder.Services.AddHttpClient<IEmployeeRepository, EmployeeRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EmployeeData/"));
-    builder.Services.AddHttpClient<IEattsApiRepository, EattsRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EATTS/"));
-    builder.Services.AddHttpClient<ISecurityModelApiRepository, SecurityModelApiRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/"));
+    builder.Services.AddHttpClient<IEmployeeRepository, EmployeeRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EmployeeData/")).AddHttpMessageHandler<UserTokenMessageHandler>();
+    builder.Services.AddHttpClient<IEattsApiRepository, EattsRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EATTS/")).AddHttpMessageHandler<UserTokenMessageHandler>();
+    builder.Services.AddHttpClient<ISecurityModelApiRepository, SecurityModelApiRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/")).AddHttpMessageHandler<UserTokenMessageHandler>();
 }
 
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
