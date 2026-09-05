@@ -17,7 +17,7 @@ public class ApplicationErrorHandler : ISubscriber
         _employeeRepository = employeeRepository;
         _eattsRepository = eattsRepository;
         _clientSettings = clientSettings;
-        eventBus.Subscribe(new ApiValidationEvent(), this);
+        eventBus.Subscribe(new ApplicationErrorEvent(), this);
     }
 
     public void ChannelNotification<T>(IChannelEvent<T> Evt)

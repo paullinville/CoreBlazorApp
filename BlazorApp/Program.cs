@@ -67,8 +67,11 @@ else
 }
 
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
+builder.Services.AddSingleton<ApplicationErrorHandler>();
 builder.Services.AddScoped<ErrorReportState>();
 builder.Services.AddTelerikBlazor();
 builder.Services.AddScoped<ThemeService>();
 
-await builder.Build().RunAsync();
+var host = builder.Build();
+_ = host.Services.GetRequiredService<ApplicationErrorHandler>();
+await host.RunAsync();
