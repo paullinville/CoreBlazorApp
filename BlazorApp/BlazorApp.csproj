@@ -26,6 +26,7 @@
     <None Include=".github\copilot-instructions.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Classes\" />
     <Folder Include="Layout\" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Release'">

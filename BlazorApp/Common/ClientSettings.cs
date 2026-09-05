@@ -1,14 +1,14 @@
 ﻿using Midland.Core.Common;
 
-namespace BlazorApp.Classes;
+namespace BlazorApp.Common;
 
 public class ClientSettings
 {
-    public required string ApplicationName { get; set; }
+    public string ApplicationName { get; set; }
     public string? Environment { get; set; }
     private string? securityModelHost;
 
-    public required string ApiHost { get; set; }
+    public string ApiHost { get; set; }
 
     public string SecurityModelHost { get => securityModelHost ?? ApiHost; set => securityModelHost = value; }
 

@@ -15,7 +15,7 @@ public class ContactModel : SupportDefaultContactEditModel
         SupportDefaultContactRef = values.SupportDefaultContactRef;
     }
 
-    public string FullName { get; set; }
+    public string FullName { get; set; } = "";
     #region
 
     public override bool Equals(object? obj)

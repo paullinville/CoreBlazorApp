@@ -3,8 +3,8 @@ namespace BlazorApp.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
-using BlazorApp.Classes;
 using BlazorApp.Data;
+using BlazorApp.Common;
 
 public partial class MainLayout : IDisposable
 {

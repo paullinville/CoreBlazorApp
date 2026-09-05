@@ -1,4 +1,4 @@
-using BlazorApp.Classes;
+using BlazorApp.Common;
 using Microsoft.AspNetCore.Components;
 
 namespace BlazorApp.Pages

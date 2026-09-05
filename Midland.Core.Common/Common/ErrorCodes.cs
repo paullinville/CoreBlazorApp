@@ -15,7 +15,9 @@ public sealed class ErrorCodes
     public static string TokenNotFound { get; } = "tnf";
     public static string UnauthorizedHost { get; } = "uah";
     public static string UnhandledException { get; } = "ue";
+    public static string ApplicationUnhandledException { get; } = "aue";
     public static string UserIdentityOrIdentityClaimsNotSet { get; } = "uic";
     public static string UserMissingActionClaims { get; } = "umaa";
+    public static string UserCreatedEntry { get; } = "uce";
     public static string ValidationFailure { get; } = "vf";
 }

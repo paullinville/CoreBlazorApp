@@ -8,36 +8,27 @@ namespace BlazorApp.Components;
 
 public partial class MessageNotification : ISubscriber
 {
-	public TelerikNotification Notification { get; set; }
+	public TelerikNotification Notification { get; set; } = default!;
 
 	[Inject]
 	private IEventChannelBus EventChannelBus { get; set; } = default!;
 
-	public void ChannelNotification(IChannelEvent Evt)
-	{
-		if (Evt is ResultsMessageEvent messageEvent)
-		{
-			ShowMessages(messageEvent.Value);
-		}
-	}
+
 
 	public void ChannelNotification<T>(IChannelEvent<T> Evt)
 	{
-		if (Evt is ResultsMessageEvent messageEvent)
+		if (Evt.Value is Midland.Core.Common.IMidlandResult midlandResult)
 		{
-			ShowMessages(messageEvent.Value);
+			_ = ShowMessages(midlandResult);
 		}
 	}
 
-	public Task ChannelNotificationAsync(IChannelEvent Evt)
+	public async Task ChannelNotificationAsync<T>(IChannelEvent<T> Evt)
 	{
-		ChannelNotification(Evt);
-		return Task.CompletedTask;
-	}
-
-	public Task ChannelNotificationAsync<T>(IChannelEvent<T> Evt)
-	{
-		throw new NotImplementedException();
+		if (Evt.Value is Midland.Core.Common.IMidlandResult midlandResult)
+		{
+			await ShowMessages(midlandResult);
+		}
 	}
 
 	public int NotificationOrder()
@@ -45,22 +36,23 @@ public partial class MessageNotification : ISubscriber
 		return 0;
 	}
 
-	public async Task ShowMessages(IMidlandResult MidlandResult)
+	public async Task ShowMessages(Midland.Core.Common.IMidlandResult midlandResult)
 	{
-		foreach (var message in MidlandResult.Messages)
+		foreach (var message in midlandResult.Messages.Values())
 		{
 			Notification.Show(new NotificationModel
 			{
 				Text = message,
 				ThemeColor = "info",
-				CloseAfter = 0
+				CloseAfter = 0,
+				ShowIcon = false,
 			});
 		}
 	}
 
 	protected override void OnInitialized()
 	{
-		EventChannelBus.Subscribe((IChannelEvent)new ResultsMessageEvent(), this);
+		EventChannelBus.Subscribe(new ResultsMessageEvent(), this);
 		base.OnInitialized();
 	}
 }

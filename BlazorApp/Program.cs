@@ -1,5 +1,5 @@
 using BlazorApp;
-using BlazorApp.Classes;
+using BlazorApp.Common;
 using BlazorApp.Data;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -38,8 +38,6 @@ builder.Configuration.Bind(settings);
 settings.Environment = env;
 builder.Services.AddSingleton(settings);
 
-
-
 if (settings.UseMocks)
 {
 #if DEBUG
@@ -56,7 +54,6 @@ if (settings.UseMocks)
 }
 else
 {
-
     //todo the next line is required I believe due to the SecurityModelToken. ClientSettings has this as a property, but it is not registered as a service. Research.
     builder.Services.AddSingleton<IUserTokenRequestModel, UserTokenRequestModel>();
 
@@ -70,7 +67,6 @@ else
     builder.Services.AddHttpClient<IEattsApiRepository, EattsRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}EATTS/"));
     builder.Services.AddHttpClient<ISecurityModelApiRepository, SecurityModelApiRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/"));
 }
-
 
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
 builder.Services.AddScoped<ErrorReportState>();

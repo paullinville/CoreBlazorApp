@@ -1,9 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+using BlazorApp.Common;
 using BlazorApp.Data;
+using CsvHelper.Configuration.Attributes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Midland.Core.Common;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 using Telerik.Blazor.Components;
 
 namespace BlazorApp.Pages;
@@ -31,6 +33,7 @@ public partial class ReportError
                 ? "Application Error"
                 : $"Application Error ({PendingErrorResponse.Code})";
             Report.Description = BuildDescription(PendingErrorResponse);
+            Report.UserCreated = false;
         }
     }
 
@@ -38,6 +41,7 @@ public partial class ReportError
     {
         var errorResponse = PendingErrorResponse ?? new ErrorResponse
         {
+            Code = ErrorCodes.UserCreatedEntry,
             Title = Report.Subject,
             Description = Report.Description,
             Messages = [Report.Description],
@@ -119,5 +123,7 @@ public partial class ReportError
         public string Description { get; set; } = string.Empty;
 
         public string AdditionalNotes { get; set; } = string.Empty;
+
+        public bool UserCreated { get; set; } = true;
     }
 }

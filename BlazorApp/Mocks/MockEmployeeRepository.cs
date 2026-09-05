@@ -126,7 +126,7 @@ public class MockEmployeeRepository : IEmployeeRepository
     {
         var token = await _securityModel.GetSecurityToken();
         var userRefValue = token?.Claims.FirstOrDefault(claim => string.Equals(claim.Type, "userRef", StringComparison.OrdinalIgnoreCase))?.Value;
-        ShowError(); 
+        //ShowError(); 
         if (!int.TryParse(userRefValue, out var userRef))
         {
             throw new InvalidOperationException("The security token does not contain a valid userRef claim.");
