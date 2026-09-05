@@ -33,7 +33,9 @@
                 <TelerikTextArea Size="ComponentSize.Small" Id="report-additional-notes" @bind-Value="@Report.AdditionalNotes" Rows="4" Placeholder="Include anything else that may help troubleshoot this issue" />
             </div>
 
-            <TelerikButton Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" ButtonType="@ButtonType.Submit">Submit Report</TelerikButton>
+            <div class="form-submit-actions">
+                <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" ButtonType="@ButtonType.Submit">Submit Report</TelerikButton>
+            </div>
         </div>
     </EditForm>
 </div>

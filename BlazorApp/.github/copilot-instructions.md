@@ -388,6 +388,8 @@ Copilot should:
 - Two-column layout on desktop.
 - Labels always visible.
 - Inline validation messages under fields.
+- All form-affecting action buttons must be right-aligned.
+- When both Cancel and a positive action are present, order buttons per Windows convention: `Cancel | Submit/OK/Apply` (left to right).
 
 ## Dialogs
 - Use compact padding.

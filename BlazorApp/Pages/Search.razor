@@ -18,7 +18,9 @@
                                     <label for="search-category">Category</label>
                                     <TelerikTextBox Size="ComponentSize.Small" Id="search-category" @bind-Value="SearchCategory" />
                                 </div>
-                                <TelerikButton Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
+                                <div class="form-submit-actions">
+                                    <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
+                                </div>
                             </div>
                         </Content>
                     </DockManagerContentPane>

@@ -435,6 +435,26 @@ body.dark-theme .report-error-icon:hover {
     margin-bottom: 8px;
 }
 
+.form-submit-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.form-submit-actions .cancel-action {
+    order: 1;
+}
+
+.form-submit-actions .primary-action,
+.form-submit-actions .submit-action,
+.form-submit-actions .ok-action,
+.form-submit-actions .apply-action {
+    order: 2;
+}
+
 .search-dockmanager-host {
     height: 100%;
     min-height: 100%;

@@ -3,4 +3,5 @@
 ## General Guidelines
 - Unless explicitly specified otherwise, all pages should apply the 'Dense Layout' instructions from the project copilot instructions, including corresponding CSS.
 - Use browser tab titles in the format '{ApplicationName} - {PageName}' as a standard for all pages.
+- Align submit/action buttons to the right using a shared form action container (applies to submit buttons, including Search page actions). All buttons that affect a form should be right-aligned, and button order should follow Windows conventions: Cancel (if present) to the left of Submit/OK/Apply actions.
 
