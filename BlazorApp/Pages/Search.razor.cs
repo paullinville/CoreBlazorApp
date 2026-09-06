@@ -15,6 +15,12 @@ public partial class Search
 
     private bool IsResultsExpanded { get; set; } = false;
 
+    private bool IsResultsLoading { get; set; }
+
+    private bool ShowResultsGrid { get; set; }
+
+    private const int ResultsPanelLoadIndicatorMs = 650;
+
     private List<SearchResultItem> GridData { get; } = [];
 
     private TelerikGrid<SearchResultItem>? SearchResultsGrid { get; set; }
@@ -49,10 +55,37 @@ public partial class Search
         return Task.CompletedTask;
     }
 
+    private async Task OnSearchClickedAsync()
+    {
+        IsSearchCriteriaExpanded = false;
+        await OnResultsExpandedChanged(true);
+        await InvokeAsync(StateHasChanged);
+    }
+
     private Task OnResultsExpandedChanged(bool value)
     {
         IsResultsExpanded = value;
+
+        if (!value)
+        {
+            ShowResultsGrid = false;
+            IsResultsLoading = false;
+            return Task.CompletedTask;
+        }
+
+        IsResultsLoading = true;
+        ShowResultsGrid = false;
+        _ = ShowResultsGridAfterDelayAsync();
+
         return Task.CompletedTask;
+    }
+
+    private async Task ShowResultsGridAfterDelayAsync()
+    {
+        await Task.Delay(ResultsPanelLoadIndicatorMs);
+        ShowResultsGrid = true;
+        IsResultsLoading = false;
+        await InvokeAsync(StateHasChanged);
     }
 
     private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)

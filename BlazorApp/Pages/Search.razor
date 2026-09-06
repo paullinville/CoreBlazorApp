@@ -7,35 +7,46 @@
         <Content>
             <div class="k-form k-form-sm">
                 <div class="form-submit-actions">
-                    <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
+                    <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@OnSearchClickedAsync">Search</TelerikButton>
                 </div>
             </div>
         </Content>
     </TelerikExpansionPanel>
 
-    <TelerikExpansionPanel Title="Results" Expanded="@IsResultsExpanded" ExpandedChanged="@OnResultsExpandedChanged" Width="100%">
+    <TelerikExpansionPanel Title="Results" Expanded="@IsResultsExpanded" ExpandedChanged="@OnResultsExpandedChanged" AnimationDuration="0" Width="100%">
         <Content>
-            <TelerikGrid @ref="SearchResultsGrid" Class="dense-grid" Data="@GridData" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
-                <GridToolBarTemplate>
-                    <div class="search-grid-toolbar">
-                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportCurrentPageAsync">Export Page</TelerikButton>
-                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportAllPagesAsync">Export All</TelerikButton>
-                    </div>
-                </GridToolBarTemplate>
-                <GridSettings>
-                    <GridPagerSettings PageSizes="@(new List<int?> { 20, 35, 50 })" />
-                </GridSettings>
-                <GridExport>
-                    <GridExcelExport FileName="SearchResults" AllPages="@ExportAllPages" />
-                </GridExport>
-                <NoDataTemplate>
-                    No results found.
-                </NoDataTemplate>
-                <GridColumns>
-                    <GridColumn Field="@nameof(SearchResultItem.Primary)" Title="Primary" />
-                    <GridColumn Field="@nameof(SearchResultItem.Secondary)" Title="Secondary" />
-                </GridColumns>
-            </TelerikGrid>
+            @if (IsResultsLoading)
+            {
+                <div class="results-panel-loader">
+                    <TelerikLoader Visible="true" Size="LoaderSize.Medium" Type="LoaderType.InfiniteSpinner" />
+                    <span class="results-panel-loader-text">Loading results...</span>
+                </div>
+            }
+
+            @if (ShowResultsGrid)
+            {
+                <TelerikGrid @ref="SearchResultsGrid" Class="dense-grid" Data="@GridData" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
+                    <GridToolBarTemplate>
+                        <div class="search-grid-toolbar">
+                            <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportCurrentPageAsync">Export Page</TelerikButton>
+                            <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportAllPagesAsync">Export All</TelerikButton>
+                        </div>
+                    </GridToolBarTemplate>
+                    <GridSettings>
+                        <GridPagerSettings PageSizes="@(new List<int?> { 20, 35, 50 })" />
+                    </GridSettings>
+                    <GridExport>
+                        <GridExcelExport FileName="SearchResults" AllPages="@ExportAllPages" />
+                    </GridExport>
+                    <NoDataTemplate>
+                        No results found.
+                    </NoDataTemplate>
+                    <GridColumns>
+                        <GridColumn Field="@nameof(SearchResultItem.Primary)" Title="Primary" />
+                        <GridColumn Field="@nameof(SearchResultItem.Secondary)" Title="Secondary" />
+                    </GridColumns>
+                </TelerikGrid>
+            }
         </Content>
     </TelerikExpansionPanel>
 </div>
