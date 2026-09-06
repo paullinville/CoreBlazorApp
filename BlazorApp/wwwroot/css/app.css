@@ -331,6 +331,24 @@ body.dark-theme .report-icon:hover {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
+.settings-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: inherit;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+    .settings-icon:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+body.dark-theme .settings-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
 .search-icon {
     display: inline-flex;
     align-items: center;

@@ -28,17 +28,34 @@ public partial class MainLayout : IDisposable
         new() { Text = "Sales Summary", Url = "/reports/sales-summary" }
     ];
 
+    public List<ReportMenuItem> SettingsMenuItems { get; } =
+    [
+        new() { Text = "Parameters", Url = "/settings/parameters" }
+    ];
+
     public bool IsReportMenuOpen { get; set; }
+
+    public bool IsSettingsMenuOpen { get; set; }
 
     public double ReportMenuTop { get; set; }
 
     public double ReportMenuLeft { get; set; }
 
+    public double SettingsMenuTop { get; set; }
+
+    public double SettingsMenuLeft { get; set; }
+
     private ElementReference ReportIconElement { get; set; }
+
+    private ElementReference SettingsIconElement { get; set; }
 
     private DotNetObjectReference<MainLayout>? ReportMenuDotNetReference { get; set; }
 
     private bool RegisterOutsideClickHandler { get; set; }
+
+    private string OutsideClickMenuSelector { get; set; } = "#report-menu";
+
+    private string OutsideClickTriggerSelector { get; set; } = "#report-icon";
 
     public string SelectedTheme { get; set; } = "meridian";
 
@@ -89,10 +106,10 @@ public partial class MainLayout : IDisposable
             StateHasChanged();
         }
 
-        if (RegisterOutsideClickHandler && IsReportMenuOpen)
+        if (RegisterOutsideClickHandler && (IsReportMenuOpen || IsSettingsMenuOpen))
         {
             ReportMenuDotNetReference ??= DotNetObjectReference.Create(this);
-            await JsRuntime.InvokeVoidAsync("appLayoutHelper.registerOutsideClick", ReportMenuDotNetReference, "#report-menu", "#report-icon");
+            await JsRuntime.InvokeVoidAsync("appLayoutHelper.registerOutsideClick", ReportMenuDotNetReference, OutsideClickMenuSelector, OutsideClickTriggerSelector);
             RegisterOutsideClickHandler = false;
         }
     }
@@ -153,13 +170,39 @@ public partial class MainLayout : IDisposable
             ReportMenuLeft = rect.Left;
         }
 
+        IsSettingsMenuOpen = false;
         IsReportMenuOpen = true;
+        OutsideClickMenuSelector = "#report-menu";
+        OutsideClickTriggerSelector = "#report-icon";
+        RegisterOutsideClickHandler = true;
+    }
+
+    private async Task ToggleSettingsMenu()
+    {
+        if (IsSettingsMenuOpen)
+        {
+            CloseReportMenu();
+            return;
+        }
+
+        var rect = await JsRuntime.InvokeAsync<ElementRect>("appLayoutHelper.getElementRect", SettingsIconElement);
+        if (rect is not null)
+        {
+            SettingsMenuTop = rect.Bottom + 4;
+            SettingsMenuLeft = rect.Left;
+        }
+
+        IsReportMenuOpen = false;
+        IsSettingsMenuOpen = true;
+        OutsideClickMenuSelector = "#settings-menu";
+        OutsideClickTriggerSelector = "#settings-icon";
         RegisterOutsideClickHandler = true;
     }
 
     private void CloseReportMenu()
     {
         IsReportMenuOpen = false;
+        IsSettingsMenuOpen = false;
         RegisterOutsideClickHandler = false;
         _ = JsRuntime.InvokeVoidAsync("appLayoutHelper.unregisterOutsideClick");
     }
@@ -172,6 +215,12 @@ public partial class MainLayout : IDisposable
     }
 
     private void OnReportMenuItemClicked(ReportMenuItem item)
+    {
+        CloseReportMenu();
+        NavigationManager.NavigateTo(item.Url);
+    }
+
+    private void OnSettingsMenuItemClicked(ReportMenuItem item)
     {
         CloseReportMenu();
         NavigationManager.NavigateTo(item.Url);
