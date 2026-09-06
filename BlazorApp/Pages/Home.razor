@@ -1,11 +1,22 @@
 ﻿@page "/"
+@using EATTS.Common.Models
 
 <PageTitle>@PageTitleText</PageTitle>
 
-<div class="dense-page">
-    <h1>Hello, world!</h1>
-
-    <p>Welcome to your new app.</p>
-
-    <p>ApiHost: @Settings.ApiHost</p>
+<div class="dense-page home-report-page">
+    <TelerikGrid TItem="EntryOccurrenceSummaryModel" Class="dense-grid" OnRead="@ReadReportGridAsync" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
+        <GridSettings>
+            <GridPagerSettings PageSizes="@(new List<int?> { 20, 35, 50 })" />
+        </GridSettings>
+        <GridColumns>
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDescription)" Title="OccurrenceDescription" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.CallerId)" Title="CallerId" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.RequestId)" Title="RequestID" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.Subject)" Title="Subject" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDate)" Title="OccurrenceDate" DisplayFormat="{0:g}" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.Origin)" Title="Origin" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.Key)" Title="Key" />
+        </GridColumns>
+    </TelerikGrid>
 </div>
+

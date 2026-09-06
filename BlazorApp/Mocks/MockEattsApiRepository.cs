@@ -97,50 +97,29 @@ public class MockEattsRepository : IEattsApiRepository
     ];
 
     private static readonly List<EntryOccurrenceSummaryModel> Occurrences =
-    [
-        new EntryOccurrenceSummaryModel
-        {
-            EntryOccurrenceRef = 1001,
-            EntryRef = 100,
-            LastEntryOccurrenceRef = 1001,
-            OccurrenceCount = 2,
-            Description = "API timeout while retrieving profile",
-            OccurrenceDescription = "Timeout after 30 seconds",
-            Origin = "CoreBlazorApp",
-            CallerId = "api-service",
-            Key = "TIMEOUT-PROFILE",
-            Subject = "core-app",
-            SubjectType = "Api",
-            UserRef = 1001,
-            IsError = true,
-            ErrorType = "Timeout",
-            EmailsSent = "support1@example.com;support2@example.com",
-            OccurrenceDate = DateTime.UtcNow.AddMinutes(-5),
-            LastOccurrenceDate = DateTime.UtcNow.AddMinutes(-5),
-            RequestId = Guid.Parse("11111111-1111-1111-1111-111111111111")
-        },
-        new EntryOccurrenceSummaryModel
-        {
-            EntryOccurrenceRef = 1011,
-            EntryRef = 101,
-            LastEntryOccurrenceRef = 1011,
-            OccurrenceCount = 1,
-            Description = "Validation warning for missing optional field",
-            OccurrenceDescription = "Optional field omitted",
-            Origin = "CoreBlazorApp",
-            CallerId = "ui-client",
-            Key = "VALIDATION-OPTIONAL",
-            Subject = "admin-app",
-            SubjectType = "Human",
-            UserRef = 1002,
-            IsError = false,
-            ErrorType = "Validation",
-            EmailsSent = "",
-            OccurrenceDate = DateTime.UtcNow.AddMinutes(-50),
-            LastOccurrenceDate = DateTime.UtcNow.AddMinutes(-50),
-            RequestId = Guid.Parse("22222222-2222-2222-2222-222222222222")
-        }
-    ];
+        Enumerable.Range(1, 20)
+            .Select(index => new EntryOccurrenceSummaryModel
+            {
+                EntryOccurrenceRef = 2000 + index,
+                EntryRef = 100 + ((index - 1) % 5),
+                LastEntryOccurrenceRef = 2000 + index,
+                OccurrenceCount = (index % 4) + 1,
+                Description = $"Mock entry {index}",
+                OccurrenceDescription = $"Mock occurrence description {index}",
+                Origin = index % 2 == 0 ? "CoreBlazorApp" : "IntegrationService",
+                CallerId = index % 2 == 0 ? "api-service" : "ui-client",
+                Key = $"MOCK-ENTRY-{index:000}",
+                Subject = index % 2 == 0 ? "core-app" : "admin-app",
+                SubjectType = index % 2 == 0 ? "Api" : "Human",
+                UserRef = 1000 + ((index - 1) % 3) + 1,
+                IsError = index % 3 == 0,
+                ErrorType = index % 3 == 0 ? "Timeout" : "Validation",
+                EmailsSent = index % 3 == 0 ? "support1@example.com;support2@example.com" : string.Empty,
+                OccurrenceDate = DateTime.UtcNow.AddMinutes(-(index * 7)),
+                LastOccurrenceDate = DateTime.UtcNow.AddMinutes(-(index * 7)),
+                RequestId = Guid.Parse($"{index:x8}-aaaa-bbbb-cccc-dddddddddddd")
+            })
+            .ToList();
 
     public Task<ApplicationOptionsGetModel> ApplicationOptionAdd(ApplicationOptionsPostModel model)
     {
@@ -286,6 +265,44 @@ public class MockEattsRepository : IEattsApiRepository
         }
 
         return Task.FromResult(result.OrderByDescending(x => x.OccurrenceDate).ToList());
+    }
+
+    public Task<PageResultsModel<EntryOccurrenceSummaryModel>> GetEntryOccurrenceDetail(EntryOccurrenceSearchCriteria criteria)
+    {
+        var pageNumber = criteria?.PageNumber > 0 ? criteria.PageNumber : 1;
+        var pageSize = criteria?.PageSize > 0 ? criteria.PageSize : 20;
+
+        IEnumerable<EntryOccurrenceSummaryModel> result = Occurrences;
+
+        if (criteria != null)
+        {
+            if (criteria.EntryRef.HasValue)
+            {
+                result = result.Where(x => x.EntryRef == criteria.EntryRef.Value);
+            }
+
+            if (criteria.OccurrenceRef.HasValue)
+            {
+                result = result.Where(x => x.EntryOccurrenceRef == criteria.OccurrenceRef.Value);
+            }
+
+            if (!criteria.Key.IsNullOrBlank())
+            {
+                result = result.Where(x => (x.Key ?? string.Empty).Contains(criteria.Key, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        var ordered = result.OrderByDescending(x => x.OccurrenceDate).ToList();
+        var totalCount = ordered.Values().Count();
+        var paged = ordered.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+        var pageRequest = new PageRequestModel
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+
+        return Task.FromResult(new PageResultsModel<EntryOccurrenceSummaryModel>(paged, pageRequest, totalCount));
     }
 
     public Task<List<ApplicationOptionsGetModel>> GetAllApplicationOptions()

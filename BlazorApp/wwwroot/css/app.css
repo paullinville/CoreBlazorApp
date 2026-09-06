@@ -494,6 +494,15 @@ body.dark-theme .report-error-icon:hover {
     padding-bottom: 4px;
 }
 
+.home-report-page {
+    height: 100%;
+}
+
+.home-report-page .k-grid {
+    flex: 1;
+    min-height: 0;
+}
+
 .environment-content-frame {
     border: 4px solid transparent;
     border-radius: 10px;

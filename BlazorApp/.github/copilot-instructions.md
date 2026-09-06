@@ -75,6 +75,9 @@ Blazor never contains backend logic.
 These belong exclusively to backend or infrastructure layers.
 
 ------------------------------------------------------------
+## Code Style
+- Use `Midland.Core.Common.Extensions.IsNullOrBlank` for null/empty string checks and keep `Midland.Core.Common` available as a global using.
+
 
 # Base Client Repository Rules (Critical)
 

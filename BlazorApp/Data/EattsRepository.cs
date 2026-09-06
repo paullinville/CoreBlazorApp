@@ -25,4 +25,12 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
 
         return found;
     }
+
+    public async Task<PageResultsModel<EntryOccurrenceSummaryModel>> GetEntryOccurrenceDetail(EntryOccurrenceSearchCriteria criteria)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .GetEntryOccurrenceViewPaged(criteria.ToQueryString());
+        var found = await ProcessResponse(response);
+        return found;
+    }
 }

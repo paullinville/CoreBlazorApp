@@ -8,4 +8,6 @@ namespace BlazorApp.Data;
 public interface IEattsApiRepository
 {
     Task<EattsEntryResultModel> PostLog(EattsEntryModel eattsEntryModel);
+
+    Task<PageResultsModel<EntryOccurrenceSummaryModel>> GetEntryOccurrenceDetail(EntryOccurrenceSearchCriteria criteria);
 }
