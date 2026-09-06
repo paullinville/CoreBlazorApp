@@ -11,9 +11,9 @@ public partial class Search
 
     private string PageTitleText => FormatPageTitle("Search");
 
-    private string SearchText { get; set; } = string.Empty;
+    private bool IsSearchCriteriaExpanded { get; set; } = true;
 
-    private string SearchCategory { get; set; } = string.Empty;
+    private bool IsResultsExpanded { get; set; } = false;
 
     private List<SearchResultItem> GridData { get; } = [];
 
@@ -32,10 +32,6 @@ public partial class Search
         await SearchResultsGrid.SaveAsExcelFileAsync();
     }
 
-    private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)
-        ? pageTitle
-        : $"{Settings.ApplicationName} - {pageTitle}";
-
     private async Task ExportAllPagesAsync()
     {
         ExportAllPages = true;
@@ -46,6 +42,22 @@ public partial class Search
 
         await SearchResultsGrid.SaveAsExcelFileAsync();
     }
+
+    private Task OnSearchCriteriaExpandedChanged(bool value)
+    {
+        IsSearchCriteriaExpanded = value;
+        return Task.CompletedTask;
+    }
+
+    private Task OnResultsExpandedChanged(bool value)
+    {
+        IsResultsExpanded = value;
+        return Task.CompletedTask;
+    }
+
+    private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)
+        ? pageTitle
+        : $"{Settings.ApplicationName} - {pageTitle}";
 
     private class SearchResultItem
     {

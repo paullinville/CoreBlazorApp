@@ -2,56 +2,40 @@
 
 <PageTitle>@PageTitleText</PageTitle>
 
-<div class="dense-page search-dockmanager-host">
-    <TelerikDockManager Width="100%" Height="100%">
-        <DockManagerPanes>
-            <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Vertical" AllowEmpty="false">
-                <Panes>
-                    <DockManagerContentPane Id="search-criteria-pane" HeaderText="Search Criteria" Size="30%" Closeable="false" AllowFloat="false">
-                        <Content>
-                            <div class="k-form k-form-sm">
-                                <div class="k-form-field k-mb-2">
-                                    <label for="search-text">Search Text</label>
-                                    <TelerikTextBox Size="ComponentSize.Small" Id="search-text" @bind-Value="SearchText" />
-                                </div>
-                                <div class="k-form-field k-mb-2">
-                                    <label for="search-category">Category</label>
-                                    <TelerikTextBox Size="ComponentSize.Small" Id="search-category" @bind-Value="SearchCategory" />
-                                </div>
-                                <div class="form-submit-actions">
-                                    <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
-                                </div>
-                            </div>
-                        </Content>
-                    </DockManagerContentPane>
+<div class="dense-page search-page-panels">
+    <TelerikExpansionPanel Title="Search Criteria" Expanded="@IsSearchCriteriaExpanded" ExpandedChanged="@OnSearchCriteriaExpandedChanged" Width="100%">
+        <Content>
+            <div class="k-form k-form-sm">
+                <div class="form-submit-actions">
+                    <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Search</TelerikButton>
+                </div>
+            </div>
+        </Content>
+    </TelerikExpansionPanel>
 
-                    <DockManagerContentPane Id="search-results-pane" HeaderText="Results" Size="70%" Closeable="false" AllowFloat="false">
-                        <Content>
-                            <TelerikGrid @ref="SearchResultsGrid" Class="dense-grid" Data="@GridData" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
-                                <GridToolBarTemplate>
-                                    <div class="search-grid-toolbar">
-                                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportCurrentPageAsync">Export Page</TelerikButton>
-                                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportAllPagesAsync">Export All</TelerikButton>
-                                    </div>
-                                </GridToolBarTemplate>
-                                <GridSettings>
-                                    <GridPagerSettings PageSizes="@(new List<int?> { 20, 35, 50 })" />
-                                </GridSettings>
-                                <GridExport>
-                                    <GridExcelExport FileName="SearchResults" AllPages="@ExportAllPages" />
-                                </GridExport>
-                                <NoDataTemplate>
-                                    No results found.
-                                </NoDataTemplate>
-                                <GridColumns>
-                                    <GridColumn Field="@nameof(SearchResultItem.Primary)" Title="Primary" />
-                                    <GridColumn Field="@nameof(SearchResultItem.Secondary)" Title="Secondary" />
-                                </GridColumns>
-                            </TelerikGrid>
-                        </Content>
-                    </DockManagerContentPane>
-                </Panes>
-            </DockManagerSplitPane>
-        </DockManagerPanes>
-    </TelerikDockManager>
+    <TelerikExpansionPanel Title="Results" Expanded="@IsResultsExpanded" ExpandedChanged="@OnResultsExpandedChanged" Width="100%">
+        <Content>
+            <TelerikGrid @ref="SearchResultsGrid" Class="dense-grid" Data="@GridData" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
+                <GridToolBarTemplate>
+                    <div class="search-grid-toolbar">
+                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportCurrentPageAsync">Export Page</TelerikButton>
+                        <TelerikButton Size="ComponentSize.Small" Icon="@SvgIcon.FileExcel" OnClick="@ExportAllPagesAsync">Export All</TelerikButton>
+                    </div>
+                </GridToolBarTemplate>
+                <GridSettings>
+                    <GridPagerSettings PageSizes="@(new List<int?> { 20, 35, 50 })" />
+                </GridSettings>
+                <GridExport>
+                    <GridExcelExport FileName="SearchResults" AllPages="@ExportAllPages" />
+                </GridExport>
+                <NoDataTemplate>
+                    No results found.
+                </NoDataTemplate>
+                <GridColumns>
+                    <GridColumn Field="@nameof(SearchResultItem.Primary)" Title="Primary" />
+                    <GridColumn Field="@nameof(SearchResultItem.Secondary)" Title="Secondary" />
+                </GridColumns>
+            </TelerikGrid>
+        </Content>
+    </TelerikExpansionPanel>
 </div>

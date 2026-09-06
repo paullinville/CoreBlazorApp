@@ -455,9 +455,12 @@ body.dark-theme .report-error-icon:hover {
     order: 2;
 }
 
-.search-dockmanager-host {
-    height: 100%;
-    min-height: 100%;
+.search-page-panels {
+    gap: 8px;
+}
+
+.search-page-panels .k-expander {
+    width: 100%;
 }
 
 .search-grid-toolbar {
