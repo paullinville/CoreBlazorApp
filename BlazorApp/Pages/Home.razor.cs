@@ -21,6 +21,8 @@ namespace BlazorApp.Pages
 
         private List<EntryOccurrenceSummaryModel> ReportGridData { get; set; } = [];
 
+        private TelerikGrid<EntryOccurrenceSummaryModel>? ReportGrid { get; set; }
+
         private string CurrentUserEmail { get; set; } = string.Empty;
 
         protected override async Task OnInitializedAsync()
@@ -47,17 +49,29 @@ namespace BlazorApp.Pages
             var criteria = new EntryOccurrenceSearchCriteria
             {
                 EmailsSent = CurrentUserEmail,
-                PageNumber = args.Request.Page + 1,
+                PageNumber = args.Request.Page,
                 PageSize = args.Request.PageSize,
-                IsError = true,
-                SortBy = nameof(EntryOccurrenceSummaryModel.OccurrenceDate),
-                SortByDir = "Asc"
+                IsError = true
             };
 
             var page = await EattsApiRepository.GetEntryOccurrenceDetail(criteria);
             ReportGridData = page?.Results ?? [];
             args.Data = ReportGridData;
             args.Total = page?.PageInfo?.NumberOfRecords ?? 0;
+        }
+
+        private async Task RefreshGridAsync()
+        {
+            if (ReportGrid is null)
+            {
+                return;
+            }
+
+            var state = ReportGrid.GetState();
+            state.Page = 1;
+            state.Skip = 0;
+            state.SortDescriptors?.Clear();
+            await ReportGrid.SetStateAsync(state);
         }
 
         private string FormatPageTitle(string pageTitle) => Settings.ApplicationName.IsNullOrBlank()

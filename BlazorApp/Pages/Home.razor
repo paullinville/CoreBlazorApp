@@ -4,11 +4,23 @@
 <PageTitle>@PageTitleText</PageTitle>
 
 <div class="dense-page home-report-page">
-    <TelerikGrid TItem="EntryOccurrenceSummaryModel" Class="dense-grid" OnRead="@ReadReportGridAsync" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow" Resizable="true">
+    <TelerikGrid @ref="ReportGrid" TItem="EntryOccurrenceSummaryModel" Class="dense-grid" OnRead="@ReadReportGridAsync" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="false" Resizable="true">
         <GridSettings>
             <GridPagerSettings PageSizes="@(new List<int?> { 20, 35, 50 })" />
         </GridSettings>
+        <GridToolBarTemplate>
+            <div class="search-grid-toolbar">
+                <TelerikButton Class="refresh-action" Size="ComponentSize.Small" FillMode="ButtonFillMode.Flat" OnClick="@RefreshGridAsync">
+                    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M20 11a8 8 0 1 0-2.34 5.66" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        <path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </TelerikButton>
+            </div>
+        </GridToolBarTemplate>
         <GridColumns>
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryOccurrenceRef)" Title="EntryOccurrenceRef" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryRef)" Title="EntryRef" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDescription)" Title="OccurrenceDescription" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.CallerId)" Title="CallerId" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.RequestId)" Title="RequestID" />

@@ -521,6 +521,11 @@ body.dark-theme .report-error-icon:hover {
     min-height: 0;
 }
 
+.home-report-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .environment-content-frame {
     border: 4px solid transparent;
     border-radius: 10px;
