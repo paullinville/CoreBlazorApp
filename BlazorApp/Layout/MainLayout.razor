@@ -74,6 +74,16 @@
                         <path d="M19.3 13.2v3.4" />
                     </svg>
                 </span>
+                <span @ref="SettingsIconElement" id="settings-icon" class="settings-icon" role="button" tabindex="0" title="Settings" @onclick="ToggleSettingsMenu">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="6" x2="20" y2="6" />
+                        <circle cx="9" cy="6" r="1.8" fill="currentColor" stroke="none" />
+                        <line x1="4" y1="12" x2="20" y2="12" />
+                        <circle cx="15" cy="12" r="1.8" fill="currentColor" stroke="none" />
+                        <line x1="4" y1="18" x2="20" y2="18" />
+                        <circle cx="11" cy="18" r="1.8" fill="currentColor" stroke="none" />
+                    </svg>
+                </span>
 
                 <TelerikSwitch Class="theme-switch-section"
                                Value="@IsDarkTheme"
@@ -88,9 +98,19 @@
     @if (IsReportMenuOpen)
     {
         <ul id="report-menu" class="report-menu" style="top:@(ReportMenuTop)px; left:@(ReportMenuLeft)px;">
-            @foreach (var item in ReportMenuItems)
+            @foreach (var item in ReportMenuItems.Values())
             {
                 <li class="report-menu-item" @onclick="@(() => OnReportMenuItemClicked(item))">@item.Text</li>
+            }
+        </ul>
+    }
+
+    @if (IsSettingsMenuOpen)
+    {
+        <ul id="settings-menu" class="report-menu" style="top:@(SettingsMenuTop)px; left:@(SettingsMenuLeft)px;">
+            @foreach (var item in SettingsMenuItems.Values())
+            {
+                <li class="report-menu-item" @onclick="@(() => OnSettingsMenuItemClicked(item))">@item.Text</li>
             }
         </ul>
     }
