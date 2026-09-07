@@ -5,10 +5,6 @@
     <div class="error-ui">
         <h3>Something went wrong</h3>
         <p>The application hit an unexpected error.</p>
-
-        <button class="btn btn-primary" @onclick="Recover">
-            Try Again
-        </button>
     </div>
 }
 else
@@ -48,6 +44,6 @@ else
         }
     </DialogContent>
     <DialogButtons>
-        <TelerikButton OnClick="@CloseEattsDialog">Close</TelerikButton>
+        <TelerikButton OnClick="@CloseDialog">Close</TelerikButton>
     </DialogButtons>
 </TelerikDialog>

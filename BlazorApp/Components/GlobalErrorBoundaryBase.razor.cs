@@ -68,7 +68,7 @@ public class GlobalErrorBoundaryBase : ErrorBoundary, IDisposable
         Nav.LocationChanged -= OnLocationChanged;
     }
 
-    protected void CloseEattsDialog()
+    protected void CloseDialog()
     {
         ShowEattsDialog = false;
         EattsResponse = null;
