@@ -73,6 +73,36 @@ builder.Services.AddTelerikBlazor();
 builder.Services.AddScoped<ThemeService>();
 
 var host = builder.Build();
+var eventBus = host.Services.GetRequiredService<IEventChannelBus>();
+
+AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
+{
+    if (eventArgs.ExceptionObject is Exception exception)
+    {
+        PublishUnhandledException(eventBus, exception);
+    }
+};
+
+TaskScheduler.UnobservedTaskException += (_, eventArgs) =>
+{
+    PublishUnhandledException(eventBus, eventArgs.Exception);
+    eventArgs.SetObserved();
+};
+
 //This is how you can force an ISubsciber to be created at startup, so that it can subscribe to the event bus and handle errors globally.
 _ = host.Services.GetRequiredService<ApplicationErrorHandler>();
 await host.RunAsync();
+
+static void PublishUnhandledException(IEventChannelBus eventBus, Exception exception)
+{
+    var errorResponse = new ErrorResponse
+    {
+        Code = ErrorCodes.ApplicationUnhandledException,
+        Description = exception.Message,
+        Details = new ErrorException(exception),
+        Errors = [],
+        Messages = [exception.Message]
+    };
+
+    eventBus.Publish(new ApplicationErrorEvent(errorResponse));
+}

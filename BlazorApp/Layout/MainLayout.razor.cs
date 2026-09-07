@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
 using BlazorApp.Data;
 using BlazorApp.Common;
+using Midland.Core.Client;
+using System.Text.Json;
 
 public partial class MainLayout : IDisposable
 {
@@ -13,8 +15,13 @@ public partial class MainLayout : IDisposable
     [Inject] public IJSRuntime JsRuntime { get; set; }
     [Inject] public ClientSettings ClientSettings { get; set; }
     [Inject] public IEmployeeRepository EmployeeRepository { get; set; }
+    [Inject] public ISecurityModelToken SecurityModelToken { get; set; }
 
     public string? WelcomeText { get; set; }
+
+    public bool IsWelcomeWindowVisible { get; set; }
+
+    public string DecodedTokenJson { get; set; } = string.Empty;
 
     public List<MenuItem> MenuItems { get; } =
     [
@@ -119,6 +126,47 @@ public partial class MainLayout : IDisposable
         CloseReportMenu();
         SelectedTheme = value ? "meridian-dark" : "meridian";
         await ThemeService.SetThemeAsync(SelectedTheme);
+    }
+
+    private async Task OnWelcomeClicked()
+    {
+        CloseReportMenu();
+        IsWelcomeWindowVisible = true;
+
+        try
+        {
+            var securityToken = await SecurityModelToken.GetSecurityToken();
+
+            DecodedTokenJson = JsonSerializer.Serialize(securityToken.Payload, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+        }
+        catch (Exception ex)
+        {
+            var tokenError = new { Error = ex.Message };
+            DecodedTokenJson = JsonSerializer.Serialize(tokenError, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+        }
+    }
+
+    private Task OnWelcomeWindowVisibleChanged(bool visible)
+    {
+        IsWelcomeWindowVisible = visible;
+        return Task.CompletedTask;
+    }
+
+    private async Task OnCopyTokenClicked()
+    {
+        await JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", DecodedTokenJson ?? string.Empty);
+    }
+
+    private Task OnCloseWelcomeWindowClicked()
+    {
+        IsWelcomeWindowVisible = false;
+        return Task.CompletedTask;
     }
 
     private void OnLocationChanged(object sender, LocationChangedEventArgs e)

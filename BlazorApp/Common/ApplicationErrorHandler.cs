@@ -22,12 +22,18 @@ public class ApplicationErrorHandler : ISubscriber
 
     public void ChannelNotification<T>(IChannelEvent<T> Evt)
     {
-        throw new NotImplementedException();
+        if (Evt is ApplicationErrorEvent applicationErrorEvent)
+        {
+            Handle(applicationErrorEvent).GetAwaiter().GetResult();
+        }
     }
 
-    public Task ChannelNotificationAsync<T>(IChannelEvent<T> Evt)
+    public async Task ChannelNotificationAsync<T>(IChannelEvent<T> Evt)
     {
-        throw new NotImplementedException();
+        if (Evt is ApplicationErrorEvent applicationErrorEvent)
+        {
+            await Handle(applicationErrorEvent);
+        }
     }
 
     public async Task Handle(ApplicationErrorEvent channelEvent)
@@ -49,6 +55,6 @@ public class ApplicationErrorHandler : ISubscriber
 
     public int NotificationOrder()
     {
-        throw new NotImplementedException();
+        return 0;
     }
 }

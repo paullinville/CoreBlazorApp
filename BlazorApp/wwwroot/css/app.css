@@ -239,6 +239,47 @@ body:not(.dark-theme) .appbar.k-appbar.k-appbar-base {
     white-space: nowrap;
 }
 
+.appbar-welcome-button {
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    text-decoration: underline;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.welcome-window-content {
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+    font-weight: 600;
+}
+
+.welcome-window-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+}
+
+.welcome-window-title-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.welcome-token-json {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
 .appbar-actions-row {
     display: flex;
     align-items: center;
