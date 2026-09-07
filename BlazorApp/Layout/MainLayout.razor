@@ -37,7 +37,7 @@
         <AppBarSection Class="appbar-user-section">
             @if (!string.IsNullOrWhiteSpace(WelcomeText))
             {
-                <div class="appbar-welcome">@WelcomeText</div>
+                <button type="button" class="appbar-welcome appbar-welcome-button" @onclick="OnWelcomeClicked">@WelcomeText</button>
             }
 
             <div class="appbar-actions-row">
@@ -64,16 +64,6 @@
                         <circle cx="12" cy="17.3" r="1" fill="currentColor" stroke="none" />
                     </svg>
                 </span>
-                <span class="lock-key-icon" role="button" tabindex="0" title="Security" @onclick="OnLockKeyClicked">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="4" y="10" width="9" height="8" rx="1.2" />
-                        <path d="M6.5 10V7.2a2.5 2.5 0 0 1 5 0V10" />
-                        <circle cx="8.5" cy="14" r="1" />
-                        <path d="M13 13.2h6.3" />
-                        <path d="M17 13.2v2.4" />
-                        <path d="M19.3 13.2v3.4" />
-                    </svg>
-                </span>
                 <span @ref="SettingsIconElement" id="settings-icon" class="settings-icon" role="button" tabindex="0" title="Settings" @onclick="ToggleSettingsMenu">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="4" y1="6" x2="20" y2="6" />
@@ -84,13 +74,22 @@
                         <circle cx="11" cy="18" r="1.8" fill="currentColor" stroke="none" />
                     </svg>
                 </span>
-
                 <TelerikSwitch Class="theme-switch-section"
                                Value="@IsDarkTheme"
                                OnLabel="Dark"
                                OffLabel="Light"
                                Width="4.5rem"
                                ValueChanged="@(async (bool value) => await OnThemeChanged(value))" />
+                <span class="lock-key-icon" role="button" tabindex="0" title="Security" @onclick="OnLockKeyClicked">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="10" width="9" height="8" rx="1.2" />
+                        <path d="M6.5 10V7.2a2.5 2.5 0 0 1 5 0V10" />
+                        <circle cx="8.5" cy="14" r="1" />
+                        <path d="M13 13.2h6.3" />
+                        <path d="M17 13.2v2.4" />
+                        <path d="M19.3 13.2v3.4" />
+                    </svg>
+                </span>
             </div>
         </AppBarSection>
     </TelerikAppBar>
@@ -113,6 +112,24 @@
                 <li class="report-menu-item" @onclick="@(() => OnSettingsMenuItemClicked(item))">@item.Text</li>
             }
         </ul>
+    }
+
+    @if (IsWelcomeWindowVisible)
+    {
+        <TelerikWindow Width="760px" Height="520px" Modal="true" Visible="@IsWelcomeWindowVisible" VisibleChanged="@OnWelcomeWindowVisibleChanged">
+            <WindowTitle>
+                <div class="welcome-window-title">
+                    <span>Users Application Information</span>
+                    <div class="welcome-window-title-actions">
+                        <TelerikButton Size="ComponentSize.Small" FillMode="ButtonFillMode.Flat" OnClick="@OnCopyTokenClicked">Copy</TelerikButton>
+                        <TelerikButton Size="ComponentSize.Small" FillMode="ButtonFillMode.Flat" OnClick="@OnCloseWelcomeWindowClicked">X</TelerikButton>
+                    </div>
+                </div>
+            </WindowTitle>
+            <WindowContent>
+                <pre class="welcome-token-json">@DecodedTokenJson</pre>
+            </WindowContent>
+        </TelerikWindow>
     }
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
