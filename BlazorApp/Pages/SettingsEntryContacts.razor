@@ -1,0 +1,125 @@
+@page "/settings/entry-contacts"
+@using BlazorApp.Models
+@using EATTS.Common.Models
+@using EmployeeData.Common.Models
+@using SecurityModel.Common.Models
+
+<PageTitle>@PageTitleText</PageTitle>
+
+<div class="dense-page">
+    <TelerikTabStrip>
+        <TabStripTab Title="Default">
+            <Content>
+                <TelerikGrid TItem="ContactModel" Class="dense-grid" Data="@EntryContactsGridData" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true" EditMode="GridEditMode.Inline" OnCreate="@OnContactCreateAsync" OnUpdate="@OnContactUpdateAsync" OnDelete="@OnContactDeleteAsync">
+                    <GridToolBarTemplate>
+                        <GridCommandButton Command="Add" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Add Contact</GridCommandButton>
+                        <GridSearchBox Width="300px" />
+                    </GridToolBarTemplate>
+                    <GridColumns>
+                        <GridColumn Field="@nameof(ContactModel.SupportDefaultContactRef)" Title="Key" Editable="false" Visible="false" />
+                        <GridColumn Field="@nameof(ContactModel.FullName)" Title="FullName">
+                            <EditorTemplate>
+                                @{
+                                    var contactModel = (ContactModel)context;
+                                }
+                                <TelerikDropDownList Data="@ActiveSelectionUsers"
+                                                     @bind-Value="contactModel.UserRef"
+                                                     ValueField="@nameof(UserSelectModelExpanded.UserRef)"
+                                                     TextField="@nameof(UserSelectModelExpanded.LastNameFirst)"
+                                                     Filterable="true"
+                                                     FilterOperator="@StringFilterOperator.Contains"
+                                                     DefaultText="Select user" />
+                            </EditorTemplate>
+                        </GridColumn>
+                        <GridColumn Field="@nameof(ContactModel.Order)" Title="Order" />
+                        <GridColumn Field="@nameof(ContactModel.Active)" Title="Active" />
+                        <GridCommandColumn>
+                            <GridCommandButton Command="Edit">Edit</GridCommandButton>
+                            <GridCommandButton Command="Save" ShowInEdit="true">Save</GridCommandButton>
+                            <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+                            <GridCommandButton Command="Delete">Delete</GridCommandButton>
+                        </GridCommandColumn>
+                    </GridColumns>
+                </TelerikGrid>
+            </Content>
+        </TabStripTab>
+        <TabStripTab Title="API">
+            <Content>
+                <TelerikGrid TItem="ApplicationOptionsModel" Class="dense-grid" Data="@ApiOptionsGridData" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true" EditMode="GridEditMode.Inline" OnCreate="@OnApiOptionCreateAsync" OnUpdate="@OnApiOptionUpdateAsync" OnDelete="@OnApiOptionDeleteAsync">
+                    <GridToolBarTemplate>
+                        <GridCommandButton Command="Add" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Add API</GridCommandButton>
+                        <GridSearchBox Width="300px" />
+                    </GridToolBarTemplate>
+                    <GridColumns>
+                        <GridColumn Field="@nameof(ApplicationOptionsModel.ApplicationOptionsRef)" Title="Key" Editable="false" Visible="false" />
+                        <GridColumn Field="@nameof(ApplicationOptionsModel.ApiName)" Title="API">
+                            <EditorTemplate>
+                                @{
+                                    var option = (ApplicationOptionsModel)context;
+                                }
+                                <TelerikDropDownList TItem="ApplicationSummary"
+                                                     TValue="string"
+                                                     Data="@GetAvailableApis(option)"
+                                                     @bind-Value="option.ApiName"
+                                                     ValueField="@nameof(ApplicationSummary.ApiName)"
+                                                     TextField="@nameof(ApplicationSummary.ApiName)"
+                                                     Filterable="true"
+                                                     FilterOperator="@StringFilterOperator.Contains"
+                                                     DefaultText="Select API" />
+                            </EditorTemplate>
+                        </GridColumn>
+                        <GridColumn Field="@nameof(ApplicationOptionsModel.SelectedContactUserRefs)" Title="Contacts" Width="420px">
+                            <Template>
+                                @{
+                                    var option = (ApplicationOptionsModel)context;
+                                }
+                                @GetContactNames(option)
+                            </Template>
+                            <EditorTemplate>
+                                @{
+                                    var option = (ApplicationOptionsModel)context;
+                                }
+                                <TelerikMultiSelect TItem="UserSelectModelExpanded"
+                                                    TValue="int"
+                                                    Data="@SelectableContacts"
+                                                    Value="option.SelectedContactUserRefs"
+                                                    ValueChanged="@(selected => OnApiOptionContactsChanged(option, selected))"
+                                                    ValueExpression="@(() => option.SelectedContactUserRefs)"
+                                                    ValueField="@nameof(UserSelectModelExpanded.UserRef)"
+                                                    TextField="@nameof(UserSelectModelExpanded.FullName)"
+                                                    Filterable="true"
+                                                    FilterOperator="@StringFilterOperator.Contains"
+                                                    Placeholder="Select contacts" />
+                            </EditorTemplate>
+                        </GridColumn>
+                        <GridCommandColumn>
+                            <GridCommandButton Command="Edit">Edit</GridCommandButton>
+                            <GridCommandButton Command="Save" ShowInEdit="true">Save</GridCommandButton>
+                            <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+                            <GridCommandButton Command="Delete">Delete</GridCommandButton>
+                        </GridCommandColumn>
+                    </GridColumns>
+                </TelerikGrid>
+            </Content>
+        </TabStripTab>
+    </TelerikTabStrip>
+</div>
+
+<style>
+    .dense-grid.k-grid,
+    .dense-grid.k-grid.k-rounded-md,
+    .dense-grid.k-grid.k-rounded-lg,
+    .dense-grid.k-grid.k-rounded-xl {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    .dense-grid.k-grid .k-grid-content,
+    .dense-grid.k-grid .k-grid-content-locked,
+    .dense-grid.k-grid .k-grid-footer,
+    .dense-grid.k-grid .k-grid-footer-wrap,
+    .dense-grid.k-grid .k-table-footer {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+</style>

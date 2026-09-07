@@ -13,7 +13,7 @@ public interface IApplicationOptions
     int ApplicationOptionsRef { get; set; }
     int? UpdatedBy { get; set; }
     DateTime? UpdatedDate { get; set; }
-    string ApplicationSlug { get; set; }
+    string ApiName { get; set; }
 
     public static void Map(IApplicationOptions fromData, IApplicationOptions toData)
     {
@@ -24,7 +24,7 @@ public interface IApplicationOptions
         toData.ApplicationOptionsRef = fromData.ApplicationOptionsRef;
         toData.UpdatedBy = fromData.UpdatedBy;
         toData.UpdatedDate = fromData.UpdatedDate;
-        toData.ApplicationSlug = fromData.ApplicationSlug;
+        toData.ApiName = fromData.ApiName;
     }
 
     public void MapTo(IApplicationOptions toData)

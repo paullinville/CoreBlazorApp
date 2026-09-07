@@ -1,98 +1,98 @@
-using System.ComponentModel.DataAnnotations;
-using System;
-using Midland.Core.Abstractions.Security;
-using System.Collections.Generic;
 using Midland.Core.Common;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace EATTS.Common.Models;
 
 public class ApplicationOptionsDeleteModel
 {
-	public virtual int ApplicationOptionsRef { get; set; }
+    public virtual int ApplicationOptionsRef { get; set; }
 }
 
 public class ApplicationOptionsGetModel : ApplicationOptionsPostModel
 {
-	public ApplicationOptionsGetModel()
-	{ }
+    public ApplicationOptionsGetModel()
+    { }
 
-	public ApplicationOptionsGetModel(IApplicationOptions values) : base(values)
-	{
-		ApplicationOptionsRef = values.ApplicationOptionsRef;
-	}
+    public ApplicationOptionsGetModel(IApplicationOptions values) : base(values)
+    {
+        ApplicationOptionsRef = values.ApplicationOptionsRef;
+    }
 
-	public int ApplicationOptionsRef { get; set; }
+    public int ApplicationOptionsRef { get; set; }
 
-	public override EATTS.Common.Dto.ApplicationOptionsDto CreateDto()
-	{
-		var createdItem = new EATTS.Common.Dto.ApplicationOptionsDto();
-		createdItem.EntryEmail = EntryEmail.ListToString(";");
-		createdItem.ApplicationOptionsRef = ApplicationOptionsRef;
-		createdItem.ApplicationSlug = ApplicationSlug;
-		return createdItem;
-	}
+    public override EATTS.Common.Dto.ApplicationOptionsDto CreateDto()
+    {
+        var createdItem = new EATTS.Common.Dto.ApplicationOptionsDto();
+        createdItem.EntryEmail = EntryEmail.ListToString(";");
+        createdItem.ApplicationOptionsRef = ApplicationOptionsRef;
+        createdItem.ApiName = ApiName;
+        return createdItem;
+    }
 
-	#region
+    #region
 
-	public override bool Equals(object obj)
-	{
-		if (obj is ApplicationOptionsGetModel item)
-		{
-			return item.ApplicationOptionsRef == ApplicationOptionsRef;
-		}
-		return false;
-	}
+    public override bool Equals(object obj)
+    {
+        if (obj is ApplicationOptionsGetModel item)
+        {
+            return item.ApplicationOptionsRef == ApplicationOptionsRef;
+        }
+        return false;
+    }
 
-	public override int GetHashCode()
-	{
-		return ApplicationOptionsRef;
-	}
+    public override int GetHashCode()
+    {
+        return ApplicationOptionsRef;
+    }
 
-	#endregion
+    #endregion
 }
 
 public class ApplicationOptionsPutModel
 {
-	public ApplicationOptionsPutModel()
-	{ }
+    public ApplicationOptionsPutModel()
+    { }
 
-	public ApplicationOptionsPutModel(IApplicationOptions values)
-	{
-		ApplicationOptionsRef = values.ApplicationOptionsRef;
-		Body = new ApplicationOptionsPostModel(values);
-	}
+    public ApplicationOptionsPutModel(IApplicationOptions values)
+    {
+        ApplicationOptionsRef = values.ApplicationOptionsRef;
+        Body = new ApplicationOptionsPostModel(values);
+    }
 
-	[Required, Range(1, int.MaxValue)]
-	public virtual int ApplicationOptionsRef { get; set; }
+    [Required, Range(1, int.MaxValue)]
+    public virtual int ApplicationOptionsRef { get; set; }
 
-	public virtual ApplicationOptionsPostModel Body { get; set; }
+    public virtual ApplicationOptionsPostModel Body { get; set; }
 }
 
 public class ApplicationOptionsPostModel
 {
-	public ApplicationOptionsPostModel()
-	{ }
+    public ApplicationOptionsPostModel()
+    { }
 
-	public ApplicationOptionsPostModel(IApplicationOptions values)
-	{
-		if (values == null) return;
+    public ApplicationOptionsPostModel(IApplicationOptions values)
+    {
+        if (values == null) return;
 
-		EntryEmail = values.EntryEmail.Split(";").ToList();
-		ApplicationSlug = values.ApplicationSlug;
-	}
+        EntryEmail = values.EntryEmail.Split(";").ToList();
+        ApiName = values.ApiName;
+    }
 
-	[Required(AllowEmptyStrings = true)]
-	[StringLength(90)]
-	public string ApplicationSlug { get; set; }
+    [Required(AllowEmptyStrings = true)]
+    [StringLength(90)]
+    public string ApiName { get; set; }
 
-	public List<string> EntryEmail { get; set; }
+    [ListCount(Min = 1, Max = 20)]
+    public List<string> EntryEmail { get; set; }
 
-	public virtual EATTS.Common.Dto.ApplicationOptionsDto CreateDto()
-	{
-		var createdItem = new EATTS.Common.Dto.ApplicationOptionsDto();
-		createdItem.EntryEmail = EntryEmail.ListToString(";");
-		createdItem.ApplicationSlug = ApplicationSlug;
-		return createdItem;
-	}
+    public virtual EATTS.Common.Dto.ApplicationOptionsDto CreateDto()
+    {
+        var createdItem = new EATTS.Common.Dto.ApplicationOptionsDto();
+        createdItem.EntryEmail = EntryEmail.ListToString(";");
+        createdItem.ApiName = ApiName;
+        return createdItem;
+    }
 }

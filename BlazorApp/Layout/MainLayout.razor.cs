@@ -37,7 +37,8 @@ public partial class MainLayout : IDisposable
 
     public List<ReportMenuItem> SettingsMenuItems { get; } =
     [
-        new() { Text = "Parameters", Url = "/settings/parameters" }
+        new() { Text = "Parameters", Url = "/settings/parameters" },
+        new() { Text = "Contacts", Url = "/settings/entry-contacts" }
     ];
 
     public bool IsReportMenuOpen { get; set; }

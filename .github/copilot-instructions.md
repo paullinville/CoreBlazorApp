@@ -8,4 +8,5 @@
 ## Code Style
 - Use `Midland.Core.Common.Extensions.IsNullOrBlank` for null/empty string checks and keep `Midland.Core.Common` available as a global using.
 - Whenever looping through any `IEnumerable`, always use `Midland.Core.Common.Extensions.Values()`.
+- When adding a grid in this codebase, do not create a new model specifically for the grid.
 

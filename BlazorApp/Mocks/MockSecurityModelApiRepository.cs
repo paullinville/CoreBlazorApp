@@ -1,3 +1,4 @@
+using System.Linq;
 using BlazorApp.Data;
 using Midland.Core.SimpleMessageBus;
 using SecurityModel.Common.Models;
@@ -141,5 +142,15 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
     {
         Applications.Sort((left, right) => string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase));
         return Task.FromResult(Applications);
+    }
+
+    public Task<List<ApplicationSummary>> GetApis()
+    {
+        var apis = Applications
+            .Where(r => !string.IsNullOrWhiteSpace(r.ApiName))
+            .OrderBy(r => r.ApiName)
+            .ToList();
+
+        return Task.FromResult(apis);
     }
 }

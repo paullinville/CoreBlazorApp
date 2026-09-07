@@ -5,5 +5,6 @@ namespace BlazorApp.Data;
 
 public interface ISecurityModelApiRepository
 {
+    Task<List<ApplicationSummary>> GetApis();
     Task<List<ApplicationSummary>> GetApplications();
 }

@@ -20,7 +20,7 @@ public class MockEmployeeRepository : IEmployeeRepository
         _securityModel = securityModel;
     }
 
-    private static readonly List<UserSelectModelExpanded> MockSelectionUsers =
+    public static readonly List<UserSelectModelExpanded> MockSelectionUsers =
     [
         new UserSelectModelExpanded { UserRef = 1001, FullName = "Alex Carter", LastNameFirst = "Carter, Alex", Email = "alex.carter@example.com" },
         new UserSelectModelExpanded { UserRef = 1002, FullName = "Jordan Lee", LastNameFirst = "Lee, Jordan", Email = "jordan.lee@example.com" },
@@ -112,21 +112,23 @@ public class MockEmployeeRepository : IEmployeeRepository
         var user = MockUsers.FirstOrDefault(x => x.UserRef == userRef);
         return Task.FromResult(user);
     }
+
     private void ShowError()
     {
         _eventBus.Publish(new ApiErrorEvent(new Midland.Core.Common.ErrorResponse
         {
             Description = "An error occurred while loading the current user.",
             Code = "USER_LOAD_ERROR",
-            Messages = [ "Message 1" ],
+            Messages = ["Message 1"],
             Errors = [new Midland.Core.Common.ErrorResultError { Name = "ERR001", Type = ErrorType.General, Value = "Detailed error message 1" }],
         }));
     }
+
     private async Task<MidlandUserGeneralModel> LoadCurrentUserAsync()
     {
         var token = await _securityModel.GetSecurityToken();
         var userRefValue = token?.Claims.FirstOrDefault(claim => string.Equals(claim.Type, "userRef", StringComparison.OrdinalIgnoreCase))?.Value;
-        //ShowError(); 
+        //ShowError();
         if (!int.TryParse(userRefValue, out var userRef))
         {
             throw new InvalidOperationException("The security token does not contain a valid userRef claim.");

@@ -1,0 +1,11 @@
+::deep .dense-grid.k-grid {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+::deep .dense-grid .k-grid-content,
+::deep .dense-grid .k-grid-footer,
+::deep .dense-grid .k-grid-footer-wrap {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}

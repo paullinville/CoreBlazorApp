@@ -33,6 +33,6 @@ public class ApplicationOptionsDto : IApplicationOptions
 
     [Required(AllowEmptyStrings = true)]
     [StringLength(90)]
-    public string ApplicationSlug { get; set; }
+    public string ApiName { get; set; }
 
 }

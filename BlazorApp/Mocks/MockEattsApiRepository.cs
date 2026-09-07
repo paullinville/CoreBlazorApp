@@ -21,14 +21,14 @@ public class MockEattsRepository : IEattsApiRepository
         new ApplicationOptionsGetModel
         {
             ApplicationOptionsRef = 1,
-            ApplicationSlug = "core-app",
-            EntryEmail = ["support1@example.com", "support2@example.com"]
+            ApiName = "core-app",
+            EntryEmail = GetRandomEntryEmails(2, 3)
         },
         new ApplicationOptionsGetModel
         {
             ApplicationOptionsRef = 2,
-            ApplicationSlug = "admin-app",
-            EntryEmail = ["adminsupport@example.com"]
+            ApiName = "admin-app",
+            EntryEmail = GetRandomEntryEmails(1, 2)
         }
     ];
 
@@ -51,6 +51,30 @@ public class MockEattsRepository : IEattsApiRepository
             FullName = "Jordan Lee"
         }
     ];
+
+    private static List<string> GetRandomEntryEmails(int minCount, int maxCount)
+    {
+        var emailPool = MockEmployeeRepository.MockSelectionUsers
+            .Select(x => x.Email)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => x.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (emailPool.Count == 0)
+        {
+            return new List<string>();
+        }
+
+        var safeMin = Math.Max(1, minCount);
+        var safeMax = Math.Min(Math.Max(safeMin, maxCount), emailPool.Count);
+        var takeCount = Random.Shared.Next(safeMin, safeMax + 1);
+
+        return emailPool
+            .OrderBy(_ => Random.Shared.Next())
+            .Take(takeCount)
+            .ToList();
+    }
 
     private static readonly List<EntrySummaryModel> Entries =
     [
@@ -126,7 +150,7 @@ public class MockEattsRepository : IEattsApiRepository
         var created = new ApplicationOptionsGetModel
         {
             ApplicationOptionsRef = _nextApplicationOptionRef++,
-            ApplicationSlug = model?.ApplicationSlug?.Trim().ToLowerInvariant() ?? string.Empty,
+            ApiName = model?.ApiName?.Trim().ToLowerInvariant() ?? string.Empty,
             EntryEmail = model?.EntryEmail?.ToList() ?? []
         };
 
@@ -162,7 +186,7 @@ public class MockEattsRepository : IEattsApiRepository
             return Task.FromResult(model);
         }
 
-        existing.ApplicationSlug = model.ApplicationSlug?.Trim().ToLowerInvariant() ?? string.Empty;
+        existing.ApiName = model.ApiName?.Trim().ToLowerInvariant() ?? string.Empty;
         existing.EntryEmail = model.EntryEmail?.ToList() ?? [];
         return Task.FromResult(existing);
     }
@@ -307,7 +331,7 @@ public class MockEattsRepository : IEattsApiRepository
 
     public Task<List<ApplicationOptionsGetModel>> GetAllApplicationOptions()
     {
-        ApplicationOptions.Sort((left, right) => string.Compare(left.ApplicationSlug, right.ApplicationSlug, StringComparison.OrdinalIgnoreCase));
+        ApplicationOptions.Sort((left, right) => string.Compare(left.ApiName, right.ApiName, StringComparison.OrdinalIgnoreCase));
         return Task.FromResult(ApplicationOptions);
     }
 
