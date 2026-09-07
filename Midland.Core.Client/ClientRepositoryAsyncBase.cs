@@ -23,11 +23,10 @@ public abstract class ClientRepositoryAsyncBase
                code == ErrorCodes.ApplicationTokenInvalid ||
                code == ErrorCodes.ServiceTokenInvalid ||
                code == ErrorCodes.ServiceTokenNotActive ||
-               code == ErrorCodes.TokenNotFound ||
-               code == ErrorCodes.UserMissingActionClaims;
+               code == ErrorCodes.TokenNotFound;
     }
 
-    protected virtual async Task CheckForErrors<T>(Response<T> response)
+    protected virtual async Task CheckForErrorsAsync<T>(Response<T> response)
     {
         if ((int)response.ResponseMessage.StatusCode >= (int)HttpStatusCode.IMUsed)
         {
@@ -35,7 +34,7 @@ public abstract class ClientRepositoryAsyncBase
 
             if (error == null)
             {
-                await HandleNullErrorResponse(response);
+                await HandleNullErrorResponseAsync(response);
             }
             else
             {
@@ -59,7 +58,7 @@ public abstract class ClientRepositoryAsyncBase
         }
     }
 
-    protected virtual async Task HandleNullErrorResponse<T>(Response<T> response)
+    protected virtual async Task HandleNullErrorResponseAsync<T>(Response<T> response)
     {
         var errorResponse = new ErrorResponse()
         {
@@ -82,15 +81,15 @@ public abstract class ClientRepositoryAsyncBase
                 Value = "An error occurred calling an API. Error Response could not be de-serialized."
             });
 
-        await HandleErrorResponse(errorResponse);
+        await OnHandleErrorResponseAsync(errorResponse);
         await _eventBus.PublishAsync(new ApiErrorEvent(errorResponse));
     }
 
-    protected virtual async Task HandleErrorResponse(ErrorResponse errorResponse)
+    protected virtual async Task OnHandleErrorResponseAsync(ErrorResponse errorResponse)
     {
     }
 
-    protected virtual async Task<T> ProcessResponse<T>(Response<MidlandResult<T>> response)
+    protected virtual async Task<T> ProcessResponseAsync<T>(Response<MidlandResult<T>> response)
     {
         var content = response.GetContent();
 
@@ -109,12 +108,12 @@ public abstract class ClientRepositoryAsyncBase
         }
         else
         {
-            await CheckForErrors(response);
+            await CheckForErrorsAsync(response);
             return default;
         }
     }
 
-    protected virtual async Task<PageResultsModel<T>> ProcessResponse<T>(Response<PageResultsModel<T>> response)
+    protected virtual async Task<PageResultsModel<T>> ProcessResponseAsync<T>(Response<PageResultsModel<T>> response)
     {
         if ((int)response.ResponseMessage.StatusCode >= (int)HttpStatusCode.OK && (int)response.ResponseMessage.StatusCode < (int)HttpStatusCode.MultipleChoices)
         {
@@ -127,7 +126,7 @@ public abstract class ClientRepositoryAsyncBase
         }
         else
         {
-            await CheckForErrors(response);
+            await CheckForErrorsAsync(response);
             return default;
         }
     }

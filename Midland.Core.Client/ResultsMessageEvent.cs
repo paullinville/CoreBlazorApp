@@ -3,7 +3,7 @@ using Midland.Core.SimpleMessageBus;
 
 namespace Midland.Core.Client;
 
-public class ResultsMessageEvent : ChannelEvent<IMidlandResult>
+public class ResultsMessageEvent : ChannelEvent<List<string>>
 {
     public ResultsMessageEvent()
     {
@@ -12,6 +12,6 @@ public class ResultsMessageEvent : ChannelEvent<IMidlandResult>
 
     public ResultsMessageEvent(IMidlandResult data) : this()
     {
-        Value = data;
+        Value = data.Messages;
     }
 }

@@ -8,4 +8,12 @@
     <p>Welcome to your new app.</p>
 
     <p>ApiHost: @Settings.ApiHost</p>
+
+    <div class="form-submit-actions">
+        <button type="button" class="btn btn-danger" @onclick="OnAppErrorClickedAsync">App Error</button>
+        <button type="button" class="btn btn-primary" @onclick="OnApiErrorClickedAsync">API error</button>
+        <button type="button" class="btn btn-warning" @onclick="OnApiValidationErrorClickedAsync">API Validation error</button>
+        <button type="button" class="btn btn-warning" @onclick="OnMessageErrorClickedAsync">API Message error</button>
+        <button type="button" class="btn btn-warning" @onclick="OnSecurityErrorClickedAsync">API Security error</button>
+    </div>
 </div>
