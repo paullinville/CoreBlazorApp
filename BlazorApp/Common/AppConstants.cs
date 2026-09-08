@@ -1,3 +1,4 @@
+using CsvHelper.Configuration.Attributes;
 using Midland.Core.Api;
 using Midland.Core.Common;
 
@@ -9,6 +10,8 @@ public static class AppConstants
     public const string SuccessColor = "success";
     public const string WarningColor = "warning";
     public const string ErrorColor = "error";
+
+    public const string MidlandOrange = "#dc6b12";
 
     public static string ToThemeColor(NotificationThemeColor themeColor)
     {

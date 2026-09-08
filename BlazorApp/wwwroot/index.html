@@ -24,15 +24,14 @@
 
 <body>
     <div id="app">
-        <div class="loading-progress">
-            <svg class="loading-progress-spinner" viewBox="0 0 100 100" aria-hidden="true">
-                <circle r="40" cx="50" cy="50" />
-                <circle r="40" cx="50" cy="50" />
-            </svg>
-            <img class="loading-progress-logo" src="images/midfirst-logo.svg" alt="MidFirst logo" />
+        <div class="loading-screen">
+            <div class="loading-progress">
+                <img class="loading-progress-logo" src="images/midfirst-logo.svg" alt="MidFirst logo" />
+            </div>
+            <div id="loading-application-name" class="loading-application-name" aria-live="polite"></div>
+            <div id="loading-environment-warning" class="loading-environment-warning"></div>
+            <div id="loading-environment-text" class="loading-environment-text" aria-live="polite"></div>
         </div>
-        <div id="loading-environment-warning" class="loading-environment-warning"></div>
-        <div id="loading-environment-text" class="loading-environment-text" aria-live="polite"></div>
     </div>
 
     <div id="blazor-error-ui">
@@ -46,7 +45,8 @@
         (async function () {
             const textElement = document.getElementById("loading-environment-text");
             const warningElement = document.getElementById("loading-environment-warning");
-            if (!textElement || !warningElement) {
+            const appNameElement = document.getElementById("loading-application-name");
+            if (!textElement || !warningElement || !appNameElement) {
                 return;
             }
 
@@ -76,8 +76,29 @@
                     textElement.style.color = "#9999FF";
                     textElement.style.display = "block";
                 }
+
+                const envSettingsResponse = rawEnvironment
+                    ? await fetch(`appsettings.${rawEnvironment}.json`, { cache: "no-store" })
+                    : null;
+                const baseSettingsResponse = await fetch("appsettings.json", { cache: "no-store" });
+
+                let appName = "";
+                if (envSettingsResponse && envSettingsResponse.ok) {
+                    const envSettings = await envSettingsResponse.json();
+                    appName = (envSettings.applicationName || envSettings.ApplicationName || "").toString().trim();
+                }
+
+                if (!appName && baseSettingsResponse.ok) {
+                    const baseSettings = await baseSettingsResponse.json();
+                    appName = (baseSettings.applicationName || baseSettings.ApplicationName || "").toString().trim();
+                }
+
+                if (appName) {
+                    appNameElement.textContent = appName;
+                    appNameElement.style.display = "block";
+                }
             } catch {
-                // keep loading label empty if environment cannot be read
+                // keep loading labels empty if configuration cannot be read
             }
         })();
     </script>
