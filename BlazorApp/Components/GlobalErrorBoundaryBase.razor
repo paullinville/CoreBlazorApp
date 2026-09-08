@@ -1,0 +1,49 @@
+﻿@inherits global::GlobalErrorBoundaryBase
+
+@if (CurrentException != null)
+{
+    <div class="error-ui">
+        <h3>Something went wrong</h3>
+        <p>The application hit an unexpected error.</p>
+    </div>
+}
+else
+{
+    @ChildContent
+}
+
+<TelerikDialog @bind-Visible="@ShowEattsDialog"
+               Width="520px"
+               Title="Error Report"
+               ShowCloseButton="false">
+    <DialogTitle>
+        <div class="d-flex justify-content-between align-items-center">
+            <span>Unhandled Exception</span>
+            
+        </div>
+    </DialogTitle>  
+    <DialogContent>
+
+        @if (EattsResponse != null)
+        {
+            <div>
+                <p>An unhandled exception occurred in the application and sent to EATTS.</p>
+            </div>
+            <div>
+                <p><strong>Entry Ref:</strong> @EattsResponse.EntryRef</p>
+                <p><strong>Occurrence Ref:</strong> @EattsResponse.OccurrenceRef</p>
+            </div>
+        }
+        else if (EattsErrorMessage != null)
+        {
+            <div class="text-danger">@EattsErrorMessage</div>
+        }
+        else
+        {
+            <div>Logging in progress…</div>
+        }
+    </DialogContent>
+    <DialogButtons>
+        <TelerikButton OnClick="@CloseDialog">Close</TelerikButton>
+    </DialogButtons>
+</TelerikDialog>

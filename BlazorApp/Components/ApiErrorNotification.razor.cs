@@ -9,7 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlazorApp.Components;
 
-public partial class ErrorNotification : ISubscriber
+public partial class ApiErrorNotification : ISubscriber
 {
     [Parameter]
     public ErrorResponse Error { get; set; } = new();
@@ -43,7 +43,7 @@ public partial class ErrorNotification : ISubscriber
 
     public int NotificationOrder()
     {
-        return 0;
+        return 1;
     }
 
     public async Task ShowErrors(ErrorResponse errorResponse)
@@ -68,7 +68,7 @@ public partial class ErrorNotification : ISubscriber
                 Notification.Show(new NotificationModel
                 {
                     Text = $"{error.Name}({error.Type}): {error.Value}",
-                    ThemeColor = "error",
+                    ThemeColor = AppConstants.ErrorColor,
                     CloseAfter = 0,
                     ShowIcon = false
                 });
@@ -101,11 +101,7 @@ public partial class ErrorNotification : ISubscriber
 
     protected override void OnInitialized()
     {
-        EventChannelBus.Subscribe((IChannelEvent)new ApiValidationEvent(), this);
         EventChannelBus.Subscribe((IChannelEvent)new ApiErrorEvent(), this);
-        EventChannelBus.Subscribe((IChannelEvent)new ActionsMissingEvent(), this);
-        EventChannelBus.Subscribe((IChannelEvent)new SecurityErrorEvent(), this);
-
         base.OnInitialized();
     }
 }

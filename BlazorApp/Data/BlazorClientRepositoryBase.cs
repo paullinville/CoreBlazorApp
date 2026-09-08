@@ -23,7 +23,7 @@ public class BlazorClientRepositoryBase : ClientRepositoryAsyncBase
         _clientSettings = clientSettings;
     }
 
-    protected override Task HandleErrorResponse(ErrorResponse errorResponse)
+    protected override Task OnHandleErrorResponseAsync(ErrorResponse errorResponse)
     {
         _eventBus.Publish(new ApplicationErrorEvent(errorResponse));
 

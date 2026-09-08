@@ -150,7 +150,7 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
         var response = await RestClient.For<IEATTSApiClient>(_httpClient)
                                         .PostLog(eattsEntryModel);
 
-        var found = await ProcessResponse(response);
+        var found = await ProcessResponseAsync(response);
 
         return found;
     }

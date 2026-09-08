@@ -28,7 +28,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
         {
             var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                     .GetUserSummaryList(null);
-            Users = await ProcessResponse(response) ?? new List<UserSelectModelExpanded>();
+            Users = await ProcessResponseAsync(response) ?? new List<UserSelectModelExpanded>();
 
             Users = Users.Values().OrderBy(r => r.LastNameFirst).ToList();
         }
@@ -41,7 +41,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
         {
             var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                     .GetUserPaged((new MidlandUserCriteria { Status = 'A', PageNumber = 1, PageSize = int.MaxValue, CostCenterCode = new List<string> { "14130", "12400" } }).ToQueryString());
-            FullUsers = (await ProcessResponse(response)).Results ?? new List<MidlandUserGeneralModel>();
+            FullUsers = (await ProcessResponseAsync(response)).Results ?? new List<MidlandUserGeneralModel>();
 
             FullUsers = FullUsers.Values().OrderBy(r => r.LastNameFirst).ToList();
         }
@@ -53,7 +53,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
         var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                 .GetUserSummaryList((new MidlandUserListCriteria { Name = name }).ToQueryString());
 
-        var model = await ProcessResponse(response) ?? new List<UserSelectModelExpanded>();
+        var model = await ProcessResponseAsync(response) ?? new List<UserSelectModelExpanded>();
 
         return model;
     }
@@ -65,7 +65,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
         var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
                                 .GetUser(userRef);
 
-        return await ProcessResponse(response);
+        return await ProcessResponseAsync(response);
     }
 
     private async Task<MidlandUserGeneralModel> LoadCurrentUserAsync()

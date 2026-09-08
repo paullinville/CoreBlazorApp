@@ -133,7 +133,13 @@
     }
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
-        @Body
+        <GlobalErrorBoundaryBase>
+            <ApiErrorNotification />
+            <ApiValidationNotification />
+            <ApiSecurityNotification />
+            <ApiMessageNotification />
+            @Body
+        </GlobalErrorBoundaryBase>
     </main>
 
 </div>
