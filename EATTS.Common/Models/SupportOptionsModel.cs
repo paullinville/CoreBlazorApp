@@ -17,7 +17,6 @@ public class SupportOptionsEditModel
 		EmailTemplate = values.EmailTemplate + "";
 		FloodCount = values.FloodCount;
 		FloodTime = values.FloodTime;
-		OtherEmail = values.OtherEmail.Split(";").ToList();
 	}
 
 	[Required(AllowEmptyStrings = true)]
@@ -33,6 +32,4 @@ public class SupportOptionsEditModel
 
 	[Range(1, int.MaxValue)]
 	public int FloodTime { get; set; }
-
-	public List<string> OtherEmail { get; set; }
 }

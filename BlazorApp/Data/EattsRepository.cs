@@ -4,6 +4,7 @@ using EATTS.Client;
 using EATTS.Common.Models;
 using Midland.Core.SimpleMessageBus;
 using RestEase;
+using System.Security.Cryptography;
 
 namespace BlazorApp.Data;
 
@@ -21,7 +22,7 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
     {
         var response = await RestClient.For<IEATTSApiClient>(_httpClient)
                                         .GetEntryOccurrenceViewPaged(criteria.ToQueryString());
-        var found = await ProcessResponse(response);
+        var found = await ProcessResponseAsync(response);
         return found;
     }
 
@@ -30,7 +31,7 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
         var response = await RestClient.For<IEATTSApiClient>(_httpClient)
                                         .PostApplicationOptions(model);
 
-        var found = await ProcessResponse(response);
+        var found = await ProcessResponseAsync(response);
 
         return found;
     }
@@ -40,7 +41,7 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
         var response = await RestClient.For<IEATTSApiClient>(_httpClient)
                                         .DeleteApplicationOptions(model.ApplicationOptionsRef);
 
-        await CheckForErrors(response);
+        await CheckForErrorsAsync(response);
     }
 
     public async Task<ApplicationOptionsGetModel> ApplicationOptionUpdate(ApplicationOptionsGetModel model)
@@ -48,37 +49,26 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
         var response = await RestClient.For<IEATTSApiClient>(_httpClient)
                                         .PutApplicationOptions(model.ApplicationOptionsRef, model);
 
-        var found = await ProcessResponse(response);
+        var found = await ProcessResponseAsync(response);
 
         return found;
     }
 
     public async Task<ContactModel> ContactAdd(ContactModel model)
     {
-        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
-                                       .PostSupportContact(model);
-
-        var updated = new ContactModel(await ProcessResponse(response));
-
+        var updated = new ContactModel(await PostSupportContact(model));
         updated.FullName = _empRepo.GetActiveSelectionUsers().Result.FirstOrDefault(r => r.UserRef == updated.UserRef)?.FullName;
         return updated;
     }
 
     public async void ContactDelete(ContactModel model)
     {
-        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
-                           .DeleteSupportContact(model.SupportDefaultContactRef);
-
-        await CheckForErrors(response);
+        await DeleteSupportContact(model.SupportDefaultContactRef);
     }
 
     public async Task<ContactModel> ContactUpdate(ContactModel model)
     {
-        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
-                                       .PutSupportContact(model);
-
-        var updated = new ContactModel(await ProcessResponse(response));
-
+        var updated = new ContactModel(await PutSupportContact(model));
         updated.FullName = _empRepo.GetActiveSelectionUsers().Result.FirstOrDefault(r => r.UserRef == updated.UserRef)?.FullName;
         return updated;
     }
@@ -89,7 +79,7 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
 
         var response = await result.GetEntryViewSummaryPaged(criteria.ToQueryString());
 
-        var x = await ProcessResponse(response);
+        var x = await ProcessResponseAsync(response);
 
         return x?.Results?.Values().ToList();
     }
@@ -100,7 +90,7 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
 
         var response = await RestClient.For<IEATTSApiClient>(_httpClient).GetEntryOccurrenceViewPaged(criteria.ToQueryString());
 
-        var x = await ProcessResponse(response);
+        var x = await ProcessResponseAsync(response);
         return x.Results.Values().ToList();
     }
 
@@ -109,7 +99,7 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
         var response = await RestClient.For<IEATTSApiClient>(_httpClient)
                                         .GetAllApplicationOptionsList();
 
-        var found = (await ProcessResponse(response)).ToList();
+        var found = (await ProcessResponseAsync(response)).ToList();
         found.ForEach(r => { r.ApiName = r.ApiName.ToLower().Trim(); });
         return found;
     }
@@ -119,13 +109,13 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
         IEATTSApiClient result = RestClient.For<IEATTSApiClient>(_httpClient);
 
         var response = await result.GetEntryViewDetail(entryRef);
-        return await ProcessResponse(response);
+        return await ProcessResponseAsync(response);
     }
 
     public async Task<EntryOccurrenceDetailModel> GetOccurrenceDetail(int occurrenceRef)
     {
         var response = await RestClient.For<IEATTSApiClient>(_httpClient).GetEntryOccurrenceViewDetail(occurrenceRef);
-        var found = await ProcessResponse(response);
+        var found = await ProcessResponseAsync(response);
         return found;
     }
 
@@ -136,13 +126,95 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
 
         var found = new List<SupportDefaultContactEditModel>();
 
-        found = await ProcessResponse(response);
+        found = await ProcessResponseAsync(response);
         if (found != null)
         {
             var users = (await _empRepo.GetActiveSelectionUsers()).Values();
             return found.Select(r => new ContactModel(r) { FullName = users.FirstOrDefault(u => u.UserRef == r.UserRef)?.FullName }).ToList();
         }
         return new List<ContactModel>();
+    }
+
+    public async Task<List<SupportOptionsOverrideGetModel>> GetAllSupportOptionOverrideList()
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .GetAllSupportOptionOverrideList();
+
+        return await ProcessResponseAsync(response);
+    }
+
+    public async Task<SupportOptionsOverrideGetModel> GetSupportOptionOverride(int supportOptionsOverrideRef)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .GetSupportOptionOverride(supportOptionsOverrideRef);
+
+        return await ProcessResponseAsync(response);
+    }
+
+    public async Task<SupportOptionsOverrideGetModel> PostSupportOptionOverride(SupportOptionsOverridePostModel model)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .PostSupportOptionOverride(model);
+
+        return await ProcessResponseAsync(response);
+    }
+
+    public async Task<SupportOptionsOverrideGetModel> PutSupportOptionOverride(int supportOptionsOverrideRef, SupportOptionsOverridePostModel model)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .PutSupportOptionOverride(supportOptionsOverrideRef, model);
+
+        return await ProcessResponseAsync(response);
+    }
+
+    public async Task DeleteSupportOptionOverride(int supportOptionsOverrideRef)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .DeleteSupportOptionOverride(supportOptionsOverrideRef);
+
+        await CheckForErrorsAsync(response);
+    }
+
+    public async Task<SupportDefaultContactEditModel> PostSupportContact(SupportDefaultContactAddModel model)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .PostSupportContact(model);
+
+        return await ProcessResponseAsync(response);
+    }
+
+    public async Task<SupportDefaultContactEditModel> PutSupportContact(SupportDefaultContactEditModel model)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .PutSupportContact(model);
+
+        return await ProcessResponseAsync(response);
+    }
+
+    public async Task DeleteSupportContact(int supportDefaultContactRef)
+    {
+        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .DeleteSupportContact(supportDefaultContactRef);
+
+        await CheckForErrorsAsync(response);
+    }
+
+    public async Task<SupportOptionsEditModel> GetSupportOptions()
+
+    {
+        var options = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .GetSupportOption();
+
+        return await ProcessResponseAsync(options);
+    }
+
+    public async Task<SupportOptionsEditModel> UpdateSupportOptions(SupportOptionsEditModel model)
+
+    {
+        var options = await RestClient.For<IEATTSApiClient>(_httpClient)
+                                        .PutSupportOption(model);
+
+        return await ProcessResponseAsync(options);
     }
 
     public async Task<EattsEntryResultModel> PostLog(EattsEntryModel eattsEntryModel)
@@ -154,4 +226,6 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
 
         return found;
     }
+
+    
 }

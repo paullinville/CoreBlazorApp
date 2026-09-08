@@ -1,0 +1,52 @@
+@page "/settings/entry-support-options"
+
+<PageTitle>@PageTitleText</PageTitle>
+
+<div class="dense-page">
+    <h3>Entry Options</h3>
+
+    <TelerikNotification @ref="@NotificationRef"
+                         HorizontalPosition="@NotificationHorizontalPosition.Center"
+                         VerticalPosition="@NotificationVerticalPosition.Top" />
+
+    @if (IsLoading)
+    {
+        <p>Loading support options...</p>
+    }
+    else
+    {
+        <EditForm Model="@SupportOptions" OnValidSubmit="@SaveSupportOptionsAsync">
+            <DataAnnotationsValidator />
+
+            <div class="k-form k-form-sm">
+                <div class="k-form-field k-mb-2">
+                    <label for="support-email-subject">Email Subject</label>
+                    <TelerikTextBox Size="ComponentSize.Small" Id="support-email-subject" @bind-Value="@SupportOptions.EmailSubject" />
+                    <ValidationMessage For="@(() => SupportOptions.EmailSubject)" />
+                </div>
+
+                <div class="k-form-field k-mb-2">
+                    <label for="support-email-template">Email Template</label>
+                    <TelerikTextArea Size="ComponentSize.Small" Id="support-email-template" @bind-Value="@SupportOptions.EmailTemplate" Rows="8" />
+                    <ValidationMessage For="@(() => SupportOptions.EmailTemplate)" />
+                </div>
+
+                <div class="k-form-field k-mb-2">
+                    <label for="support-flood-count">Flood Count</label>
+                    <TelerikNumericTextBox Id="support-flood-count" @bind-Value="@SupportOptions.FloodCount" Min="1" Decimals="0" Format="n0" Size="ComponentSize.Small" />
+                    <ValidationMessage For="@(() => SupportOptions.FloodCount)" />
+                </div>
+
+                <div class="k-form-field k-mb-2">
+                    <label for="support-flood-time">Flood Time (minutes)</label>
+                    <TelerikNumericTextBox Id="support-flood-time" @bind-Value="@SupportOptions.FloodTime" Min="1" Decimals="0" Format="n0" Size="ComponentSize.Small" />
+                    <ValidationMessage For="@(() => SupportOptions.FloodTime)" />
+                </div>
+
+                <div class="form-submit-actions">
+                    <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" ButtonType="@ButtonType.Submit">Save</TelerikButton>
+                </div>
+            </div>
+        </EditForm>
+    }
+</div>

@@ -38,7 +38,9 @@ public partial class MainLayout : IDisposable
     public List<ReportMenuItem> SettingsMenuItems { get; } =
     [
         new() { Text = "Parameters", Url = "/settings/parameters" },
-        new() { Text = "Contacts", Url = "/settings/entry-contacts" }
+        new() { Text = "Contacts", Url = "/settings/entry-contacts" },
+        new() { Text = "Entry Options", Url = "/settings/entry-support-options" },
+        new() { Text = "Alt Entry Options", Url = "/settings/support-options-override" }
     ];
 
     public bool IsReportMenuOpen { get; set; }

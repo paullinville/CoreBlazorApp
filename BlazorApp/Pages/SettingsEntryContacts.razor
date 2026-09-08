@@ -7,9 +7,8 @@
 <PageTitle>@PageTitleText</PageTitle>
 
 <div class="dense-page">
-    <TelerikTabStrip>
-        <TabStripTab Title="Default">
-            <Content>
+    <TelerikExpansionPanel Title="Default" Expanded="true" Width="100%">
+        <Content>
                 <TelerikGrid TItem="ContactModel" Class="dense-grid" Data="@EntryContactsGridData" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true" EditMode="GridEditMode.Inline" OnCreate="@OnContactCreateAsync" OnUpdate="@OnContactUpdateAsync" OnDelete="@OnContactDeleteAsync">
                     <GridToolBarTemplate>
                         <GridCommandButton Command="Add" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Add Contact</GridCommandButton>
@@ -41,10 +40,11 @@
                         </GridCommandColumn>
                     </GridColumns>
                 </TelerikGrid>
-            </Content>
-        </TabStripTab>
-        <TabStripTab Title="API">
-            <Content>
+        </Content>
+    </TelerikExpansionPanel>
+
+    <TelerikExpansionPanel Title="API" Expanded="true" Width="100%">
+        <Content>
                 <TelerikGrid TItem="ApplicationOptionsModel" Class="dense-grid" Data="@ApiOptionsGridData" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true" EditMode="GridEditMode.Inline" OnCreate="@OnApiOptionCreateAsync" OnUpdate="@OnApiOptionUpdateAsync" OnDelete="@OnApiOptionDeleteAsync">
                     <GridToolBarTemplate>
                         <GridCommandButton Command="Add" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Add API</GridCommandButton>
@@ -100,9 +100,8 @@
                         </GridCommandColumn>
                     </GridColumns>
                 </TelerikGrid>
-            </Content>
-        </TabStripTab>
-    </TelerikTabStrip>
+        </Content>
+    </TelerikExpansionPanel>
 </div>
 
 <style>

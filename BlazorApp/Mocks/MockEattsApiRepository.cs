@@ -1,6 +1,5 @@
 using BlazorApp.Models;
 using EATTS.Common.Models;
-using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
 
 namespace BlazorApp.Data;
@@ -49,6 +48,34 @@ public class MockEattsRepository : IEattsApiRepository
             Order = 2,
             Active = true,
             FullName = "Jordan Lee"
+        }
+    ];
+
+    private static SupportOptionsEditModel SupportOptions = CreateMockSupportOptions();
+
+    private static readonly List<SupportOptionsOverrideGetModel> SupportOptionOverrides =
+    [
+        new SupportOptionsOverrideGetModel
+        {
+            SupportOptionsOverrideRef = 1,
+            EntryRef = 100,
+            DoNotSendEmail = false,
+            FloodCount = 3,
+            FloodTime = 30,
+            FloodEmail = "alerts@coreblazorapp.local",
+            OtherEmail = string.Empty,
+            Reason = "Critical production entry"
+        },
+        new SupportOptionsOverrideGetModel
+        {
+            SupportOptionsOverrideRef = 2,
+            EntryRef = 101,
+            DoNotSendEmail = true,
+            FloodCount = 5,
+            FloodTime = 60,
+            FloodEmail = "ops@coreblazorapp.local",
+            OtherEmail = string.Empty,
+            Reason = "Do not send flood emails for known issue"
         }
     ];
 
@@ -191,7 +218,40 @@ public class MockEattsRepository : IEattsApiRepository
         return Task.FromResult(existing);
     }
 
-    public Task<ContactModel> ContactAdd(ContactModel model)
+    public async Task<ContactModel> ContactAdd(ContactModel model)
+    {
+        var created = await PostSupportContact(model);
+        return new ContactModel(created)
+        {
+            FullName = model?.FullName ?? "Mock User"
+        };
+    }
+
+    public async void ContactDelete(ContactModel model)
+    {
+        if (model == null)
+        {
+            return;
+        }
+
+        await DeleteSupportContact(model.SupportDefaultContactRef);
+    }
+
+    public async Task<ContactModel> ContactUpdate(ContactModel model)
+    {
+        if (model == null)
+        {
+            return null;
+        }
+
+        var updated = await PutSupportContact(model);
+        return new ContactModel(updated)
+        {
+            FullName = model.FullName
+        };
+    }
+
+    public Task<SupportDefaultContactEditModel> PostSupportContact(SupportDefaultContactAddModel model)
     {
         var created = new ContactModel
         {
@@ -199,46 +259,60 @@ public class MockEattsRepository : IEattsApiRepository
             UserRef = model?.UserRef ?? 0,
             Order = model?.Order ?? 0,
             Active = model?.Active ?? true,
-            FullName = model?.FullName ?? "Mock User"
+            FullName = "Mock User"
         };
 
         Contacts.Add(created);
-        return Task.FromResult(created);
+
+        return Task.FromResult<SupportDefaultContactEditModel>(new SupportDefaultContactEditModel
+        {
+            SupportDefaultContactRef = created.SupportDefaultContactRef,
+            UserRef = created.UserRef,
+            Order = created.Order,
+            Active = created.Active
+        });
     }
 
-    public void ContactDelete(ContactModel model)
+    public Task<SupportDefaultContactEditModel> PutSupportContact(SupportDefaultContactEditModel model)
     {
         if (model == null)
         {
-            return;
-        }
-
-        var existing = Contacts.FirstOrDefault(x => x.SupportDefaultContactRef == model.SupportDefaultContactRef);
-        if (existing != null)
-        {
-            Contacts.Remove(existing);
-        }
-    }
-
-    public Task<ContactModel> ContactUpdate(ContactModel model)
-    {
-        if (model == null)
-        {
-            return Task.FromResult<ContactModel>(null);
+            return Task.FromResult<SupportDefaultContactEditModel>(null);
         }
 
         var existing = Contacts.FirstOrDefault(x => x.SupportDefaultContactRef == model.SupportDefaultContactRef);
         if (existing == null)
         {
-            Contacts.Add(model);
-            return Task.FromResult(model);
+            existing = new ContactModel
+            {
+                SupportDefaultContactRef = model.SupportDefaultContactRef,
+                FullName = "Mock User"
+            };
+            Contacts.Add(existing);
         }
 
         existing.UserRef = model.UserRef;
         existing.Order = model.Order;
         existing.Active = model.Active;
-        existing.FullName = model.FullName;
-        return Task.FromResult(existing);
+
+        return Task.FromResult<SupportDefaultContactEditModel>(new SupportDefaultContactEditModel
+        {
+            SupportDefaultContactRef = existing.SupportDefaultContactRef,
+            UserRef = existing.UserRef,
+            Order = existing.Order,
+            Active = existing.Active
+        });
+    }
+
+    public Task DeleteSupportContact(int supportDefaultContactRef)
+    {
+        var existing = Contacts.FirstOrDefault(x => x.SupportDefaultContactRef == supportDefaultContactRef);
+        if (existing != null)
+        {
+            Contacts.Remove(existing);
+        }
+
+        return Task.CompletedTask;
     }
 
     public Task<List<EntrySummaryModel>> FindEntries(EntrySearchCriteria criteria)
@@ -405,6 +479,165 @@ public class MockEattsRepository : IEattsApiRepository
     {
         Contacts.Sort((left, right) => left.Order.CompareTo(right.Order));
         return Task.FromResult(Contacts);
+    }
+
+    public Task<List<SupportOptionsOverrideGetModel>> GetAllSupportOptionOverrideList()
+    {
+        return Task.FromResult(SupportOptionOverrides.ToList());
+    }
+
+    public Task<SupportOptionsOverrideGetModel> GetSupportOptionOverride(int supportOptionsOverrideRef)
+    {
+        return Task.FromResult(SupportOptionOverrides.FirstOrDefault(x => x.SupportOptionsOverrideRef == supportOptionsOverrideRef));
+    }
+
+    public Task<SupportOptionsOverrideGetModel> PostSupportOptionOverride(SupportOptionsOverridePostModel model)
+    {
+        var nextRef = SupportOptionOverrides.Select(x => x.SupportOptionsOverrideRef).DefaultIfEmpty(0).Max() + 1;
+        var created = new SupportOptionsOverrideGetModel
+        {
+            SupportOptionsOverrideRef = nextRef,
+            EntryRef = model?.EntryRef ?? 0,
+            DoNotSendEmail = model?.DoNotSendEmail,
+            FloodCount = model?.FloodCount,
+            FloodEmail = model?.FloodEmail,
+            FloodTime = model?.FloodTime,
+            OtherEmail = model?.OtherEmail,
+            Reason = model?.Reason
+        };
+
+        SupportOptionOverrides.Add(created);
+        return Task.FromResult(created);
+    }
+
+    public Task<SupportOptionsOverrideGetModel> PutSupportOptionOverride(int supportOptionsOverrideRef, SupportOptionsOverridePostModel model)
+    {
+        var existing = SupportOptionOverrides.FirstOrDefault(x => x.SupportOptionsOverrideRef == supportOptionsOverrideRef);
+        if (existing == null)
+        {
+            existing = new SupportOptionsOverrideGetModel
+            {
+                SupportOptionsOverrideRef = supportOptionsOverrideRef
+            };
+            SupportOptionOverrides.Add(existing);
+        }
+
+        existing.EntryRef = model?.EntryRef ?? existing.EntryRef;
+        existing.DoNotSendEmail = model?.DoNotSendEmail;
+        existing.FloodCount = model?.FloodCount;
+        existing.FloodEmail = model?.FloodEmail;
+        existing.FloodTime = model?.FloodTime;
+        existing.OtherEmail = model?.OtherEmail;
+        existing.Reason = model?.Reason;
+
+        return Task.FromResult(existing);
+    }
+
+    public Task DeleteSupportOptionOverride(int supportOptionsOverrideRef)
+    {
+        var existing = SupportOptionOverrides.FirstOrDefault(x => x.SupportOptionsOverrideRef == supportOptionsOverrideRef);
+        if (existing != null)
+        {
+            SupportOptionOverrides.Remove(existing);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task<SupportOptionsEditModel> GetSupportOptions()
+    {
+        return Task.FromResult(CloneSupportOptions(SupportOptions));
+    }
+
+    public Task<SupportOptionsEditModel> UpdateSupportOptions(SupportOptionsEditModel model)
+    {
+        SupportOptions = model is null
+            ? CreateMockSupportOptions()
+            : CloneSupportOptions(model);
+
+        return Task.FromResult(CloneSupportOptions(SupportOptions));
+    }
+
+    private static SupportOptionsEditModel CreateMockSupportOptions()
+    {
+        var model = new SupportOptionsEditModel();
+
+        SetSupportOptionsPropertyValue(model, "AutoAssign", true);
+        SetSupportOptionsPropertyValue(model, "AutoClose", false);
+        SetSupportOptionsPropertyValue(model, "IncludeStackTrace", true);
+        SetSupportOptionsPropertyValue(model, "EmailEnabled", true);
+        SetSupportOptionsPropertyValue(model, "FromEmail", "no-reply@coreblazorapp.local");
+        SetSupportOptionsPropertyValue(model, "ReplyToEmail", "support@coreblazorapp.local");
+        SetSupportOptionsPropertyValue(model, "AlertEmails", GetRandomEntryEmails(2, 4));
+
+        return model;
+    }
+
+    private static SupportOptionsEditModel CloneSupportOptions(SupportOptionsEditModel source)
+    {
+        if (source == null)
+        {
+            return new SupportOptionsEditModel();
+        }
+
+        var clone = new SupportOptionsEditModel();
+        foreach (var property in typeof(SupportOptionsEditModel).GetProperties())
+        {
+            if (!property.CanRead || !property.CanWrite)
+            {
+                continue;
+            }
+
+            var value = property.GetValue(source);
+            if (value is System.Collections.IList list && property.PropertyType != typeof(string))
+            {
+                var copiedList = Activator.CreateInstance(property.PropertyType) as System.Collections.IList;
+                if (copiedList != null)
+                {
+                    foreach (var item in list)
+                    {
+                        copiedList.Add(item);
+                    }
+
+                    property.SetValue(clone, copiedList);
+                    continue;
+                }
+            }
+
+            property.SetValue(clone, value);
+        }
+
+        return clone;
+    }
+
+    private static void SetSupportOptionsPropertyValue(SupportOptionsEditModel model, string propertyName, object value)
+    {
+        var property = typeof(SupportOptionsEditModel).GetProperty(propertyName);
+        if (property is null || !property.CanWrite)
+        {
+            return;
+        }
+
+        if (value is null)
+        {
+            property.SetValue(model, null);
+            return;
+        }
+
+        if (property.PropertyType.IsAssignableFrom(value.GetType()))
+        {
+            property.SetValue(model, value);
+            return;
+        }
+
+        try
+        {
+            var convertedValue = Convert.ChangeType(value, property.PropertyType);
+            property.SetValue(model, convertedValue);
+        }
+        catch
+        {
+        }
     }
 
     public Task<EattsEntryResultModel> PostLog(EattsEntryModel eattsEntryModel)

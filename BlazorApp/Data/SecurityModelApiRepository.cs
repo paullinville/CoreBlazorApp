@@ -32,7 +32,7 @@ public class SecurityModelApiRepository : BlazorClientRepositoryBase, ISecurityM
     public async Task<List<ApplicationSummary>> GetApis()
     {
         var response = await RestClient.For<ISecurityModelApiClient>(_httpClient).GetApplicationSummaryList(null);
-        var found = (await ProcessResponse(response)).Values().ToList();
+        var found = (await ProcessResponseAsync(response)).Values().ToList();
         return found.Where(r => r.ApiName.IsNotEmpty()).ToList();
     }
 }

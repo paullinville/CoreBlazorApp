@@ -34,4 +34,24 @@ public interface IEattsApiRepository
     Task<EntryOccurrenceDetailModel> GetOccurrenceDetail(int occurrenceRef);
 
     Task<List<ContactModel>> GetSupportDefaultContactEdit();
+
+    Task<List<SupportOptionsOverrideGetModel>> GetAllSupportOptionOverrideList();
+
+    Task<SupportOptionsOverrideGetModel> GetSupportOptionOverride(int supportOptionsOverrideRef);
+
+    Task<SupportOptionsOverrideGetModel> PostSupportOptionOverride(SupportOptionsOverridePostModel model);
+
+    Task<SupportOptionsOverrideGetModel> PutSupportOptionOverride(int supportOptionsOverrideRef, SupportOptionsOverridePostModel model);
+
+    Task DeleteSupportOptionOverride(int supportOptionsOverrideRef);
+
+    Task<SupportDefaultContactEditModel> PostSupportContact(SupportDefaultContactAddModel model);
+
+    Task<SupportDefaultContactEditModel> PutSupportContact(SupportDefaultContactEditModel model);
+
+    Task DeleteSupportContact(int supportDefaultContactRef);
+
+    Task<SupportOptionsEditModel> GetSupportOptions();
+
+    Task<SupportOptionsEditModel> UpdateSupportOptions(SupportOptionsEditModel model);
 }

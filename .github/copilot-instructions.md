@@ -9,4 +9,5 @@
 - Use `Midland.Core.Common.Extensions.IsNullOrBlank` for null/empty string checks and keep `Midland.Core.Common` available as a global using.
 - Whenever looping through any `IEnumerable`, always use `Midland.Core.Common.Extensions.Values()`.
 - When adding a grid in this codebase, do not create a new model specifically for the grid.
+- Never use try/catch when calling repository methods; repository errors must be handled by the established channel event flow. Do not handle repository-call errors in Razor page code-behind; rely on channel event-based error handling per project instructions.
 
