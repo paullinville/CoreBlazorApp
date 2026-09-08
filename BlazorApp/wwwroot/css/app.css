@@ -49,6 +49,12 @@ body {
         content: "An error has occurred."
     }
 
+.loading-screen {
+    position: relative;
+    min-height: 100vh;
+    background-color: #2f3442;
+}
+
 .loading-progress {
     position: absolute;
     display: flex;
@@ -81,8 +87,9 @@ body {
 
 .loading-progress-logo {
     position: absolute;
-    width: 3rem;
-    height: 3rem;
+    width: 3.75rem;
+    height: 3.75rem;
+    animation: loading-logo-fade 1.8s ease-in-out infinite alternate;
 }
 
 .loading-progress-text {
@@ -95,6 +102,26 @@ body {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+.loading-application-name {
+    position: absolute;
+    text-align: center;
+    font-size: 3.9rem;
+    font-weight: 700;
+    color: #dc6b12;
+    inset: calc(20vh + 9.75rem + 50px) 0 auto 0;
+    display: none;
+}
+
+@keyframes loading-logo-fade {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
 
 .loading-environment-warning {
     position: absolute;
