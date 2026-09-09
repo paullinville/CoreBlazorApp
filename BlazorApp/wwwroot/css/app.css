@@ -87,8 +87,8 @@ body {
 
 .loading-progress-logo {
     position: absolute;
-    width: 3.75rem;
-    height: 3.75rem;
+    width: 5.8594rem !important;
+    height: 5.8594rem !important;
     animation: loading-logo-fade 1.8s ease-in-out infinite alternate;
 }
 
