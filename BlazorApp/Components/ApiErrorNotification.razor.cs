@@ -43,7 +43,7 @@ public partial class ApiErrorNotification : ISubscriber
 
     public int NotificationOrder()
     {
-        return 1;
+        return 10;
     }
 
     public async Task ShowErrors(ErrorResponse errorResponse)

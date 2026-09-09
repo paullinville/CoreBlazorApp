@@ -30,7 +30,7 @@ public partial class ApiValidationNotification : ISubscriber
 
     public int NotificationOrder()
     {
-        return 0;
+        return 13;
     }
 
     public async Task ShowValidationErrors(ErrorResponse errorResponse)

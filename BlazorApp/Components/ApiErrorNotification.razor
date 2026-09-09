@@ -1,22 +1,4 @@
 ﻿@using BlazorApp.Common;
-@* <TelerikNotification @ref="@Notification"
-					 Class="demo-notification"
-					 HorizontalPosition="@NotificationHorizontalPosition.Center"
-					 VerticalPosition="@NotificationVerticalPosition.Top">
-	<Template Context="item">
-		<div class="k-d-inline-flex k-align-items-center" style="gap:2px;">
-			<span>@item.Text</span>
-				<a href="#"
-				   @onclick="@(() => ReportCurrentError(item))"
-				   @onclick:preventDefault="true"
-				   class="k-link"
-				   style="cursor:pointer; margin-left:2px; text-decoration:underline;">
-					Report
-				</a>
-		</div>
-	</Template>
-</TelerikNotification> *@
-
 <TelerikNotification @ref="@Notification"
 					 Class="error-notification"
 					 HorizontalPosition="@NotificationHorizontalPosition.Center"

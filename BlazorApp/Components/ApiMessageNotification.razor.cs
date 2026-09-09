@@ -32,7 +32,7 @@ public partial class ApiMessageNotification : ISubscriber
 
     public int NotificationOrder()
     {
-        return 5;
+        return 11;
     }
 
     public async Task ShowMessages(List<string> messages)
