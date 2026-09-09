@@ -1,6 +1,53 @@
 @page "/settings/support-options-override"
+@using BlazorApp.Models
+@using EmployeeData.Common.Models
 
 <PageTitle>@PageTitleText</PageTitle>
 
 <div class="dense-page">
+    <TelerikGrid TItem="SupportOptionsOverrideModel" Class="dense-grid" Data="@SupportOptionsOverrideGridData" Height="100%" Size="ComponentSize.Small" Pageable="true" Sortable="true" Resizable="true" EditMode="GridEditMode.Popup" OnCreate="@OnSupportOptionOverrideCreateAsync" OnUpdate="@OnSupportOptionOverrideUpdateAsync" OnDelete="@OnSupportOptionOverrideDeleteAsync">
+        <GridToolBarTemplate>
+            <GridCommandButton Command="Add" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Add Override</GridCommandButton>
+            <GridSearchBox Width="300px" />
+        </GridToolBarTemplate>
+        <GridColumns>
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.SupportOptionsOverrideRef)" Title="Ref" Editable="false" Visible="false" />
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.EntryRef)" Title="Entry Ref" />
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.DoNotSendEmail)" Title="Do Not Send Email" />
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.FloodCount)" Title="Flood Count" />
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.FloodTime)" Title="Flood Time" />
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.FloodEmail)" Title="Flood Email" />
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.OtherEmail)" Title="Other Email">
+                <Template>
+                    @{
+                        var option = (SupportOptionsOverrideModel)context;
+                    }
+                    @GetOtherEmailDisplay(option)
+                </Template>
+                <EditorTemplate>
+                    @{
+                        var option = (SupportOptionsOverrideModel)context;
+                    }
+                    <TelerikMultiSelect TItem="UserSelectModelExpanded"
+                                        TValue="int"
+                                        Data="@ActiveSelectionUsers"
+                                        Value="option.SelectedUserRefs"
+                                        ValueChanged="@(selected => OnOtherEmailUsersChanged(option, selected))"
+                                        ValueExpression="@(() => option.SelectedUserRefs)"
+                                        ValueField="@nameof(UserSelectModelExpanded.UserRef)"
+                                        TextField="@nameof(UserSelectModelExpanded.FullName)"
+                                        Filterable="true"
+                                        FilterOperator="@StringFilterOperator.Contains"
+                                        Placeholder="Select users" />
+                </EditorTemplate>
+            </GridColumn>
+            <GridColumn Field="@nameof(SupportOptionsOverrideModel.Reason)" Title="Reason" />
+            <GridCommandColumn>
+                <GridCommandButton Command="Edit">Edit</GridCommandButton>
+                <GridCommandButton Command="Save" ShowInEdit="true">Save</GridCommandButton>
+                <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+                <GridCommandButton Command="Delete">Delete</GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
 </div>

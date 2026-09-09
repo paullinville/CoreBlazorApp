@@ -1,0 +1,72 @@
+@page "/occurrence-details/{occurenceRef:int}"
+@using EATTS.Common.Models
+
+<PageTitle>@PageTitleText</PageTitle>
+
+<div class="dense-page">
+    @if (IsLoading)
+    {
+        <div class="results-panel-loader">
+            <TelerikLoader Visible="true" Size="LoaderSize.Medium" Type="LoaderType.InfiniteSpinner" />
+            <span class="results-panel-loader-text">Loading occurrence details...</span>
+        </div>
+    }
+    else if (OccurrenceDetail is null)
+    {
+        <div>Occurrence details were not found.</div>
+    }
+    else
+    {
+        <div class="k-form k-form-sm">
+            <div class="form-submit-actions">
+                <TelerikButton Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@OpenOccurrenceWindow">View Details Window</TelerikButton>
+            </div>
+            <div><strong>Occurrence Ref:</strong> @OccurrenceDetail.EntryOccurrenceRef</div>
+            <div><strong>Entry Ref:</strong> @OccurrenceDetail.EntryRef</div>
+            <div><strong>Date:</strong> @OccurrenceDetail.Date</div>
+            <div><strong>Description:</strong> @OccurrenceDetail.Description</div>
+            <div><strong>Generic Description:</strong> @OccurrenceDetail.GenericDescription</div>
+            <div><strong>Key:</strong> @OccurrenceDetail.Key</div>
+            <div><strong>Origin:</strong> @OccurrenceDetail.Origin</div>
+            <div><strong>Caller Id:</strong> @OccurrenceDetail.CallerId</div>
+            <div><strong>Emails Sent:</strong> @OccurrenceDetail.EmailsSent</div>
+            <div><strong>Error:</strong> @OccurrenceDetail.Error</div>
+            <div><strong>Token Subject:</strong> @OccurrenceDetail.TokenSubject</div>
+            <div><strong>Token Type:</strong> @OccurrenceDetail.TokenType</div>
+            <div><strong>Api Slug:</strong> @OccurrenceDetail.ApiSlug</div>
+            <div><strong>Occurrence Count:</strong> @OccurrenceDetail.OccurrenceCount</div>
+            <div><strong>Last Entry Occurrence Ref:</strong> @OccurrenceDetail.LastEntryOccurrenceRef</div>
+        </div>
+
+        <OccurrenceDetailWindow OccurrenceDetail="@OccurrenceDetail" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
+
+        <TelerikExpansionPanel Title="API Log Data" Expanded="true" Width="100%">
+            <Content>
+                <TelerikGrid TItem="ApiLogDataModel" Class="dense-grid" Data="@OccurrenceDetail.ApiLogData" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true">
+                    <GridColumns>
+                        <GridColumn Field="@nameof(ApiLogDataModel.ApiLogRef)" Title="ApiLogRef" />
+                        <GridColumn Field="@nameof(ApiLogDataModel.ApiName)" Title="ApiName" />
+                        <GridColumn Field="@nameof(ApiLogDataModel.LogDate)" Title="LogDate" DisplayFormat="{0:g}" />
+                        <GridColumn Field="@nameof(ApiLogDataModel.Server)" Title="Server" />
+                        <GridColumn Field="@nameof(ApiLogDataModel.Error)" Title="Error" />
+                        <GridColumn Field="@nameof(ApiLogDataModel.RequestId)" Title="RequestId" />
+                    </GridColumns>
+                </TelerikGrid>
+            </Content>
+        </TelerikExpansionPanel>
+
+        <TelerikExpansionPanel Title="Notes" Expanded="true" Width="100%">
+            <Content>
+                <TelerikGrid TItem="EntryNoteDetail" Class="dense-grid" Data="@OccurrenceDetail.Notes" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true">
+                    <GridColumns>
+                        <GridColumn Field="@nameof(EntryNoteDetail.EntryNoteRef)" Title="EntryNoteRef" />
+                        <GridColumn Field="@nameof(EntryNoteDetail.EntryRef)" Title="EntryRef" />
+                        <GridColumn Field="@nameof(EntryNoteDetail.EntryOccurrenceRef)" Title="EntryOccurrenceRef" />
+                        <GridColumn Field="@nameof(EntryNoteDetail.Date)" Title="Date" DisplayFormat="{0:g}" />
+                        <GridColumn Field="@nameof(EntryNoteDetail.Text)" Title="Text" />
+                    </GridColumns>
+                </TelerikGrid>
+            </Content>
+        </TelerikExpansionPanel>
+    }
+</div>

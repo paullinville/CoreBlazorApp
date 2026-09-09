@@ -19,15 +19,24 @@
             </div>
         </GridToolBarTemplate>
         <GridColumns>
-            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryOccurrenceRef)" Title="EntryOccurrenceRef" />
-            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryRef)" Title="EntryRef" />
-            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDescription)" Title="OccurrenceDescription" />
-            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.CallerId)" Title="CallerId" />
-            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.RequestId)" Title="RequestID" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryOccurrenceRef)" Title="Entry Occurrence Ref">
+                <Template>
+                    @{
+                        var occurrence = (EntryOccurrenceSummaryModel)context;
+                    }
+                    <a href="#" @onclick:preventDefault="true" @onclick="@(() => OpenOccurrenceDetailsAsync(occurrence.EntryOccurrenceRef))">@occurrence.EntryOccurrenceRef</a>
+                </Template>
+            </GridColumn>
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryRef)" Title="Entry Ref" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDescription)" Title="Description" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.CallerId)" Title="Caller Id" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.RequestId)" Title="Request ID" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.Subject)" Title="Subject" />
-            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDate)" Title="OccurrenceDate" DisplayFormat="{0:g}" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDate)" Title="Occurrence Date" DisplayFormat="{0:g}" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.Origin)" Title="Origin" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.Key)" Title="Key" />
         </GridColumns>
     </TelerikGrid>
+
+    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
 </div>

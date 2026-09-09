@@ -457,6 +457,15 @@ public class MockEattsRepository : IEattsApiRepository
             TokenSubject = found?.Subject ?? "core-app",
             TokenType = found?.SubjectType ?? "Api",
             Error = found?.IsError,
+            ErrorResponse = new ErrorResponse
+            {
+                Code = found?.IsError == true ? "Mock.Error" : "Mock.Info",
+                Title = "Mock Occurrence Detail",
+                Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
+                RequestId = (found?.RequestId ?? Guid.NewGuid()).ToString(),
+                RequestPath = $"/api/eatts/occurrence/{occurrenceRef}",
+                Messages = ["Mock response generated for occurrence detail."]
+            },
             ErrorTypeCode = new ErrorTypeCode { ErrorTypeRef = 1, Name = found?.ErrorType ?? "General" },
             ApiLogData =
             [

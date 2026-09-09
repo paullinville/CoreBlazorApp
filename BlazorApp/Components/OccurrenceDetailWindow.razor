@@ -1,0 +1,42 @@
+@using EATTS.Common.Models
+
+@if (OccurrenceDetail is not null)
+{
+    <TelerikWindow Visible="@IsVisible"
+                   VisibleChanged="@OnVisibleChangedAsync"
+                   Modal="true"
+                   Width="920px"
+                   Height="700px"
+                   Resizable="true"
+                   Draggable="true">
+        <WindowTitle>Occurrence Details</WindowTitle>
+        <WindowActions>
+            <WindowAction Name="Close" />
+        </WindowActions>
+        <WindowContent>
+            <div class="k-form k-form-sm">
+                <div><strong>Occurrence Ref:</strong> @OccurrenceDetail.EntryOccurrenceRef</div>
+                <div><strong>Entry Ref:</strong> @OccurrenceDetail.EntryRef</div>
+                <div><strong>Date:</strong> @OccurrenceDetail.Date</div>
+                <div><strong>Description:</strong> @OccurrenceDetail.Description</div>
+                <div><strong>Generic Description:</strong> @OccurrenceDetail.GenericDescription</div>
+                <div><strong>Key:</strong> @OccurrenceDetail.Key</div>
+                <div><strong>Origin:</strong> @OccurrenceDetail.Origin</div>
+                <div><strong>Caller Id:</strong> @OccurrenceDetail.CallerId</div>
+                <div><strong>Emails Sent:</strong> @OccurrenceDetail.EmailsSent</div>
+                <div><strong>Error:</strong> @OccurrenceDetail.Error</div>
+                <div><strong>Token Subject:</strong> @OccurrenceDetail.TokenSubject</div>
+                <div><strong>Token Type:</strong> @OccurrenceDetail.TokenType</div>
+                <div><strong>Api Slug:</strong> @OccurrenceDetail.ApiSlug</div>
+                <div><strong>Occurrence Count:</strong> @OccurrenceDetail.OccurrenceCount</div>
+                <div><strong>Last Entry Occurrence Ref:</strong> @OccurrenceDetail.LastEntryOccurrenceRef</div>
+            </div>
+
+            @if (StackTraceText.IsNotNullOrBlank())
+            {
+                <h4>Stack Trace</h4>
+                <pre class="occurrence-stack-trace-block">@StackTraceText</pre>
+            }
+        </WindowContent>
+    </TelerikWindow>
+}

@@ -19,9 +19,13 @@ namespace BlazorApp.Pages
 
         private string PageTitleText => FormatPageTitle("Home");
 
-        private List<EntryOccurrenceSummaryModel> ReportGridData { get; set; } = [];
+        private List<EntryOccurrenceSummaryModel> ReportGridData { get; set; } = new List<EntryOccurrenceSummaryModel>();
 
         private TelerikGrid<EntryOccurrenceSummaryModel>? ReportGrid { get; set; }
+
+        private EntryOccurrenceDetailModel? SelectedOccurrenceDetail { get; set; }
+
+        private bool IsOccurrenceWindowVisible { get; set; }
 
         private string CurrentUserEmail { get; set; } = string.Empty;
 
@@ -72,6 +76,31 @@ namespace BlazorApp.Pages
             state.Skip = 0;
             state.SortDescriptors?.Clear();
             await ReportGrid.SetStateAsync(state);
+        }
+
+        private async Task OpenOccurrenceDetailsAsync(int occurrenceRef)
+        {
+            if (occurrenceRef <= 0)
+            {
+                return;
+            }
+
+            SelectedOccurrenceDetail = await EattsApiRepository.GetOccurrenceDetail(occurrenceRef);
+            if (SelectedOccurrenceDetail is null)
+            {
+                IsOccurrenceWindowVisible = false;
+                return;
+            }
+
+            SelectedOccurrenceDetail.ApiLogData ??= [];
+            SelectedOccurrenceDetail.Notes ??= [];
+            IsOccurrenceWindowVisible = true;
+        }
+
+        private Task OnOccurrenceWindowVisibleChanged(bool isVisible)
+        {
+            IsOccurrenceWindowVisible = isVisible;
+            return Task.CompletedTask;
         }
 
         private string FormatPageTitle(string pageTitle) => Settings.ApplicationName.IsNullOrBlank()
