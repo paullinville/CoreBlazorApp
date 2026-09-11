@@ -5,3 +5,6 @@
 - Use browser tab titles in the format '{ApplicationName} - {PageName}' as a standard for all pages.
 - Align submit/action buttons to the right using a shared form action container (applies to submit buttons, including Search page actions). All buttons that affect a form should be right-aligned, and button order should follow Windows conventions: Cancel (if present) to the left of Submit/OK/Apply actions.
 
+## Project-Specific Rules
+- Only change the CoreBlazorApp project in future; do not modify other projects because they are referenced NuGet packages.
+

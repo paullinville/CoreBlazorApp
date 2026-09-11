@@ -1,19 +1,31 @@
 ﻿using Midland.Core.Api;
 using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
+using Newtonsoft.Json;
 using RestEase;
 using System.Net;
 using System.Text.Json;
 
 namespace Midland.Core.Client;
 
-public abstract class ClientRepositoryAsyncBase
+public abstract class ClientRepositoryAsyncBase<TApi> where TApi : IApiClient
 {
     protected readonly IEventChannelBus _eventBus;
+    protected readonly JsonSerializerSettings _jsonSettings;
+    protected readonly HttpClient _httpClient;
 
     protected ClientRepositoryAsyncBase(IEventChannelBus eventBus)
     {
         _eventBus = eventBus;
+    }
+
+    protected ClientRepositoryAsyncBase(IEventChannelBus eventBus,
+                                      JsonSerializerSettings jsonSettings,
+                                      HttpClient httpClient)
+    {
+        _eventBus = eventBus;
+        _jsonSettings = jsonSettings;
+        _httpClient = httpClient;
     }
 
     public static bool IsSecurityError(string code)
@@ -30,7 +42,7 @@ public abstract class ClientRepositoryAsyncBase
     {
         if ((int)response.ResponseMessage.StatusCode >= (int)HttpStatusCode.IMUsed)
         {
-            ErrorResponse error = JsonSerializer.Deserialize<ErrorResponse>(response.StringContent, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            ErrorResponse error = System.Text.Json.JsonSerializer.Deserialize<ErrorResponse>(response.StringContent, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             if (error == null)
             {
@@ -87,6 +99,7 @@ public abstract class ClientRepositoryAsyncBase
 
     protected virtual async Task OnHandleErrorResponseAsync(ErrorResponse errorResponse)
     {
+        await _eventBus.PublishAsync(new ApplicationErrorEvent(errorResponse));
     }
 
     protected virtual async Task<T> ProcessResponseAsync<T>(Response<MidlandResult<T>> response)
@@ -129,5 +142,12 @@ public abstract class ClientRepositoryAsyncBase
             await CheckForErrorsAsync(response);
             return default;
         }
+    }
+
+    protected TApi Client { get => CreateClient(); }
+
+    protected TApi CreateClient()
+    {
+        return new RestClient(_httpClient) { JsonSerializerSettings = _jsonSettings }.For<TApi>();
     }
 }

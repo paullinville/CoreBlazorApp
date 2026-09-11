@@ -1,25 +1,20 @@
 ﻿using BlazorApp.Common;
-using BlazorApp.Models;
 using EATTS.Client;
-using EATTS.Common.Models;
-using Midland.Core.Client;
-using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
-using RestEase;
+using Newtonsoft.Json;
 
 namespace BlazorApp.Data;
 
-public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
+public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEattsApiRepository
 {
-    public EattsRepository(HttpClient httpClient, IEventChannelBus eventBus, ClientSettings clientSettings)
-        : base(httpClient, eventBus, clientSettings)
+    public EattsRepository(HttpClient httpClient, IEventChannelBus eventBus, ClientSettings clientSettings, JsonSerializerSettings jsonSettings)
+        : base(httpClient, eventBus, clientSettings, jsonSettings)
     {
     }
 
     public async Task<EattsEntryResultModel> PostLog(EattsEntryModel eattsEntryModel)
     {
-        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
-                                        .PostLog(eattsEntryModel);
+        var response = await Client.PostLog(eattsEntryModel);
 
         var found = await ProcessResponseAsync(response);
 

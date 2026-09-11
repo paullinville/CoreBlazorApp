@@ -2,22 +2,20 @@
 using EmployeeData.Client;
 using EmployeeData.Common.Models;
 using Midland.Core.Client;
-using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
-using RestEase;
-using SecurityModel.Common;
+using Newtonsoft.Json;
 
 namespace BlazorApp.Data;
 
-public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepository
+public class EmployeeRepository : BlazorClientRepositoryBase<IEmployeeDataApiClient>, IEmployeeRepository
 {
     private static List<MidlandUserGeneralModel>? FullUsers;
     private static List<UserSelectModelExpanded>? Users;
     private Task<MidlandUserGeneralModel>? _currentUser;
     private readonly ISecurityModelToken _securityToken;
 
-    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings, ISecurityModelToken securityToken)
-        : base(httpClient, bus, clientSettings)
+    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings, JsonSerializerSettings jsonSettings, ISecurityModelToken securityToken)
+        : base(httpClient, bus, clientSettings, jsonSettings)
     {
         _securityToken = securityToken;
     }
@@ -26,8 +24,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
     {
         if (Users == null)
         {
-            var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
-                                    .GetUserSummaryList(null);
+            var response = await Client.GetUserSummaryList(null);
             Users = await ProcessResponseAsync(response) ?? new List<UserSelectModelExpanded>();
 
             Users = Users.Values().OrderBy(r => r.LastNameFirst).ToList();
@@ -39,8 +36,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
     {
         if (FullUsers == null)
         {
-            var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
-                                    .GetUserPaged((new MidlandUserCriteria { Status = 'A', PageNumber = 1, PageSize = int.MaxValue, CostCenterCode = new List<string> { "14130", "12400" } }).ToQueryString());
+            var response = await Client.GetUserPaged((new MidlandUserCriteria { Status = 'A', PageNumber = 1, PageSize = int.MaxValue, CostCenterCode = new List<string> { "14130", "12400" } }).ToQueryString());
             FullUsers = (await ProcessResponseAsync(response)).Results ?? new List<MidlandUserGeneralModel>();
 
             FullUsers = FullUsers.Values().OrderBy(r => r.LastNameFirst).ToList();
@@ -50,8 +46,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
 
     public async Task<List<UserSelectModelExpanded>> GetUsersBy(string name)
     {
-        var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
-                                .GetUserSummaryList((new MidlandUserListCriteria { Name = name }).ToQueryString());
+        var response = await Client.GetUserSummaryList((new MidlandUserListCriteria { Name = name }).ToQueryString());
 
         var model = await ProcessResponseAsync(response) ?? new List<UserSelectModelExpanded>();
 
@@ -62,8 +57,7 @@ public class EmployeeRepository : BlazorClientRepositoryBase, IEmployeeRepositor
 
     public async Task<MidlandUserGeneralModel> GetUser(int userRef)
     {
-        var response = await RestClient.For<IEmployeeDataApiClient>(_httpClient)
-                                .GetUser(userRef);
+        var response = await Client.GetUser(userRef);
 
         return await ProcessResponseAsync(response);
     }

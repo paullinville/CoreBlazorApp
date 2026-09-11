@@ -1,8 +1,7 @@
-﻿using CsvHelper.Configuration.Attributes;
-using Midland.Core.Common;
+﻿using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
 
-namespace BlazorApp.Common;
+namespace Midland.Core.Client;
 
 public class ApplicationErrorEvent : ChannelEvent<ErrorResponse>
 {
