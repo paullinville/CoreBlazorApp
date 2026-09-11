@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
+using Midland.Core.Client;
 using Midland.Core.SimpleMessageBus;
 using Telerik.Blazor.Components;
 

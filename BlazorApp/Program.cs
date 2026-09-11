@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Midland.Core.Client;
 using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
+using Newtonsoft.Json;
+using RestEase;
+using System.Text.Json;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
@@ -27,6 +30,16 @@ builder.Configuration.AddJsonStream(envSettingsStream);
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+var jsonSettings = new JsonSerializerSettings
+{
+    DateTimeZoneHandling = DateTimeZoneHandling.Utc,   // serialize as UTC
+    DateParseHandling = DateParseHandling.DateTime,    // parse as DateTime
+    // Optional: converters if you need more control
+    // Converters = { new YourCustomDateTimeConverter() }
+};
+
+builder.Services.AddSingleton(jsonSettings);
 
 // 4. Bind settings normally
 var settings = new ClientSettings

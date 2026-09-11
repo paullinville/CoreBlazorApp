@@ -1,5 +1,4 @@
 ﻿using BlazorApp.Common;
-using BlazorApp.Models;
 using EATTS.Client;
 using EATTS.Common.Models;
 using Midland.Core.SimpleMessageBus;
@@ -8,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace BlazorApp.Data;
 
-public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
+public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEattsApiRepository
 {
     private readonly IEmployeeRepository _empRepo;
 
@@ -219,13 +218,10 @@ public class EattsRepository : BlazorClientRepositoryBase, IEattsApiRepository
 
     public async Task<EattsEntryResultModel> PostLog(EattsEntryModel eattsEntryModel)
     {
-        var response = await RestClient.For<IEATTSApiClient>(_httpClient)
-                                        .PostLog(eattsEntryModel);
+        var response = await Client.PostLog(eattsEntryModel);
 
         var found = await ProcessResponseAsync(response);
 
         return found;
     }
-
-    
 }
