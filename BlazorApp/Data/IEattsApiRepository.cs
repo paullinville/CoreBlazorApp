@@ -54,4 +54,5 @@ public interface IEattsApiRepository
     Task<SupportOptionsEditModel> GetSupportOptions();
 
     Task<SupportOptionsEditModel> UpdateSupportOptions(SupportOptionsEditModel model);
+    Task<List<ApiLogDataModel>> FindApiLogData(ApiLogCriteria criteria);
 }

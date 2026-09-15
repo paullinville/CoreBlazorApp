@@ -57,13 +57,7 @@
                         <circle cx="18.5" cy="7.7" r="0.8" fill="currentColor" stroke="none" />
                     </svg>
                 </span>
-                <span class="report-error-icon" role="button" tabindex="0" title="Report Error" @onclick="OnReportErrorClicked">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 3.2 21.5 19.8a1 1 0 0 1-.87 1.5H3.37a1 1 0 0 1-.87-1.5L12 3.2Z" />
-                        <line x1="12" y1="9.5" x2="12" y2="14" />
-                        <circle cx="12" cy="17.3" r="1" fill="currentColor" stroke="none" />
-                    </svg>
-                </span>
+
                 <span @ref="SettingsIconElement" id="settings-icon" class="settings-icon" role="button" tabindex="0" title="Settings" @onclick="ToggleSettingsMenu">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="4" y1="6" x2="20" y2="6" />
@@ -80,6 +74,13 @@
                                OffLabel="Light"
                                Width="4.5rem"
                                ValueChanged="@(async (bool value) => await OnThemeChanged(value))" />
+                <span class="report-error-icon" role="button" tabindex="0" title="Report Error" @onclick="OnReportErrorClicked">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3.2 21.5 19.8a1 1 0 0 1-.87 1.5H3.37a1 1 0 0 1-.87-1.5L12 3.2Z" />
+                        <line x1="12" y1="9.5" x2="12" y2="14" />
+                        <circle cx="12" cy="17.3" r="1" fill="currentColor" stroke="none" />
+                    </svg>
+                </span>
                 <span class="lock-key-icon" role="button" tabindex="0" title="Security" @onclick="OnLockKeyClicked">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="4" y="10" width="9" height="8" rx="1.2" />
@@ -133,13 +134,13 @@
     }
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
-        <GlobalErrorBoundaryBase>
+        @* <GlobalErrorBoundaryBase> *@
             <ApiErrorNotification />
             <ApiValidationNotification />
             <ApiSecurityNotification />
             <ApiMessageNotification />
             @Body
-        </GlobalErrorBoundaryBase>
+        @* </GlobalErrorBoundaryBase> *@
     </main>
 
 </div>

@@ -507,8 +507,14 @@ body.dark-theme .report-error-icon:hover {
 
 .content {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
     padding: 12px;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .dense-page {
@@ -630,6 +636,11 @@ body.dark-theme .report-error-icon:hover {
     text-decoration: underline;
     cursor: pointer;
     margin-left: 12px;
+}
+
+.occurrence-tile-section {
+    height: 100%;
+    overflow: auto;
 }
 
 .occurrence-stack-trace-block {

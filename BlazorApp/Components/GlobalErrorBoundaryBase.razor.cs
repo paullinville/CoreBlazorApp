@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
+using System.Runtime.ExceptionServices;
 using Midland.Core.Client;
 using Midland.Core.SimpleMessageBus;
 using Telerik.Blazor.Components;
@@ -29,6 +30,11 @@ public class GlobalErrorBoundaryBase : ErrorBoundary, IDisposable
 
     protected override async Task OnErrorAsync(Exception exception)
     {
+        if (ClientSettings.UseMocks)
+        {
+            ExceptionDispatchInfo.Capture(exception).Throw();
+        }
+
         var errorResponse = new ErrorResponse
         {
             Code = ErrorCodes.ApplicationUnhandledException,
@@ -37,6 +43,7 @@ public class GlobalErrorBoundaryBase : ErrorBoundary, IDisposable
             Errors = [],
             Messages = [exception.Message]
         };
+
         var currentUser = await EmployeeRepo.CurrentUser;
         var eattsResponse = await EattsRepo.PostLog(new EattsEntryModel(null,
                                                                           ClientSettings.ApplicationName,
@@ -63,6 +70,11 @@ public class GlobalErrorBoundaryBase : ErrorBoundary, IDisposable
             Recover();
         }
     }
+
+    //public void RotateLabels(ChartLabelVisualArgs args)
+    //{
+    //    args.TextBlock.Rotation = 45;
+    //}
 
     public void Dispose()
     {

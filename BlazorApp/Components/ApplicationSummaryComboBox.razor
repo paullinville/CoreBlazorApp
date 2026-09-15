@@ -1,0 +1,27 @@
+@using System.Linq.Expressions
+@using SecurityModel.Common.Models
+
+<TelerikComboBox TItem="ApplicationSummary"
+                 TValue="string"
+                 Data="@Data"
+                 Value="@Value"
+                 ValueChanged="@ValueChanged"
+                 ValueExpression="@ValueExpression"
+                 ValueField="@nameof(ApplicationSummary.ApiName)"
+                 TextField="@nameof(ApplicationSummary.ApiName)"
+                 Filterable="true"
+                 FilterOperator="@StringFilterOperator.Contains"
+                 AllowCustom="false"
+                 Placeholder="@Placeholder"
+                 Width="@Width"
+                 @attributes="AdditionalAttributes" />
+
+@code {
+    [Parameter] public IEnumerable<ApplicationSummary> Data { get; set; } = [];
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Select API";
+    [Parameter] public string Width { get; set; } = "220px";
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

@@ -1,0 +1,27 @@
+<TelerikChart Height="500px" Width="100%">
+    <ChartTitle Text="Latency Trend Moving Average" />
+
+    <ChartCategoryAxes>
+        <ChartCategoryAxis>
+            <ChartCategoryAxisLabels Format="MM/dd HH:mm" />
+        </ChartCategoryAxis>
+    </ChartCategoryAxes>
+
+    <ChartSeriesItems>
+        @foreach (var actionTrend in Results)
+        {
+            <ChartSeries Type="ChartSeriesType.Line"
+                         Name="@actionTrend.Action"
+                         Data="@actionTrend.Points"
+                         Field="MovingAverage"
+                         CategoryField="Timestamp"
+                         MissingValues="ChartSeriesMissingValues.Interpolate" />
+        }
+    </ChartSeriesItems>
+
+    <ChartLegend Position="ChartLegendPosition.Bottom" />
+</TelerikChart>
+
+@code {
+    [Parameter] public List<MovingAverageTrendResult> Results { get; set; } = [];
+}

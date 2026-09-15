@@ -9,6 +9,8 @@ public partial class OccurrenceDetailWindow
     [Parameter] public bool IsVisible { get; set; }
     [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
 
+    private IReadOnlyList<ApiLogDataModel> LogEntries => OccurrenceDetail?.ApiLogData ?? [];
+
     private string StackTraceText => OccurrenceDetail?.ErrorResponse?.Details?.StackTrace is null
         ? string.Empty
         : string.Join(Environment.NewLine, OccurrenceDetail.ErrorResponse.Details.StackTrace.Values());

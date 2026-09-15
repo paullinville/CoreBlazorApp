@@ -1,0 +1,29 @@
+﻿@using BlazorApp.Models
+
+<TelerikChart Height="400px" Width="100%">
+    <ChartTitle Text="Latency Trend (Windowed)" />
+
+    <ChartCategoryAxes>
+        <ChartCategoryAxis>
+            <ChartCategoryAxisLabels Format="MM/dd HH:mm" />
+        </ChartCategoryAxis>
+    </ChartCategoryAxes>
+
+    <ChartSeriesItems>
+        @foreach (var actionTrend in Results)
+        {
+            <ChartSeries Type="ChartSeriesType.Line"
+                         Name="@actionTrend.Action"
+                         Data="@actionTrend.Points"
+                         Field="AverageLatency"
+                         CategoryField="WindowStart"
+                         MissingValues="ChartSeriesMissingValues.Interpolate" />
+        }
+    </ChartSeriesItems>
+
+    <ChartLegend Position="ChartLegendPosition.Bottom" />
+</TelerikChart>
+
+@code {
+    [Parameter] public List<WindowedTrendResult> Results { get; set; } = new();
+}

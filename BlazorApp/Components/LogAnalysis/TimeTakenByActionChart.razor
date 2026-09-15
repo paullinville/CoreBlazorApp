@@ -1,0 +1,39 @@
+<TelerikChart Width="100%" Height="300px">
+    <ChartLegend Position="@ChartLegendPosition.Left" />
+    <ChartCategoryAxes>
+        <ChartCategoryAxis>
+
+        </ChartCategoryAxis>
+    </ChartCategoryAxes>
+    <ChartValueAxes>
+        <ChartValueAxis>
+            <ChartValueAxisTitle Text="Time in milliseconds" />
+        </ChartValueAxis>
+    </ChartValueAxes>
+    <ChartSeriesItems>
+        <ChartSeries Type="ChartSeriesType.Bar"
+                     Name="Count"
+                     Data="@Results"
+                     Field="@nameof(LogDataTimeTakenResult.Count)"
+                     CategoryField="@nameof(LogDataTimeTakenResult.Action)" />
+        <ChartSeries Type="ChartSeriesType.Bar"
+                     Name="Average"
+                     Data="@Results"
+                     Field="@nameof(LogDataTimeTakenResult.AverageTimeElapsed)"
+                     CategoryField="@nameof(LogDataTimeTakenResult.Action)" />
+        <ChartSeries Type="ChartSeriesType.Bar"
+                     Name="Max"
+                     Data="@Results"
+                     Field="@nameof(LogDataTimeTakenResult.MaxTimeElapsed)"
+                     CategoryField="@nameof(LogDataTimeTakenResult.Action)" />
+        <ChartSeries Type="ChartSeriesType.Bar"
+                     Name="P95"
+                     Data="@Results"
+                     Field="@nameof(LogDataTimeTakenResult.P95TimeElapsed)"
+                     CategoryField="@nameof(LogDataTimeTakenResult.Action)" />
+    </ChartSeriesItems>
+</TelerikChart>
+
+@code {
+    [Parameter] public List<LogDataTimeTakenResult> Results { get; set; } = [];
+}

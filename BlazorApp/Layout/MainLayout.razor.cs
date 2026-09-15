@@ -32,7 +32,7 @@ public partial class MainLayout : IDisposable
 
     public List<ReportMenuItem> ReportMenuItems { get; } =
     [
-        new() { Text = "Sales Summary", Url = "/reports/sales-summary" }
+        new() { Text = "Log Analysis", Url = "/reports/log-analysis" }
     ];
 
     public List<ReportMenuItem> SettingsMenuItems { get; } =

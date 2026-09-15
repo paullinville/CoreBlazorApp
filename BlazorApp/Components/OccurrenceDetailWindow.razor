@@ -5,8 +5,8 @@
     <TelerikWindow Visible="@IsVisible"
                    VisibleChanged="@OnVisibleChangedAsync"
                    Modal="true"
-                   Width="920px"
-                   Height="700px"
+                   Width="1750px"
+                   Height="800px"
                    Resizable="true"
                    Draggable="true">
         <WindowTitle>Occurrence Details</WindowTitle>
@@ -14,29 +14,69 @@
             <WindowAction Name="Close" />
         </WindowActions>
         <WindowContent>
-            <div class="k-form k-form-sm">
-                <div><strong>Occurrence Ref:</strong> @OccurrenceDetail.EntryOccurrenceRef</div>
-                <div><strong>Entry Ref:</strong> @OccurrenceDetail.EntryRef</div>
-                <div><strong>Date:</strong> @OccurrenceDetail.Date</div>
-                <div><strong>Description:</strong> @OccurrenceDetail.Description</div>
-                <div><strong>Generic Description:</strong> @OccurrenceDetail.GenericDescription</div>
-                <div><strong>Key:</strong> @OccurrenceDetail.Key</div>
-                <div><strong>Origin:</strong> @OccurrenceDetail.Origin</div>
-                <div><strong>Caller Id:</strong> @OccurrenceDetail.CallerId</div>
-                <div><strong>Emails Sent:</strong> @OccurrenceDetail.EmailsSent</div>
-                <div><strong>Error:</strong> @OccurrenceDetail.Error</div>
-                <div><strong>Token Subject:</strong> @OccurrenceDetail.TokenSubject</div>
-                <div><strong>Token Type:</strong> @OccurrenceDetail.TokenType</div>
-                <div><strong>Api Slug:</strong> @OccurrenceDetail.ApiSlug</div>
-                <div><strong>Occurrence Count:</strong> @OccurrenceDetail.OccurrenceCount</div>
-                <div><strong>Last Entry Occurrence Ref:</strong> @OccurrenceDetail.LastEntryOccurrenceRef</div>
-            </div>
+            <TelerikDockManager Width="100%" Height="100%">
+                <DockManagerPanes>
+                    <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Vertical">
+                        <Panes>
+                            <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Horizontal" Size="60%">
+                                <Panes>
+                                    <DockManagerContentPane Id="occurrence-details-pane" HeaderText="Details" Size="50%" AllowFloat="false" Unpinnable="false" Closeable="false">
+                                        <Content>
+                                            <div class="k-form k-form-sm occurrence-tile-section">
+                                                <div><strong>Occurrence Ref:</strong> @OccurrenceDetail.EntryOccurrenceRef</div>
+                                                <div><strong>Entry Ref:</strong> @OccurrenceDetail.EntryRef</div>
+                                                <div><strong>Date:</strong> @OccurrenceDetail.Date</div>
+                                                <div><strong>Description:</strong> @OccurrenceDetail.Description</div>
+                                                <div><strong>Generic Description:</strong> @OccurrenceDetail.GenericDescription</div>
+                                                <div><strong>Key:</strong> @OccurrenceDetail.Key</div>
+                                                <div><strong>Origin:</strong> @OccurrenceDetail.Origin</div>
+                                                <div><strong>Caller Id:</strong> @OccurrenceDetail.CallerId</div>
+                                                <div><strong>Emails Sent:</strong> @OccurrenceDetail.EmailsSent</div>
+                                                <div><strong>Error:</strong> @OccurrenceDetail.Error</div>
+                                                <div><strong>Token Subject:</strong> @OccurrenceDetail.TokenSubject</div>
+                                                <div><strong>Token Type:</strong> @OccurrenceDetail.TokenType</div>
+                                                <div><strong>Api Slug:</strong> @OccurrenceDetail.ApiSlug</div>
+                                                <div><strong>Occurrence Count:</strong> @OccurrenceDetail.OccurrenceCount</div>
+                                                <div><strong>Last Entry Occurrence Ref:</strong> @OccurrenceDetail.LastEntryOccurrenceRef</div>
+                                            </div>
+                                        </Content>
+                                    </DockManagerContentPane>
 
-            @if (StackTraceText.IsNotNullOrBlank())
-            {
-                <h4>Stack Trace</h4>
-                <pre class="occurrence-stack-trace-block">@StackTraceText</pre>
-            }
+                                    <DockManagerContentPane Id="occurrence-logs-pane" HeaderText="Logs" Size="50%" AllowFloat="false" Unpinnable="false" Closeable="false">
+                                        <Content>
+                                            <div class="occurrence-tile-section">
+                                                <TelerikGrid TItem="ApiLogDataModel" Data="@LogEntries" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true" Height="100%">
+                                                    <GridColumns>
+                                                        <GridColumn Field="@nameof(ApiLogDataModel.ApiLogRef)" Title="ApiLogRef" />
+                                                        <GridColumn Field="@nameof(ApiLogDataModel.ApiName)" Title="ApiName" />
+                                                        <GridColumn Field="@nameof(ApiLogDataModel.LogDate)" Title="LogDate" DisplayFormat="{0:g}" />
+                                                        <GridColumn Field="@nameof(ApiLogDataModel.Server)" Title="Server" />
+                                                        <GridColumn Field="@nameof(ApiLogDataModel.Error)" Title="Error" />
+                                                        <GridColumn Field="@nameof(ApiLogDataModel.RequestId)" Title="RequestId" />
+                                                    </GridColumns>
+                                                </TelerikGrid>
+                                            </div>
+                                        </Content>
+                                    </DockManagerContentPane>
+                                </Panes>
+                            </DockManagerSplitPane>
+
+                            <DockManagerContentPane Id="occurrence-stacktrace-pane" HeaderText="Stack Trace" Size="40%" AllowFloat="false" Unpinnable="false" Closeable="false">
+                                <Content>
+                                    @if (StackTraceText.IsNotNullOrBlank())
+                                    {
+                                        <pre class="occurrence-stack-trace-block">@StackTraceText</pre>
+                                    }
+                                    else
+                                    {
+                                        <div class="occurrence-tile-section">No stack trace available.</div>
+                                    }
+                                </Content>
+                            </DockManagerContentPane>
+                        </Panes>
+                    </DockManagerSplitPane>
+                </DockManagerPanes>
+            </TelerikDockManager>
         </WindowContent>
     </TelerikWindow>
 }

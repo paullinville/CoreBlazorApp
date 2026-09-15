@@ -1,0 +1,127 @@
+@page "/reports/log-analysis"
+
+<PageTitle>@PageTitleText</PageTitle>
+
+@* <div class="dense-page log-analysis-page"> *@
+<TelerikDockManager Class="log-analysis-dock-manager" Width="100%" Height="98%">
+    <DockManagerPanes>
+        <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Horizontal">
+            <Panes>
+                <DockManagerContentPane Size="15%" HeaderText="Criteria">
+                    <Content>
+                        <TelerikForm Model="@CriteriaInput" OnValidSubmit="@OnSubmitAsync">
+                            <FormValidation>
+                                <DataAnnotationsValidator />
+                            </FormValidation>
+                            <FormItems>
+                                <FormItem>
+                                    <Template>
+                                        <div class="k-form k-form-sm">
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-analysis-application">Application Summary</label>
+                                                <ApplicationSummaryComboBox Data="@Applications"
+                                                                            @bind-Value="CriteriaInput.SelectedApplicationSummary"
+                                                                            Placeholder="Select application"
+                                                                            Width="220px"
+                                                                            AdditionalAttributes="@(new Dictionary<string, object> { ["id"] = "log-analysis-application" })" />
+                                                <ValidationMessage For="@(() => CriteriaInput.SelectedApplicationSummary)" />
+                                            </div>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-analysis-from-date">From</label>
+                                                <TelerikDateTimePicker Id="log-analysis-from-date" @bind-Value="CriteriaInput.FromDate" Format="MM/dd/yyyy hh:mm" />
+                                                <ValidationMessage For="@(() => CriteriaInput.FromDate)" />
+                                            </div>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-analysis-to-date">To</label>
+                                                <TelerikDateTimePicker Id="log-analysis-to-date" @bind-Value="CriteriaInput.ToDate" Format="MM/dd/yyyy hh:mm" />
+                                                <ValidationMessage For="@(() => CriteriaInput.ToDate)" />
+                                            </div>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-analysis-window-unit">Window Unit</label>
+                                                <TelerikDropDownList Id="log-analysis-window-unit"
+                                                                     TItem="WindowUnit"
+                                                                     TValue="WindowUnit"
+                                                                     Data="@WindowUnits"
+                                                                     @bind-Value="CriteriaInput.WindowUnit" />
+                                                <ValidationMessage For="@(() => CriteriaInput.WindowUnit)" />
+                                            </div>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-analysis-window-size">Window Size</label>
+                                                <TelerikNumericTextBox Id="log-analysis-window-size" @bind-Value="CriteriaInput.WindowSize" Min="1" Decimals="0" Format="n0" />
+                                                <ValidationMessage For="@(() => CriteriaInput.WindowSize)" />
+                                            </div>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-analysis-action-count">Actions to Analyze</label>
+                                                <TelerikNumericTextBox Id="log-analysis-action-count" @bind-Value="CriteriaInput.ActionCountToAnalyze" Min="1" Decimals="0" Format="n0" />
+                                                <ValidationMessage For="@(() => CriteriaInput.ActionCountToAnalyze)" />
+                                            </div>
+
+                                        </div>
+                                    </Template>
+                                </FormItem>
+                            </FormItems>
+                        </TelerikForm>
+                    </Content>
+                </DockManagerContentPane>
+
+                <DockManagerContentPane Size="85%" AllowFloat="true" Closeable="false" Unpinnable="true">
+                    <Content>
+                        <div class="log-analysis-right-panel-placeholder">
+                            <TelerikTileLayout Class="log-analysis-tile-layout"
+                                               Columns="5"
+                                               ColumnWidth="1fr"
+                                               RowHeight="auto"
+                                               Width="100%"
+                                               Height="100%">
+                                <TileLayoutItems>
+                                    <TileLayoutItem HeaderText="Summary" ColSpan="1" RowSpan="1">
+                                        <Content>
+                                            <div class="log-analysis-tile-content">
+                                                <div><strong>Log entries:</strong> @LogDataResults.Count</div>
+                                                <div><strong>Actions analyzed:</strong> @LogDataTimeTakenResults.Count</div>
+                                            </div>
+                                        </Content>
+                                    </TileLayoutItem>
+                                    <TileLayoutItem HeaderText="Rolling Window Trend" ColSpan="2" RowSpan="1">
+                                        <Content>
+                                            <RollingWindowTrendGrid Results="@RollingWindowTrendResults" />
+                                        </Content>
+                                    </TileLayoutItem>
+                                    <TileLayoutItem HeaderText="Trend Slope (Long-Term Drift)" ColSpan="2" RowSpan="1">
+                                        <Content>
+                                            <TrendSlopeGrid Results="@TrendSlopeResults" />
+                                        </Content>
+                                    </TileLayoutItem>
+                                    <TileLayoutItem HeaderText="Windowed Latency Trend" ColSpan="5" RowSpan="2">
+                                        <Content>
+                                            <ActionLatencyTrendWindowedChart Results="@WindowedTrendResults" />
+                                        </Content>
+                                    </TileLayoutItem>
+                                    <TileLayoutItem HeaderText="Action Response Time Moving Average" ColSpan="5" RowSpan="2">
+                                        <Content>
+                                            <div class="log-analysis-tile-content">
+                                                <ActionLatencyTrendMovingAverageChart Results="@MovingAverageTrendResults" />
+                                            </div>
+                                        </Content>
+                                    </TileLayoutItem>
+
+                                    <TileLayoutItem HeaderText="Time Taken By Action" ColSpan="5" RowSpan="2">
+                                        <Content>
+                                            <TimeTakenByActionChart Results="@LogDataTimeTakenResults" />
+                                        </Content>
+                                    </TileLayoutItem>
+                                </TileLayoutItems>
+                            </TelerikTileLayout>
+                        </div>
+                    </Content>
+                </DockManagerContentPane>
+            </Panes>
+        </DockManagerSplitPane>
+    </DockManagerPanes>
+</TelerikDockManager>
+@*</div>*@

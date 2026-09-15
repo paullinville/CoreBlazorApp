@@ -57,15 +57,10 @@
                                 @{
                                     var option = (ApplicationOptionsModel)context;
                                 }
-                                <TelerikDropDownList TItem="ApplicationSummary"
-                                                     TValue="string"
-                                                     Data="@GetAvailableApis(option)"
-                                                     @bind-Value="option.ApiName"
-                                                     ValueField="@nameof(ApplicationSummary.ApiName)"
-                                                     TextField="@nameof(ApplicationSummary.ApiName)"
-                                                     Filterable="true"
-                                                     FilterOperator="@StringFilterOperator.Contains"
-                                                     DefaultText="Select API" />
+                                <ApplicationSummaryDropDown Data="@GetAvailableApis(option)"
+                                                            @bind-Value="option.ApiName"
+                                                            DefaultText="Select API"
+                                                            AdditionalAttributes="@(new Dictionary<string, object> { { "style", "width: 100%;" } })" />
                             </EditorTemplate>
                         </GridColumn>
                         <GridColumn Field="@nameof(ApplicationOptionsModel.SelectedContactUserRefs)" Title="Contacts" Width="420px">

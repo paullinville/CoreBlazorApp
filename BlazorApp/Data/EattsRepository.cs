@@ -70,6 +70,13 @@ public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEat
         return updated;
     }
 
+    public async Task<List<ApiLogDataModel>> FindApiLogData(ApiLogCriteria criteria)
+    {
+        var response = await Client.GetLogPaged(criteria.ToQueryString());
+        var x = await ProcessResponseAsync(response);
+        return x?.Results?.Values().ToList();
+    }
+
     public async Task<List<EntrySummaryModel>> FindEntries(EntrySearchCriteria criteria)
     {
         var response = await Client.GetEntryViewSummaryPaged(criteria.ToQueryString());

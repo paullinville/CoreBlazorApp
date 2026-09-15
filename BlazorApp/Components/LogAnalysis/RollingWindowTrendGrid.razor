@@ -1,0 +1,15 @@
+﻿@using BlazorApp.Models
+@using static BlazorApp.Pages.LogAnalysis
+
+<TelerikGrid Data="@Results" Height="250px">
+    <GridColumns>
+        <GridColumn Field="Action" Title="Action" />
+        <GridColumn Field="RecentAverage" Title="Recent Avg (ms)" DisplayFormat="{0:N0}" />
+        <GridColumn Field="PreviousAverage" Title="Prev Avg (ms)" DisplayFormat="{0:N0}" />
+        <GridColumn Field="PercentageChange" Title="% Change" DisplayFormat="{0:N0}" />
+    </GridColumns>
+</TelerikGrid>
+
+@code {
+    [Parameter] public List<RollingWindowTrendResult> Results { get; set; } = new();
+}

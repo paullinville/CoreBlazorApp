@@ -1,6 +1,9 @@
 using BlazorApp.Models;
 using EATTS.Common.Models;
 using Midland.Core.SimpleMessageBus;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BlazorApp.Data;
 
@@ -172,6 +175,199 @@ public class MockEattsRepository : IEattsApiRepository
             })
             .ToList();
 
+    private static readonly List<ApiLogDataModel> ApiLogs =
+    [
+        new ApiLogDataModel
+        {
+            ApiLogRef = 9001,
+            ApiName = "core-app",
+            Error = true,
+            LogDate = DateTime.UtcNow.AddMinutes(-15),
+            RequestId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+            Server = "mock-server-01",
+            LogData = new LogDataBindingModel
+            {
+                Action = "GetProfile",
+                Api = "core-app",
+                CallerContext = "ProfileController.Get",
+                ClientIp = "10.0.0.21",
+                Controller = "Profile",
+                CostCenter = "CC100",
+                Exception = new ExceptionModel
+                {
+                    Message = "Timed out retrieving profile.",
+                    Source = "MockEattsApiRepository",
+                    StackTrace = "at CoreBlazorApp.Controllers.ProfileController.Get()"
+                },
+                ExceptionDetail = new ErrorException(new TimeoutException("Timed out retrieving profile.")),
+                Input = new Dictionary<string, string>
+                {
+                    ["userRef"] = "1001",
+                    ["includeAudit"] = "true"
+                },
+                Level = 4,
+                LogId = "LOG-9001",
+                Message = "Request timed out while retrieving profile.",
+                NomadAllocId = "alloc-001",
+                NomadDatacenter = "dc1",
+                NomadJobName = "core-app",
+                NomadNodeName = "node-a",
+                NomadTaskName = "api",
+                Output = "{}",
+                ProcessId = 1234,
+                RecorderId = "rec-001",
+                RequestId = "33333333-3333-3333-3333-333333333333",
+                Route = "/api/profile",
+                Server = "mock-server-01",
+                StatusCode = 504,
+                TimeElapsed = 15234,
+                TimeStamp = DateTime.UtcNow.AddMinutes(-15).ToString("O"),
+                TraceId = "trace-9001",
+                UserType = "Api",
+                Query = "userRef=1001",
+                SourceContext = "CoreBlazorApp.Controllers.ProfileController",
+                SpanId = "span-9001",
+                TraceFlags = "01"
+            }
+        },
+        new ApiLogDataModel
+        {
+            ApiLogRef = 9002,
+            ApiName = "admin-app",
+            Error = false,
+            LogDate = DateTime.UtcNow.AddMinutes(-40),
+            RequestId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+            Server = "mock-server-02",
+            LogData = new LogDataBindingModel
+            {
+                Action = "UpdateSettings",
+                Api = "admin-app",
+                CallerContext = "SettingsController.Update",
+                ClientIp = "10.0.0.22",
+                Controller = "Settings",
+                CostCenter = "CC200",
+                ExceptionDetail = null,
+                Input = new Dictionary<string, string>
+                {
+                    ["settingName"] = "Theme",
+                    ["value"] = "Dark"
+                },
+                Level = 2,
+                LogId = "LOG-9002",
+                Message = "Settings updated successfully.",
+                NomadAllocId = "alloc-002",
+                NomadDatacenter = "dc1",
+                NomadJobName = "admin-app",
+                NomadNodeName = "node-b",
+                NomadTaskName = "ui",
+                Output = new { Success = true, Updated = 1 },
+                ProcessId = 2345,
+                RecorderId = "rec-002",
+                RequestId = "44444444-4444-4444-4444-444444444444",
+                Route = "/api/settings",
+                Server = "mock-server-02",
+                StatusCode = 200,
+                TimeElapsed = 842,
+                TimeStamp = DateTime.UtcNow.AddMinutes(-40).ToString("O"),
+                TraceId = "trace-9002",
+                UserType = "Human",
+                Query = "settingName=Theme",
+                SourceContext = "CoreBlazorApp.Controllers.SettingsController",
+                SpanId = "span-9002",
+                TraceFlags = "00"
+            }
+        },
+        ..CreateMockApiLogs()
+    ];
+
+    private static IEnumerable<ApiLogDataModel> CreateMockApiLogs()
+    {
+        var actions = new[]
+        {
+            "GetProfile",
+            "UpdateProfile",
+            "GetSettings",
+            "UpdateSettings",
+            "SearchUsers",
+            "CreateEntry",
+            "GetEntry",
+            "UpdateEntry",
+            "DeleteEntry",
+            "GenerateReport"
+        };
+
+        return Enumerable.Range(3, 300).Select(index =>
+        {
+            var sequence = index - 3;
+            var actionIndex = sequence % actions.Length;
+            var dayOffset = sequence / actions.Length;
+            var action = actions[actionIndex];
+            var apiName = actionIndex % 2 == 0 ? "core-app" : "admin-app";
+            var isError = (sequence + 1) % 9 == 0;
+            var requestId = Guid.Parse($"{(9000 + index):x8}-5555-6666-7777-888888888888");
+            var logDate = DateTime.UtcNow.Date.AddDays(-dayOffset).AddHours(actionIndex * 2).AddMinutes(sequence % 60);
+            var server = $"mock-server-{(actionIndex % 4) + 1:00}";
+
+            return new ApiLogDataModel
+            {
+                ApiLogRef = 9000 + index,
+                ApiName = apiName,
+                Error = isError,
+                LogDate = logDate,
+                RequestId = requestId,
+                Server = server,
+                LogData = new LogDataBindingModel
+                {
+                    Action = action,
+                    Api = apiName,
+                    CallerContext = $"{(apiName == "core-app" ? "Core" : "Admin")}Controller.{(isError ? "Post" : "Get")}",
+                    ClientIp = $"10.0.0.{20 + index}",
+                    Controller = apiName == "core-app" ? "Core" : "Admin",
+                    CostCenter = apiName == "core-app" ? "CC100" : "CC200",
+                    Exception = isError
+                        ? new ExceptionModel
+                        {
+                            Message = $"Mock exception {index}",
+                            Source = "MockEattsApiRepository",
+                            StackTrace = $"at CoreBlazorApp.Controllers.{(apiName == "core-app" ? "Core" : "Admin")}Controller.{(isError ? "Post" : "Get")}()"
+                        }
+                        : null,
+                    ExceptionDetail = isError ? new ErrorException(new InvalidOperationException($"Mock exception {index}")) : null,
+                    Input = new Dictionary<string, string>
+                    {
+                        ["index"] = index.ToString(),
+                        ["apiName"] = apiName,
+                        ["error"] = isError.ToString(),
+                        ["action"] = action
+                    },
+                    Level = isError ? 4 : 2,
+                    LogId = $"LOG-{9000 + index}",
+                    Message = isError ? $"Mock error log {index}" : $"Mock success log {index}",
+                    NomadAllocId = $"alloc-{index:000}",
+                    NomadDatacenter = actionIndex % 2 == 0 ? "dc1" : "dc2",
+                    NomadJobName = apiName,
+                    NomadNodeName = $"node-{(char)('a' + (actionIndex % 4))}",
+                    NomadTaskName = apiName == "core-app" ? "api" : "ui",
+                    Output = isError ? "{}" : new { Success = true, Index = index },
+                    ProcessId = 1000 + index,
+                    RecorderId = $"rec-{index:000}",
+                    RequestId = requestId.ToString(),
+                    Route = $"/api/{apiName}/{action.ToLowerInvariant()}",
+                    Server = server,
+                    StatusCode = isError ? 500 : 200,
+                    TimeElapsed = Random.Shared.Next(2, 1001),
+                    TimeStamp = logDate.ToString("O"),
+                    TraceId = $"trace-{9000 + index}",
+                    UserType = isError ? "Api" : "Human",
+                    Query = $"index={index}&apiName={apiName}&action={action}",
+                    SourceContext = $"CoreBlazorApp.Controllers.{(apiName == "core-app" ? "Core" : "Admin")}Controller",
+                    SpanId = $"span-{9000 + index}",
+                    TraceFlags = isError ? "01" : "00"
+                }
+            };
+        });
+    }
+
     public Task<ApplicationOptionsGetModel> ApplicationOptionAdd(ApplicationOptionsPostModel model)
     {
         var created = new ApplicationOptionsGetModel
@@ -216,6 +412,14 @@ public class MockEattsRepository : IEattsApiRepository
         existing.ApiName = model.ApiName?.Trim().ToLowerInvariant() ?? string.Empty;
         existing.EntryEmail = model.EntryEmail?.ToList() ?? [];
         return Task.FromResult(existing);
+    }
+
+    public Task<List<ApiLogDataModel>> FindApiLogData(ApiLogCriteria criteria)
+    {
+        var query = ApiLogs.AsEnumerable();
+        var results = query.Where(r => r.LogDate >= criteria.BeginDate && r.LogDate <= criteria.EndDate);
+
+        return Task.FromResult(results.ToList());
     }
 
     public async Task<ContactModel> ContactAdd(ContactModel model)
