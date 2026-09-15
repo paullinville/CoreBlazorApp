@@ -21,10 +21,38 @@ public partial class LogAnalysis
     public List<TrendSlopeResult> TrendSlopeResults { get; private set; } = [];
     private List<LogDataTimeTakenResult> LogDataTimeTakenResults { get; set; } = [];
     private List<MovingAverageTrendResult> MovingAverageTrendResults { get; set; } = [];
+    private LogAnalysisTileInfo ActiveTileInfo { get; set; } = LogAnalysisTileInfo.None;
 
     private string PageTitleText => Settings.ApplicationName.IsNullOrBlank()
         ? "Log Analysis"
         : $"{Settings.ApplicationName} - Log Analysis";
+
+    private void ToggleTileInfo(LogAnalysisTileInfo tileInfo)
+    {
+        ActiveTileInfo = ActiveTileInfo == tileInfo ? LogAnalysisTileInfo.None : tileInfo;
+    }
+
+    private string GetTileInfoText(LogAnalysisTileInfo tileInfo) => tileInfo switch
+    {
+        LogAnalysisTileInfo.Summary => "Summary statistics for the selected criteria.",
+        LogAnalysisTileInfo.RollingWindowTrend => "Shows how each API performed recently compared to the previous time window.\r\nA positive percentage means the action got slower; a negative percentage means it improved.",
+        LogAnalysisTileInfo.TrendSlope => "Shows the long‑term trend for each API action.\r\nA positive slope means latency is rising over time; a negative slope means it’s improving.",
+        LogAnalysisTileInfo.WindowedLatencyTrend => "Displays the average latency for each API action in each time window.\r\nThis chart shows how performance changed over time, window by window.",
+        LogAnalysisTileInfo.MovingAverageTrend => "Shows a smoothed latency trend across multiple windows.\r\nThis reduces noise and highlights the overall direction of performance — improving or degrading.",
+        LogAnalysisTileInfo.TimeTakenByAction => "Compares count, average, maximum, and p95 time by action.",
+        _ => string.Empty
+    };
+
+    private enum LogAnalysisTileInfo
+    {
+        None,
+        Summary,
+        RollingWindowTrend,
+        TrendSlope,
+        WindowedLatencyTrend,
+        MovingAverageTrend,
+        TimeTakenByAction
+    }
 
     protected override async Task OnInitializedAsync()
     {

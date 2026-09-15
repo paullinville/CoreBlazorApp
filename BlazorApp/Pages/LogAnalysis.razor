@@ -51,10 +51,16 @@
 
                                             <div class="k-form-field k-mb-2">
                                                 <label for="log-analysis-window-size">Window Size</label>
-                                                <TelerikNumericTextBox Id="log-analysis-window-size" @bind-Value="CriteriaInput.WindowSize" Min="1" Decimals="0" Format="n0" />
+                                                <div title="Number of log entries in each analysis window">
+                                                    <TelerikNumericTextBox Id="log-analysis-window-size"
+                                                                           @bind-Value="CriteriaInput.WindowSize"
+                                                                           Min="1"
+                                                                           Decimals="0"
+                                                                           Format="n0" />
+                                                </div>
                                                 <ValidationMessage For="@(() => CriteriaInput.WindowSize)" />
                                             </div>
-
+                                            
                                             <div class="k-form-field k-mb-2">
                                                 <label for="log-analysis-action-count">Actions to Analyze</label>
                                                 <TelerikNumericTextBox Id="log-analysis-action-count" @bind-Value="CriteriaInput.ActionCountToAnalyze" Min="1" Decimals="0" Format="n0" />
@@ -79,7 +85,24 @@
                                                Width="100%"
                                                Height="100%">
                                 <TileLayoutItems>
-                                    <TileLayoutItem HeaderText="Summary" ColSpan="1" RowSpan="1">
+                                    <TileLayoutItem ColSpan="1" RowSpan="1">
+                                        <HeaderTemplate>
+                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                                <span>Summary</span>
+                                                <div @onclick:stopPropagation="true">
+                                                    <TelerikButton Size="ComponentSize.Small"
+                                                                   FillMode="ButtonFillMode.Flat"
+                                                                   ThemeColor="ThemeConstants.Button.ThemeColor.Light"
+                                                                   Icon="@SvgIcon.InfoCircle"
+                                                                   Title="Show summary info"
+                                                                   OnClick="@(() => ToggleTileInfo(LogAnalysisTileInfo.Summary))" />
+                                                </div>
+                                            </div>
+                                            @if (ActiveTileInfo == LogAnalysisTileInfo.Summary)
+                                            {
+                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.Summary)</div>
+                                            }
+                                        </HeaderTemplate>
                                         <Content>
                                             <div class="log-analysis-tile-content">
                                                 <div><strong>Log entries:</strong> @LogDataResults.Count</div>
@@ -87,22 +110,90 @@
                                             </div>
                                         </Content>
                                     </TileLayoutItem>
-                                    <TileLayoutItem HeaderText="Rolling Window Trend" ColSpan="2" RowSpan="1">
+                                    <TileLayoutItem ColSpan="2" RowSpan="1">
+                                        <HeaderTemplate>
+                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                                <span>Rolling Window Trend</span>
+                                                <div @onclick:stopPropagation="true">
+                                                    <TelerikButton Size="ComponentSize.Small"
+                                                                   FillMode="ButtonFillMode.Flat"
+                                                                   ThemeColor="ThemeConstants.Button.ThemeColor.Light"
+                                                                   Icon="@SvgIcon.InfoCircle"
+                                                                   Title="Show rolling window trend info"
+                                                                   OnClick="@(() => ToggleTileInfo(LogAnalysisTileInfo.RollingWindowTrend))" />
+                                                </div>
+                                            </div>
+                                            @if (ActiveTileInfo == LogAnalysisTileInfo.RollingWindowTrend)
+                                            {
+                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.RollingWindowTrend)</div>
+                                            }
+                                        </HeaderTemplate>
                                         <Content>
                                             <RollingWindowTrendGrid Results="@RollingWindowTrendResults" />
                                         </Content>
                                     </TileLayoutItem>
-                                    <TileLayoutItem HeaderText="Trend Slope (Long-Term Drift)" ColSpan="2" RowSpan="1">
+                                    <TileLayoutItem ColSpan="2" RowSpan="1">
+                                        <HeaderTemplate>
+                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                                <span>Trend Slope (Long-Term Drift)</span>
+                                                <div @onclick:stopPropagation="true">
+                                                    <TelerikButton Size="ComponentSize.Small"
+                                                                   FillMode="ButtonFillMode.Flat"
+                                                                   ThemeColor="ThemeConstants.Button.ThemeColor.Light"
+                                                                   Icon="@SvgIcon.InfoCircle"
+                                                                   Title="Show trend slope info"
+                                                                   OnClick="@(() => ToggleTileInfo(LogAnalysisTileInfo.TrendSlope))" />
+                                                </div>
+                                            </div>
+                                            @if (ActiveTileInfo == LogAnalysisTileInfo.TrendSlope)
+                                            {
+                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.TrendSlope)</div>
+                                            }
+                                        </HeaderTemplate>
                                         <Content>
                                             <TrendSlopeGrid Results="@TrendSlopeResults" />
                                         </Content>
                                     </TileLayoutItem>
-                                    <TileLayoutItem HeaderText="Windowed Latency Trend" ColSpan="5" RowSpan="2">
+                                    <TileLayoutItem ColSpan="5" RowSpan="2">
+                                        <HeaderTemplate>
+                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                                <span>Windowed Latency Trend</span>
+                                                <div @onclick:stopPropagation="true">
+                                                    <TelerikButton Size="ComponentSize.Small"
+                                                                   FillMode="ButtonFillMode.Flat"
+                                                                   ThemeColor="ThemeConstants.Button.ThemeColor.Light"
+                                                                   Icon="@SvgIcon.InfoCircle"
+                                                                   Title="Show windowed latency trend info"
+                                                                   OnClick="@(() => ToggleTileInfo(LogAnalysisTileInfo.WindowedLatencyTrend))" />
+                                                </div>
+                                            </div>
+                                            @if (ActiveTileInfo == LogAnalysisTileInfo.WindowedLatencyTrend)
+                                            {
+                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.WindowedLatencyTrend)</div>
+                                            }
+                                        </HeaderTemplate>
                                         <Content>
                                             <ActionLatencyTrendWindowedChart Results="@WindowedTrendResults" />
                                         </Content>
                                     </TileLayoutItem>
-                                    <TileLayoutItem HeaderText="Action Response Time Moving Average" ColSpan="5" RowSpan="2">
+                                    <TileLayoutItem ColSpan="5" RowSpan="2">
+                                        <HeaderTemplate>
+                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                                <span>Action Response Time Moving Average</span>
+                                                <div @onclick:stopPropagation="true">
+                                                    <TelerikButton Size="ComponentSize.Small"
+                                                                   FillMode="ButtonFillMode.Flat"
+                                                                   ThemeColor="ThemeConstants.Button.ThemeColor.Light"
+                                                                   Icon="@SvgIcon.InfoCircle"
+                                                                   Title="Show moving average info"
+                                                                   OnClick="@(() => ToggleTileInfo(LogAnalysisTileInfo.MovingAverageTrend))" />
+                                                </div>
+                                            </div>
+                                            @if (ActiveTileInfo == LogAnalysisTileInfo.MovingAverageTrend)
+                                            {
+                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.MovingAverageTrend)</div>
+                                            }
+                                        </HeaderTemplate>
                                         <Content>
                                             <div class="log-analysis-tile-content">
                                                 <ActionLatencyTrendMovingAverageChart Results="@MovingAverageTrendResults" />
@@ -110,7 +201,24 @@
                                         </Content>
                                     </TileLayoutItem>
 
-                                    <TileLayoutItem HeaderText="Time Taken By Action" ColSpan="5" RowSpan="2">
+                                    <TileLayoutItem ColSpan="5" RowSpan="2">
+                                        <HeaderTemplate>
+                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                                <span>Time Taken By Action</span>
+                                                <div @onclick:stopPropagation="true">
+                                                    <TelerikButton Size="ComponentSize.Small"
+                                                                   FillMode="ButtonFillMode.Flat"
+                                                                   ThemeColor="ThemeConstants.Button.ThemeColor.Light"
+                                                                   Icon="@SvgIcon.InfoCircle"
+                                                                   Title="Show time taken by action info"
+                                                                   OnClick="@(() => ToggleTileInfo(LogAnalysisTileInfo.TimeTakenByAction))" />
+                                                </div>
+                                            </div>
+                                            @if (ActiveTileInfo == LogAnalysisTileInfo.TimeTakenByAction)
+                                            {
+                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.TimeTakenByAction)</div>
+                                            }
+                                        </HeaderTemplate>
                                         <Content>
                                             <TimeTakenByActionChart Results="@LogDataTimeTakenResults" />
                                         </Content>

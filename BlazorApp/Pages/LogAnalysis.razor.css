@@ -44,10 +44,6 @@
     gap: 1rem;
 }
 
-::deep .log-analysis-tile-layout .k-tilelayout-item-header.k-card-header,
-::deep .log-analysis-tile-layout .k-card-header {
-    display: none !important;
-}
 
 ::deep .log-analysis-tile-layout .k-tilelayout-item-body {
     height: 100%;
