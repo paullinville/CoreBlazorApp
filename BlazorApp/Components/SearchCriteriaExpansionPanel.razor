@@ -1,0 +1,28 @@
+﻿<div class="sc-expander @(IsExpanded ? "expanded" : "")">
+    <div class="sc-expander-header" @onclick="Toggle">
+        <span class="sc-expander-title">@Title</span>
+
+        <span class="sc-expander-icon">
+            @(IsExpanded ? "▾" : "▸")
+        </span>
+    </div>
+
+    @if (IsExpanded)
+    {
+        <div class="sc-expander-body">
+            @ChildContent
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private bool IsExpanded { get; set; } = true;
+
+    private void Toggle()
+    {
+        IsExpanded = !IsExpanded;
+    }
+}

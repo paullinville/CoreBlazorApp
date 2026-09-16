@@ -9,7 +9,7 @@
 - Only change the CoreBlazorApp project in future; do not modify other projects because they are referenced NuGet packages.
 
 ## Code Style
-- Always use code behind (separate .razor.cs files) for Blazor pages and components in CoreBlazorApp, unless specifically directed otherwise. Do not use @code blocks in .razor files.
+- Use code behind (separate .razor.cs files) for Blazor pages in CoreBlazorApp. Inline `@code` blocks are fine for Razor components unless specifically directed otherwise.
 - Use `Midland.Core.Common.Extensions.IsNullOrBlank` for null/empty string checks and keep `Midland.Core.Common` available as a global using.
 - Whenever looping through any `IEnumerable`, always use `Midland.Core.Common.Extensions.Values()`.
 - When adding a grid in this codebase, do not create a new model specifically for the grid.

@@ -6,7 +6,7 @@
                    VisibleChanged="@OnVisibleChangedAsync"
                    Modal="true"
                    Width="1750px"
-                   Height="800px"
+                   Height="1000px"
                    Resizable="true"
                    Draggable="true">
         <WindowTitle>Occurrence Details</WindowTitle>
@@ -18,31 +18,92 @@
                 <DockManagerPanes>
                     <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Vertical">
                         <Panes>
-                            <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Horizontal" Size="60%">
+                            <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Horizontal" Size="50%">
                                 <Panes>
-                                    <DockManagerContentPane Id="occurrence-details-pane" HeaderText="Details" Size="50%" AllowFloat="false" Unpinnable="false" Closeable="false">
+                                    <DockManagerContentPane Id="occurrence-details-pane" HeaderText="Details" Size="30%" AllowFloat="false" Unpinnable="false" Closeable="false">
                                         <Content>
-                                            <div class="k-form k-form-sm occurrence-tile-section">
-                                                <div><strong>Occurrence Ref:</strong> @OccurrenceDetail.EntryOccurrenceRef</div>
-                                                <div><strong>Entry Ref:</strong> @OccurrenceDetail.EntryRef</div>
-                                                <div><strong>Date:</strong> @OccurrenceDetail.Date</div>
-                                                <div><strong>Description:</strong> @OccurrenceDetail.Description</div>
-                                                <div><strong>Generic Description:</strong> @OccurrenceDetail.GenericDescription</div>
-                                                <div><strong>Key:</strong> @OccurrenceDetail.Key</div>
-                                                <div><strong>Origin:</strong> @OccurrenceDetail.Origin</div>
-                                                <div><strong>Caller Id:</strong> @OccurrenceDetail.CallerId</div>
-                                                <div><strong>Emails Sent:</strong> @OccurrenceDetail.EmailsSent</div>
-                                                <div><strong>Error:</strong> @OccurrenceDetail.Error</div>
-                                                <div><strong>Token Subject:</strong> @OccurrenceDetail.TokenSubject</div>
-                                                <div><strong>Token Type:</strong> @OccurrenceDetail.TokenType</div>
-                                                <div><strong>Api Slug:</strong> @OccurrenceDetail.ApiSlug</div>
-                                                <div><strong>Occurrence Count:</strong> @OccurrenceDetail.OccurrenceCount</div>
-                                                <div><strong>Last Entry Occurrence Ref:</strong> @OccurrenceDetail.LastEntryOccurrenceRef</div>
+                                            <div class="occurrence-tile-section">
+                                                <div class="k-grid k-grid-md dense-grid occurrence-details-table">
+                                                    <table class="k-grid-table">
+                                                        <colgroup>
+                                                            <col style="width: 280px;" />
+                                                            <col />
+                                                        </colgroup>
+                                                        <thead class="k-table-thead">
+                                                            <tr class="k-table-row">
+                                                                <th class="k-table-th">Field</th>
+                                                                <th class="k-table-th">Value</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="k-table-tbody">
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Occurrenc#</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.EntryOccurrenceRef</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Entry#</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.EntryRef</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Date</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.Date</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Description</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.Description</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Generic</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.GenericDescription</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Key</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.Key</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Origin</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.Origin</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Caller Id</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.CallerId</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Emails</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.EmailsSent</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Error</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.Error</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Token Subject</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.TokenSubject</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Token Type</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.TokenType</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Api Slug</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.ApiSlug</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Occurrence Count</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.OccurrenceCount</td>
+                                                            </tr>
+                                                            <tr class="k-table-row">
+                                                                <td class="k-table-td">Last Occurrence</td>
+                                                                <td class="k-table-td">@OccurrenceDetail.LastEntryOccurrenceRef</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </Content>
                                     </DockManagerContentPane>
 
-                                    <DockManagerContentPane Id="occurrence-logs-pane" HeaderText="Logs" Size="50%" AllowFloat="false" Unpinnable="false" Closeable="false">
+                                    <DockManagerContentPane Id="occurrence-logs-pane" HeaderText="Logs" Size="70%" AllowFloat="false" Unpinnable="false" Closeable="false">
                                         <Content>
                                             <div class="occurrence-tile-section">
                                                 <TelerikGrid TItem="ApiLogDataModel" Data="@LogEntries" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true" Height="100%">
@@ -61,7 +122,7 @@
                                 </Panes>
                             </DockManagerSplitPane>
 
-                            <DockManagerContentPane Id="occurrence-stacktrace-pane" HeaderText="Stack Trace" Size="40%" AllowFloat="false" Unpinnable="false" Closeable="false">
+                            <DockManagerContentPane Id="occurrence-stacktrace-pane" HeaderText="Stack Trace" Size="50%" AllowFloat="false" Unpinnable="false" Closeable="false">
                                 <Content>
                                     @if (StackTraceText.IsNotNullOrBlank())
                                     {

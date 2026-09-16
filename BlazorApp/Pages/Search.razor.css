@@ -1,0 +1,18 @@
+/* Break the page content out of the flex column layout */
+::deep .content {
+    display: block !important;
+}
+
+/* Force your grid to behave like a real grid */
+.search-grid-3 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    gap: 16px 24px;
+    width: 100%;
+}
+
+.search-grid-3 > div {
+    min-width: 0;
+}
