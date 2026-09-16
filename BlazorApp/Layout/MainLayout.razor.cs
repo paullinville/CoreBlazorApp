@@ -32,7 +32,8 @@ public partial class MainLayout : IDisposable
 
     public List<ReportMenuItem> ReportMenuItems { get; } =
     [
-        new() { Text = "Log Analysis", Url = "/reports/log-analysis" }
+        new() { Text = "Log Analysis Overview", Url = "/reports/log-analysis-overview" },
+        new() { Text = "Log Pivot Table", Url = "/reports/log-pivot-table" }
     ];
 
     public List<ReportMenuItem> SettingsMenuItems { get; } =

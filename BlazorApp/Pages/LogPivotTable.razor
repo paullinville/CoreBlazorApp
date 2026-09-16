@@ -1,0 +1,81 @@
+@page "/reports/log-pivot-table"
+@using BlazorApp.Components
+@using Microsoft.AspNetCore.Components
+
+<PageTitle>@PageTitleText</PageTitle>
+
+<TelerikDockManager Class="log-pivot-table-dock-manager" Width="100%" Height="98%">
+    <DockManagerPanes>
+        <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Horizontal">
+            <Panes>
+                <DockManagerContentPane Size="10%" HeaderText="Criteria" Closeable="false">
+                    <Content>
+                        <TelerikForm Model="@CriteriaInput" OnValidSubmit="@OnSubmitAsync">
+                            <FormValidation>
+                                <DataAnnotationsValidator />
+                            </FormValidation>
+                            <FormItems>
+                                <FormItem>
+                                    <Template>
+                                        <div class="k-form k-form-sm">
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-pivot-table-application">Application Summary</label>
+                                                <ApplicationSummaryComboBox Data="@Applications"
+                                                                            @bind-Value="CriteriaInput.SelectedApplicationSummary"
+                                                                            Placeholder="Select application"
+                                                                            Width="220px"
+                                                                            AdditionalAttributes="@(new Dictionary<string, object> { ["id"] = "log-pivot-table-application" })" />
+                                                <ValidationMessage For="@(() => CriteriaInput.SelectedApplicationSummary)" />
+                                            </div>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-pivot-table-from-date">From</label>
+                                                <TelerikDateTimePicker Id="log-pivot-table-from-date" @bind-Value="CriteriaInput.FromDate" Format="MM/dd/yyyy hh:mm" />
+                                                <ValidationMessage For="@(() => CriteriaInput.FromDate)" />
+                                            </div>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-pivot-table-to-date">To</label>
+                                                <TelerikDateTimePicker Id="log-pivot-table-to-date" @bind-Value="CriteriaInput.ToDate" Format="MM/dd/yyyy hh:mm" />
+                                                <ValidationMessage For="@(() => CriteriaInput.ToDate)" />
+                                            </div>
+                                        </div>
+                                    </Template>
+                                </FormItem>
+                            </FormItems>
+                        </TelerikForm>
+                    </Content>
+                </DockManagerContentPane>
+
+                <DockManagerContentPane Size="90%" AllowFloat="true" Closeable="false" Unpinnable="true">
+                    <Content>
+                        <div class="log-pivot-table-right-panel-placeholder" style="width: 100%; height: 100%;">
+                            @if (LogDataResults.Any())
+                            {
+                                <TelerikPivotGridContainer>
+                                    <TelerikPivotGridConfiguratorButton></TelerikPivotGridConfiguratorButton>
+
+                                    <TelerikPivotGridConfigurator></TelerikPivotGridConfigurator>
+                                    <TelerikPivotGrid Data="@LogDataResults"
+                                                      Height="100%"
+                                                      Width="100%">
+                                        <PivotGridRows>
+                                            <PivotGridRow Name="ApiName" />
+                                        </PivotGridRows>
+                                        <PivotGridColumns>
+                                            <PivotGridColumn Name="ApiServer" />
+                                        </PivotGridColumns>
+                                        <PivotGridMeasures>
+                                            <PivotGridMeasure Name="WorkingSet" Aggregate="PivotGridAggregateType.Sum" />
+                                            <PivotGridMeasure Name="TimeElapsed" Aggregate="PivotGridAggregateType.Average" />
+                                        </PivotGridMeasures>
+                                    </TelerikPivotGrid>
+                                </TelerikPivotGridContainer><p style="padding: 20px;">Select criteria and click Search to display the pivot analysis.</p>
+                            }
+                        </div>
+                    </Content>
+                </DockManagerContentPane>
+            </Panes>
+        </DockManagerSplitPane>
+    </DockManagerPanes>
+</TelerikDockManager>

@@ -9,8 +9,11 @@
 - Only change the CoreBlazorApp project in future; do not modify other projects because they are referenced NuGet packages.
 
 ## Code Style
+- Always use code behind (separate .razor.cs files) for Blazor pages and components in CoreBlazorApp, unless specifically directed otherwise. Do not use @code blocks in .razor files.
 - Use `Midland.Core.Common.Extensions.IsNullOrBlank` for null/empty string checks and keep `Midland.Core.Common` available as a global using.
 - Whenever looping through any `IEnumerable`, always use `Midland.Core.Common.Extensions.Values()`.
 - When adding a grid in this codebase, do not create a new model specifically for the grid.
 - Never use try/catch when calling repository methods; repository errors must be handled by the established channel event flow. Do not handle repository-call errors in Razor page code-behind; rely on channel event-based error handling per project instructions.
+- Always use Telerik controls if available in the CoreBlazorApp codebase, rather than standard HTML elements or other control libraries. If an appropriate Telerik control is not available, ask the developer for a Telerik control to use. If they cannot provide one, then use a standard HTML element or other control library.
+- For TelerikTooltip, use the `<Template>` parameter, not `<TooltipTemplate>`, to define tooltip content.
 

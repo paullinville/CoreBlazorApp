@@ -39,7 +39,7 @@ public partial class LogAnalysis
         LogAnalysisTileInfo.TrendSlope => "Shows the long‑term trend for each API action.\r\nA positive slope means latency is rising over time; a negative slope means it’s improving.",
         LogAnalysisTileInfo.WindowedLatencyTrend => "Displays the average latency for each API action in each time window.\r\nThis chart shows how performance changed over time, window by window.",
         LogAnalysisTileInfo.MovingAverageTrend => "Shows a smoothed latency trend across multiple windows.\r\nThis reduces noise and highlights the overall direction of performance — improving or degrading.",
-        LogAnalysisTileInfo.TimeTakenByAction => "Compares count, average, maximum, and p95 time by action.",
+        LogAnalysisTileInfo.TimeTakenByAction => "P95 shows the latency of the slowest 5% of requests — useful for spotting occasional high‑latency spikes.",
         _ => string.Empty
     };
 
@@ -76,7 +76,10 @@ public partial class LogAnalysis
                               .ToList();
         LogDataTimeTakenResults = LogDataTimeTakenAnalyzer.Analyze(LogDataResults, CriteriaInput.ActionCountToAnalyze);
 
-        var trendAnalyzer = new LatencyTrendAnalyzer(CriteriaInput.WindowSize, CriteriaInput.WindowUnit);
+        var trendAnalyzer = new LatencyTrendAnalyzer(CriteriaInput.WindowSize, CriteriaInput.WindowUnit)
+        {
+            MovingAverageWindowCount = CriteriaInput.MovingAverageWindowCount
+        };
 
         RollingWindowTrendResults = trendAnalyzer.ComputeRollingWindowTrend(LogDataResults, CriteriaInput.ActionCountToAnalyze);
 

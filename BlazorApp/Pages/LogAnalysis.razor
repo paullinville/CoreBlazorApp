@@ -1,4 +1,4 @@
-@page "/reports/log-analysis"
+@page "/reports/log-analysis-overview"
 
 <PageTitle>@PageTitleText</PageTitle>
 
@@ -7,7 +7,7 @@
     <DockManagerPanes>
         <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Horizontal">
             <Panes>
-                <DockManagerContentPane Size="15%" HeaderText="Criteria">
+                <DockManagerContentPane Size="10%" HeaderText="Criteria" Closeable="false">
                     <Content>
                         <TelerikForm Model="@CriteriaInput" OnValidSubmit="@OnSubmitAsync">
                             <FormValidation>
@@ -18,7 +18,7 @@
                                     <Template>
                                         <div class="k-form k-form-sm">
                                             <div class="k-form-field k-mb-2">
-                                                <label for="log-analysis-application">Application Summary</label>
+                                                <label for="log-analysis-application">API</label>
                                                 <ApplicationSummaryComboBox Data="@Applications"
                                                                             @bind-Value="CriteriaInput.SelectedApplicationSummary"
                                                                             Placeholder="Select application"
@@ -51,7 +51,7 @@
 
                                             <div class="k-form-field k-mb-2">
                                                 <label for="log-analysis-window-size">Window Size</label>
-                                                <div title="Number of log entries in each analysis window">
+                                                <div id="log-analysis-window-size-container">
                                                     <TelerikNumericTextBox Id="log-analysis-window-size"
                                                                            @bind-Value="CriteriaInput.WindowSize"
                                                                            Min="1"
@@ -60,12 +60,37 @@
                                                 </div>
                                                 <ValidationMessage For="@(() => CriteriaInput.WindowSize)" />
                                             </div>
+                                            <TelerikTooltip TargetSelector="#log-analysis-window-size-container" Position="TooltipPosition.Top">
+                                                <Template>
+                                                    <div>Sets how large each window is. For example, a window size of 2 Days groups logs into 2‑day windows.</div>
+                                                </Template>
+                                            </TelerikTooltip>
                                             
                                             <div class="k-form-field k-mb-2">
                                                 <label for="log-analysis-action-count">Actions to Analyze</label>
-                                                <TelerikNumericTextBox Id="log-analysis-action-count" @bind-Value="CriteriaInput.ActionCountToAnalyze" Min="1" Decimals="0" Format="n0" />
+                                                <div id="log-analysis-action-count-container">
+                                                    <TelerikNumericTextBox Id="log-analysis-action-count" @bind-Value="CriteriaInput.ActionCountToAnalyze" Min="1" Decimals="0" Format="n0" />
+                                                </div>
                                                 <ValidationMessage For="@(() => CriteriaInput.ActionCountToAnalyze)" />
                                             </div>
+                                            <TelerikTooltip TargetSelector="#log-analysis-action-count-container" Position="TooltipPosition.Top">
+                                                <Template>
+                                                    <div>The number of actions to show. Will pick the top actions for the graph/grid.</div>
+                                                </Template>
+                                            </TelerikTooltip>
+
+                                            <div class="k-form-field k-mb-2">
+                                                <label for="log-analysis-moving-avg-count">Moving Average Window Count</label>
+                                                <div id="log-analysis-moving-avg-count-container">
+                                                    <TelerikNumericTextBox Id="log-analysis-moving-avg-count" @bind-Value="CriteriaInput.MovingAverageWindowCount" Min="2" Max="5" Decimals="0" Format="n0" />
+                                                </div>
+                                                <ValidationMessage For="@(() => CriteriaInput.MovingAverageWindowCount)" />
+                                            </div>
+                                            <TelerikTooltip TargetSelector="#log-analysis-moving-avg-count-container" Position="TooltipPosition.Top">
+                                                <Template>
+                                                    <div>Sets how many windows are used to calculate the moving average. A higher number produces a smoother trend line. Valid values range from 2 up to the total number of windows in the selected date range.</div>
+                                                </Template>
+                                            </TelerikTooltip>
 
                                         </div>
                                     </Template>
@@ -75,7 +100,7 @@
                     </Content>
                 </DockManagerContentPane>
 
-                <DockManagerContentPane Size="85%" AllowFloat="true" Closeable="false" Unpinnable="true">
+                <DockManagerContentPane Size="90%" AllowFloat="true" Closeable="false" Unpinnable="false">
                     <Content>
                         <div class="log-analysis-right-panel-placeholder">
                             <TelerikTileLayout Class="log-analysis-tile-layout"

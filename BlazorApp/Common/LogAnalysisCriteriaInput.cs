@@ -22,6 +22,9 @@ public class LogAnalysisCriteriaInput : IValidatableObject
     [Range(1, int.MaxValue, ErrorMessage = "Action Count must be greater than 0")]
     public int ActionCountToAnalyze { get; set; } = 5;
 
+    [Range(2, 5, ErrorMessage = "Moving Average Window Count must be between 2 and 5")]
+    public int MovingAverageWindowCount { get; set; } = 3;
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (FromDate.HasValue && ToDate.HasValue && FromDate.Value > ToDate.Value)

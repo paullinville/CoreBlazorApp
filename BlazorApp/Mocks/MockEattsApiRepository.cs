@@ -416,9 +416,12 @@ public class MockEattsRepository : IEattsApiRepository
 
     public Task<List<ApiLogDataModel>> FindApiLogData(ApiLogCriteria criteria)
     {
-        var query = ApiLogs.AsEnumerable();
+        var query = ApiLogs.AsQueryable();
         var results = query.Where(r => r.LogDate >= criteria.BeginDate && r.LogDate <= criteria.EndDate);
-
+        if (criteria.ApiSlug.IsNotNullOrBlank())
+        {
+            results = results.Where(r => r.ApiName.Equals(criteria.ApiSlug, StringComparison.OrdinalIgnoreCase));
+        }
         return Task.FromResult(results.ToList());
     }
 
