@@ -21,7 +21,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 1,
             Name = "Core App",
             Slug = "core-app",
-            ApiName = "Core API",
+            ApiName = "CoreAPI",
             VirtualDirectory = "/core",
             IsActive = true,
             Guid = Guid.Parse("33333333-3333-3333-3333-333333333333")
@@ -31,7 +31,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 2,
             Name = "Admin App",
             Slug = "admin-app",
-            ApiName = "Admin API",
+            ApiName = "AdminAPI",
             VirtualDirectory = "/admin",
             IsActive = true,
             Guid = Guid.Parse("44444444-4444-4444-4444-444444444444")
@@ -41,7 +41,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 3,
             Name = "Loan Portal",
             Slug = "loan-portal",
-            ApiName = "Loan API",
+            ApiName = "LoanAPI",
             VirtualDirectory = "/loan",
             IsActive = true,
             Guid = Guid.Parse("55555555-5555-5555-5555-555555555555")
@@ -51,7 +51,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 4,
             Name = "Payroll Hub",
             Slug = "payroll-hub",
-            ApiName = "Payroll API",
+            ApiName = "PayrollAPI",
             VirtualDirectory = "/payroll",
             IsActive = true,
             Guid = Guid.Parse("66666666-6666-6666-6666-666666666666")
@@ -61,7 +61,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 5,
             Name = "Risk Center",
             Slug = "risk-center",
-            ApiName = "Risk API",
+            ApiName = "RiskAPI",
             VirtualDirectory = "/risk",
             IsActive = true,
             Guid = Guid.Parse("77777777-7777-7777-7777-777777777777")
@@ -71,7 +71,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 6,
             Name = "Customer Insights",
             Slug = "customer-insights",
-            ApiName = "Insights API",
+            ApiName = "InsightsAPI",
             VirtualDirectory = "/insights",
             IsActive = true,
             Guid = Guid.Parse("88888888-8888-8888-8888-888888888888")
@@ -81,7 +81,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 7,
             Name = "Treasury Tools",
             Slug = "treasury-tools",
-            ApiName = "Treasury API",
+            ApiName = "TreasuryAPI",
             VirtualDirectory = "/treasury",
             IsActive = true,
             Guid = Guid.Parse("99999999-9999-9999-9999-999999999999")
@@ -91,7 +91,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 8,
             Name = "Fraud Monitor",
             Slug = "fraud-monitor",
-            ApiName = "Fraud API",
+            ApiName = "FraudAPI",
             VirtualDirectory = "/fraud",
             IsActive = true,
             Guid = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
@@ -101,7 +101,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 9,
             Name = "Statements",
             Slug = "statements",
-            ApiName = "Statements API",
+            ApiName = "StatementsAPI",
             VirtualDirectory = "/statements",
             IsActive = true,
             Guid = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
@@ -111,7 +111,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 10,
             Name = "Cards Platform",
             Slug = "cards-platform",
-            ApiName = "Cards API",
+            ApiName = "CardsAPI",
             VirtualDirectory = "/cards",
             IsActive = true,
             Guid = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc")
@@ -121,7 +121,7 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 11,
             Name = "Investments",
             Slug = "investments",
-            ApiName = "Investments API",
+            ApiName = "InvestmentsAPI",
             VirtualDirectory = "/investments",
             IsActive = true,
             Guid = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd")
@@ -131,12 +131,16 @@ public class MockSecurityModelRepository : ISecurityModelApiRepository
             ApplicationRef = 12,
             Name = "Document Vault",
             Slug = "document-vault",
-            ApiName = "Documents API",
+            ApiName = "DocumentsAPI",
             VirtualDirectory = "/documents",
             IsActive = true,
             Guid = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee")
         }
     ];
+
+    public static List<string> ApiNames => Applications
+        .Select(r => r.ApiName)
+        .ToList();
 
     public Task<List<ApplicationSummary>> GetApplications()
     {

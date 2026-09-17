@@ -180,7 +180,7 @@ public class MockEattsRepository : IEattsApiRepository
         new ApiLogDataModel
         {
             ApiLogRef = 9001,
-            ApiName = "core-app",
+            ApiName = MockSecurityModelRepository.ApiNames.GetRandom(),
             Error = true,
             LogDate = DateTime.UtcNow.AddMinutes(-15),
             RequestId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
@@ -188,7 +188,7 @@ public class MockEattsRepository : IEattsApiRepository
             LogData = new LogDataBindingModel
             {
                 Action = "GetProfile",
-                Api = "core-app",
+                Api = MockSecurityModelRepository.ApiNames.GetRandom(),
                 CallerContext = "ProfileController.Get",
                 ClientIp = "10.0.0.21",
                 Controller = "Profile",
@@ -233,7 +233,7 @@ public class MockEattsRepository : IEattsApiRepository
         new ApiLogDataModel
         {
             ApiLogRef = 9002,
-            ApiName = "admin-app",
+            ApiName = MockSecurityModelRepository.ApiNames.GetRandom(),
             Error = false,
             LogDate = DateTime.UtcNow.AddMinutes(-40),
             RequestId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
@@ -241,7 +241,7 @@ public class MockEattsRepository : IEattsApiRepository
             LogData = new LogDataBindingModel
             {
                 Action = "UpdateSettings",
-                Api = "admin-app",
+                Api = MockSecurityModelRepository.ApiNames.GetRandom(),
                 CallerContext = "SettingsController.Update",
                 ClientIp = "10.0.0.22",
                 Controller = "Settings",
@@ -311,7 +311,7 @@ public class MockEattsRepository : IEattsApiRepository
             return new ApiLogDataModel
             {
                 ApiLogRef = 9000 + index,
-                ApiName = apiName,
+                ApiName = MockSecurityModelRepository.ApiNames.GetRandom(),
                 Error = isError,
                 LogDate = logDate,
                 RequestId = requestId,

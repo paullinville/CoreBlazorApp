@@ -2,8 +2,7 @@
 
 <PageTitle>@PageTitleText</PageTitle>
 
-@* <div class="dense-page log-analysis-page"> *@
-<TelerikDockManager Class="log-analysis-dock-manager" Width="100%" Height="98%">
+<TelerikDockManager Width="100%" Height="98%">
     <DockManagerPanes>
         <DockManagerSplitPane Orientation="DockManagerPaneOrientation.Horizontal">
             <Panes>
@@ -16,8 +15,8 @@
                             <FormItems>
                                 <FormItem>
                                     <Template>
-                                        <div class="k-form k-form-sm">
-                                            <div class="k-form-field k-mb-2">
+                                        <div>
+                                            <div>
                                                 <label for="log-analysis-application">API</label>
                                                 <ApplicationSummaryComboBox Data="@Applications"
                                                                             @bind-Value="CriteriaInput.SelectedApplicationSummary"
@@ -27,19 +26,19 @@
                                                 <ValidationMessage For="@(() => CriteriaInput.SelectedApplicationSummary)" />
                                             </div>
 
-                                            <div class="k-form-field k-mb-2">
+                                            <div>
                                                 <label for="log-analysis-from-date">From</label>
                                                 <TelerikDateTimePicker Id="log-analysis-from-date" @bind-Value="CriteriaInput.FromDate" Format="MM/dd/yyyy hh:mm" />
                                                 <ValidationMessage For="@(() => CriteriaInput.FromDate)" />
                                             </div>
 
-                                            <div class="k-form-field k-mb-2">
+                                            <div>
                                                 <label for="log-analysis-to-date">To</label>
                                                 <TelerikDateTimePicker Id="log-analysis-to-date" @bind-Value="CriteriaInput.ToDate" Format="MM/dd/yyyy hh:mm" />
                                                 <ValidationMessage For="@(() => CriteriaInput.ToDate)" />
                                             </div>
 
-                                            <div class="k-form-field k-mb-2">
+                                            <div>
                                                 <label for="log-analysis-window-unit">Window Unit</label>
                                                 <TelerikDropDownList Id="log-analysis-window-unit"
                                                                      TItem="WindowUnit"
@@ -49,7 +48,7 @@
                                                 <ValidationMessage For="@(() => CriteriaInput.WindowUnit)" />
                                             </div>
 
-                                            <div class="k-form-field k-mb-2">
+                                            <div>
                                                 <label for="log-analysis-window-size">Window Size</label>
                                                 <div id="log-analysis-window-size-container">
                                                     <TelerikNumericTextBox Id="log-analysis-window-size"
@@ -66,7 +65,7 @@
                                                 </Template>
                                             </TelerikTooltip>
                                             
-                                            <div class="k-form-field k-mb-2">
+                                            <div>
                                                 <label for="log-analysis-action-count">Actions to Analyze</label>
                                                 <div id="log-analysis-action-count-container">
                                                     <TelerikNumericTextBox Id="log-analysis-action-count" @bind-Value="CriteriaInput.ActionCountToAnalyze" Min="1" Decimals="0" Format="n0" />
@@ -79,7 +78,7 @@
                                                 </Template>
                                             </TelerikTooltip>
 
-                                            <div class="k-form-field k-mb-2">
+                                            <div>
                                                 <label for="log-analysis-moving-avg-count">Moving Average Window Count</label>
                                                 <div id="log-analysis-moving-avg-count-container">
                                                     <TelerikNumericTextBox Id="log-analysis-moving-avg-count" @bind-Value="CriteriaInput.MovingAverageWindowCount" Min="2" Max="5" Decimals="0" Format="n0" />
@@ -102,8 +101,8 @@
 
                 <DockManagerContentPane Size="90%" AllowFloat="true" Closeable="false" Unpinnable="false">
                     <Content>
-                        <div class="log-analysis-right-panel-placeholder">
-                            <TelerikTileLayout Class="log-analysis-tile-layout"
+                        <div>
+                            <TelerikTileLayout
                                                Columns="5"
                                                ColumnWidth="1fr"
                                                RowHeight="auto"
@@ -112,7 +111,7 @@
                                 <TileLayoutItems>
                                     <TileLayoutItem ColSpan="1" RowSpan="1">
                                         <HeaderTemplate>
-                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                            <div>
                                                 <span>Summary</span>
                                                 <div @onclick:stopPropagation="true">
                                                     <TelerikButton Size="ComponentSize.Small"
@@ -125,11 +124,11 @@
                                             </div>
                                             @if (ActiveTileInfo == LogAnalysisTileInfo.Summary)
                                             {
-                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.Summary)</div>
+                                                <div>@GetTileInfoText(LogAnalysisTileInfo.Summary)</div>
                                             }
                                         </HeaderTemplate>
                                         <Content>
-                                            <div class="log-analysis-tile-content">
+                                            <div>
                                                 <div><strong>Log entries:</strong> @LogDataResults.Count</div>
                                                 <div><strong>Actions analyzed:</strong> @LogDataTimeTakenResults.Count</div>
                                             </div>
@@ -137,7 +136,7 @@
                                     </TileLayoutItem>
                                     <TileLayoutItem ColSpan="2" RowSpan="1">
                                         <HeaderTemplate>
-                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                            <div>
                                                 <span>Rolling Window Trend</span>
                                                 <div @onclick:stopPropagation="true">
                                                     <TelerikButton Size="ComponentSize.Small"
@@ -150,7 +149,7 @@
                                             </div>
                                             @if (ActiveTileInfo == LogAnalysisTileInfo.RollingWindowTrend)
                                             {
-                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.RollingWindowTrend)</div>
+                                                <div>@GetTileInfoText(LogAnalysisTileInfo.RollingWindowTrend)</div>
                                             }
                                         </HeaderTemplate>
                                         <Content>
@@ -159,7 +158,7 @@
                                     </TileLayoutItem>
                                     <TileLayoutItem ColSpan="2" RowSpan="1">
                                         <HeaderTemplate>
-                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                            <div>
                                                 <span>Trend Slope (Long-Term Drift)</span>
                                                 <div @onclick:stopPropagation="true">
                                                     <TelerikButton Size="ComponentSize.Small"
@@ -172,7 +171,7 @@
                                             </div>
                                             @if (ActiveTileInfo == LogAnalysisTileInfo.TrendSlope)
                                             {
-                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.TrendSlope)</div>
+                                                <div>@GetTileInfoText(LogAnalysisTileInfo.TrendSlope)</div>
                                             }
                                         </HeaderTemplate>
                                         <Content>
@@ -181,7 +180,7 @@
                                     </TileLayoutItem>
                                     <TileLayoutItem ColSpan="5" RowSpan="2">
                                         <HeaderTemplate>
-                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                            <div>
                                                 <span>Windowed Latency Trend</span>
                                                 <div @onclick:stopPropagation="true">
                                                     <TelerikButton Size="ComponentSize.Small"
@@ -194,7 +193,7 @@
                                             </div>
                                             @if (ActiveTileInfo == LogAnalysisTileInfo.WindowedLatencyTrend)
                                             {
-                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.WindowedLatencyTrend)</div>
+                                                <div>@GetTileInfoText(LogAnalysisTileInfo.WindowedLatencyTrend)</div>
                                             }
                                         </HeaderTemplate>
                                         <Content>
@@ -203,7 +202,7 @@
                                     </TileLayoutItem>
                                     <TileLayoutItem ColSpan="5" RowSpan="2">
                                         <HeaderTemplate>
-                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                            <div>
                                                 <span>Action Response Time Moving Average</span>
                                                 <div @onclick:stopPropagation="true">
                                                     <TelerikButton Size="ComponentSize.Small"
@@ -216,11 +215,11 @@
                                             </div>
                                             @if (ActiveTileInfo == LogAnalysisTileInfo.MovingAverageTrend)
                                             {
-                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.MovingAverageTrend)</div>
+                                                <div>@GetTileInfoText(LogAnalysisTileInfo.MovingAverageTrend)</div>
                                             }
                                         </HeaderTemplate>
                                         <Content>
-                                            <div class="log-analysis-tile-content">
+                                            <div>
                                                 <ActionLatencyTrendMovingAverageChart Results="@MovingAverageTrendResults" />
                                             </div>
                                         </Content>
@@ -228,7 +227,7 @@
 
                                     <TileLayoutItem ColSpan="5" RowSpan="2">
                                         <HeaderTemplate>
-                                            <div class="k-d-flex k-align-items-center k-justify-content-between k-gap-2">
+                                            <div>
                                                 <span>Time Taken By Action</span>
                                                 <div @onclick:stopPropagation="true">
                                                     <TelerikButton Size="ComponentSize.Small"
@@ -241,7 +240,7 @@
                                             </div>
                                             @if (ActiveTileInfo == LogAnalysisTileInfo.TimeTakenByAction)
                                             {
-                                                <div class="k-text-xs k-mt-1">@GetTileInfoText(LogAnalysisTileInfo.TimeTakenByAction)</div>
+                                                <div>@GetTileInfoText(LogAnalysisTileInfo.TimeTakenByAction)</div>
                                             }
                                         </HeaderTemplate>
                                         <Content>
@@ -257,4 +256,3 @@
         </DockManagerSplitPane>
     </DockManagerPanes>
 </TelerikDockManager>
-@*</div>*@
