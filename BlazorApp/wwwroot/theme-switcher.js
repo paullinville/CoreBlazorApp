@@ -1,6 +1,6 @@
 ﻿window.telerikThemeSwitcher = {
     themeStorageKey: "blazorAppTheme",
-    setTheme: function (themeName) {
+    setTheme: function (themeName, savePreference = true) {
         const meridian = document.getElementById("telerik-theme-meridian");
         const meridianDark = document.getElementById("telerik-theme-meridian-dark");
 
@@ -8,18 +8,37 @@
             return;
         }
 
-        const isDarkTheme = themeName === "meridian-dark";
+        const resolvedTheme = themeName === "meridian-dark" ? "meridian-dark" : "meridian";
+        const isDarkTheme = resolvedTheme === "meridian-dark";
 
         meridian.disabled = isDarkTheme;
         meridianDark.disabled = !isDarkTheme;
         document.body.classList.toggle("dark-theme", isDarkTheme);
 
-        window.localStorage.setItem(this.themeStorageKey, themeName);
+        if (savePreference) {
+            window.localStorage.setItem(this.themeStorageKey, resolvedTheme);
+        }
     },
     getStoredTheme: function () {
         return window.localStorage.getItem(this.themeStorageKey);
+    },
+    getSystemTheme: function () {
+        return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "meridian-dark"
+            : "meridian";
+    },
+    applyInitialTheme: function () {
+        const storedTheme = this.getStoredTheme();
+        if (storedTheme) {
+            this.setTheme(storedTheme, true);
+            return;
+        }
+
+        this.setTheme(this.getSystemTheme(), false);
     }
 };
+
+window.telerikThemeSwitcher.applyInitialTheme();
 
 window.appLayoutHelper = {
     outsideClickHandler: null,
