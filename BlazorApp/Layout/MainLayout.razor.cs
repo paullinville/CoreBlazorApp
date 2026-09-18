@@ -104,12 +104,13 @@ public partial class MainLayout : IDisposable
         if (firstRender)
         {
             var storedTheme = await ThemeService.GetStoredThemeAsync();
-            if (!string.IsNullOrEmpty(storedTheme))
-            {
-                SelectedTheme = storedTheme;
-            }
+            var hasStoredTheme = !storedTheme.IsNullOrBlank();
 
-            await ThemeService.SetThemeAsync(SelectedTheme);
+            SelectedTheme = hasStoredTheme
+                ? storedTheme!
+                : await ThemeService.GetSystemThemeAsync();
+
+            await ThemeService.SetThemeAsync(SelectedTheme, hasStoredTheme);
             StateHasChanged();
         }
 

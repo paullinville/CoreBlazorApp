@@ -9,13 +9,18 @@ public class ThemeService
         _js = js;
     }
 
-    public async Task SetThemeAsync(string theme)
+    public async Task SetThemeAsync(string theme, bool savePreference = true)
     {
-        await _js.InvokeVoidAsync("telerikThemeSwitcher.setTheme", theme);
+        await _js.InvokeVoidAsync("telerikThemeSwitcher.setTheme", theme, savePreference);
     }
 
-    public async Task<string> GetStoredThemeAsync()
+    public async Task<string?> GetStoredThemeAsync()
     {
-        return await _js.InvokeAsync<string>("telerikThemeSwitcher.getStoredTheme");
+        return await _js.InvokeAsync<string?>("telerikThemeSwitcher.getStoredTheme");
+    }
+
+    public async Task<string> GetSystemThemeAsync()
+    {
+        return await _js.InvokeAsync<string>("telerikThemeSwitcher.getSystemTheme");
     }
 }
