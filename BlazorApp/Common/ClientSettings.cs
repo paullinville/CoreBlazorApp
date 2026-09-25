@@ -16,19 +16,3 @@ public class ClientSettings
 
     public bool UseMocks { get; set; } = false;
 }
-
-// ------------------------------------------------------------
-// Models
-// ------------------------------------------------------------
-public class MovingAverageTrendResult
-{
-    public string Action { get; set; }
-    public List<MovingAveragePoint> Points { get; set; } = new();
-}
-
-public class MovingAveragePoint
-{
-    public DateTime Timestamp { get; set; }
-    public double RawValue { get; set; }
-    public double MovingAverage { get; set; }
-}
