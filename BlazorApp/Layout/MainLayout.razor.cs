@@ -3,13 +3,20 @@ namespace BlazorApp.Layout;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
+using BlazorApp.Components;
 using BlazorApp.Data;
 using BlazorApp.Common;
 using Midland.Core.Client;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 public partial class MainLayout : IDisposable
 {
+    private static readonly JsonSerializerOptions PrettyPrintJsonOptions = new()
+    {
+        WriteIndented = true
+    };
+
     [Inject] public ThemeService ThemeService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IJSRuntime JsRuntime { get; set; }
@@ -22,6 +29,10 @@ public partial class MainLayout : IDisposable
     public bool IsWelcomeWindowVisible { get; set; }
 
     public string DecodedTokenJson { get; set; } = string.Empty;
+
+    public List<TokenTreeItem> DecodedTokenTreeItems { get; set; } = new();
+
+    public List<TokenPermissionItem> DecodedTokenPermissions { get; set; } = new();
 
     public List<MenuItem> MenuItems { get; } =
     [
@@ -74,14 +85,14 @@ public partial class MainLayout : IDisposable
 
     public string? EnvironmentBannerText => ClientSettings.Environment?.Trim().ToLowerInvariant() switch
     {
-        "development" => "Development",
+        AppConstants.DevelopmentEnvironment => "Development",
         "deployment" => "UAT",
         _ => null
     };
 
     public string EnvironmentBannerColor => ClientSettings.Environment?.Trim().ToLowerInvariant() switch
     {
-        "development" => "#99FF99",
+        AppConstants.DevelopmentEnvironment => "#99FF99",
         "deployment" => "#9999FF",
         _ => string.Empty
     };
@@ -141,20 +152,105 @@ public partial class MainLayout : IDisposable
         try
         {
             var securityToken = await SecurityModelToken.GetSecurityToken();
-
-            DecodedTokenJson = JsonSerializer.Serialize(securityToken.Payload, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+            UpdateDecodedTokenDisplay(securityToken.Payload, "Decoded Token");
         }
         catch (Exception ex)
         {
-            var tokenError = new { Error = ex.Message };
-            DecodedTokenJson = JsonSerializer.Serialize(tokenError, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+            UpdateDecodedTokenDisplay(new { Error = ex.Message }, "Token Error");
         }
+    }
+
+    private void UpdateDecodedTokenDisplay(object payload, string rootLabel)
+    {
+        var jsonNode = JsonSerializer.SerializeToNode(payload, PrettyPrintJsonOptions);
+        DecodedTokenJson = jsonNode?.ToJsonString(PrettyPrintJsonOptions) ?? string.Empty;
+        DecodedTokenTreeItems = jsonNode is null
+            ? []
+            : [BuildTreeItem(rootLabel, jsonNode)];
+        DecodedTokenPermissions = ExtractTokenPermissions(jsonNode);
+    }
+
+    private static List<TokenPermissionItem> ExtractTokenPermissions(JsonNode? jsonNode)
+    {
+        if (jsonNode is JsonObject jsonObject && jsonObject["permissions"] is JsonArray permissionsArray)
+        {
+            return permissionsArray
+                .Select(permissionNode => permissionNode?.Deserialize<TokenPermissionItem>())
+                .Where(permission => permission is not null)
+                .Select(permission => permission!)
+                .ToList();
+        }
+
+        return [];
+    }
+
+    private static TokenTreeItem BuildTreeItem(string text, JsonNode? node)
+    {
+        if (node is null)
+        {
+            return new TokenTreeItem { Text = $"{text}: null" };
+        }
+
+        if (node is JsonObject jsonObject)
+        {
+            return new TokenTreeItem
+            {
+                Text = text,
+                Items = [.. jsonObject.Select(property => BuildTreeItem(property.Key, property.Value))]
+            };
+        }
+
+        if (node is JsonArray jsonArray)
+        {
+            return new TokenTreeItem
+            {
+                Text = text,
+                Items = [.. jsonArray.Select((item, index) => BuildTreeItem($"[{index}]", item))]
+            };
+        }
+
+        return new TokenTreeItem
+        {
+            Text = $"{text}: {FormatNodeValue(node)}"
+        };
+    }
+
+    private static string FormatNodeValue(JsonNode node)
+    {
+        if (node is JsonValue jsonValue)
+        {
+            if (jsonValue.TryGetValue<string>(out var stringValue))
+            {
+                return stringValue;
+            }
+
+            if (jsonValue.TryGetValue<bool>(out var boolValue))
+            {
+                return boolValue.ToString();
+            }
+
+            if (jsonValue.TryGetValue<int>(out var intValue))
+            {
+                return intValue.ToString();
+            }
+
+            if (jsonValue.TryGetValue<long>(out var longValue))
+            {
+                return longValue.ToString();
+            }
+
+            if (jsonValue.TryGetValue<double>(out var doubleValue))
+            {
+                return doubleValue.ToString();
+            }
+
+            if (jsonValue.TryGetValue<decimal>(out var decimalValue))
+            {
+                return decimalValue.ToString();
+            }
+        }
+
+        return node.ToJsonString();
     }
 
     private Task OnWelcomeWindowVisibleChanged(bool visible)

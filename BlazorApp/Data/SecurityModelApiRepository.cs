@@ -1,5 +1,6 @@
 ﻿using BlazorApp.Common;
 using Midland.Core.SimpleMessageBus;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestEase;
 using SecurityModel.Client;
@@ -9,8 +10,8 @@ namespace BlazorApp.Data;
 
 public class SecurityModelApiRepository : BlazorClientRepositoryBase<ISecurityModelApiClient>, ISecurityModelApiRepository
 {
-    public SecurityModelApiRepository(HttpClient httpClient, IEventChannelBus eventBus, ClientSettings clientSettings, JsonSerializerSettings jsonSettings)
-    : base(httpClient, eventBus, clientSettings, jsonSettings)
+    public SecurityModelApiRepository(HttpClient httpClient, IEventChannelBus eventBus, ClientSettings clientSettings, JsonSerializerSettings jsonSettings, IConfiguration configuration)
+    : base(httpClient, eventBus, clientSettings, jsonSettings, configuration)
     {
     }
 

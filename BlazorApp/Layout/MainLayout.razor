@@ -115,23 +115,12 @@
         </ul>
     }
 
-    @if (IsWelcomeWindowVisible)
-    {
-        <TelerikWindow Width="760px" Height="520px" Modal="true" Visible="@IsWelcomeWindowVisible" VisibleChanged="@OnWelcomeWindowVisibleChanged">
-            <WindowTitle>
-                <div class="welcome-window-title">
-                    <span>Users Application Information</span>
-                    <div class="welcome-window-title-actions">
-                        <TelerikButton Size="ComponentSize.Small" FillMode="ButtonFillMode.Flat" OnClick="@OnCopyTokenClicked">Copy</TelerikButton>
-                        <TelerikButton Size="ComponentSize.Small" FillMode="ButtonFillMode.Flat" OnClick="@OnCloseWelcomeWindowClicked">X</TelerikButton>
-                    </div>
-                </div>
-            </WindowTitle>
-            <WindowContent>
-                <pre class="welcome-token-json">@DecodedTokenJson</pre>
-            </WindowContent>
-        </TelerikWindow>
-    }
+    <TokenTreeWindow Visible="@IsWelcomeWindowVisible"
+                      VisibleChanged="@OnWelcomeWindowVisibleChanged"
+                      TreeItems="@DecodedTokenTreeItems"
+                      PermissionItems="@DecodedTokenPermissions"
+                      CopyClicked="@OnCopyTokenClicked"
+                      CloseClicked="@OnCloseWelcomeWindowClicked" />
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
         @* <GlobalErrorBoundaryBase> *@

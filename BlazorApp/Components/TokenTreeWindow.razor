@@ -1,0 +1,69 @@
+<TelerikWindow Width="760px" Height="520px" Modal="true" Id="welcome-window" Visible="@Visible" VisibleChanged="@OnVisibleChanged">
+    <WindowTitle>
+        <div class="welcome-window-title">
+            <span>@Title</span>
+            <div class="welcome-window-title-actions">
+                <TelerikButton Size="ComponentSize.Small" FillMode="ButtonFillMode.Flat" OnClick="@OnCopyClicked">Copy</TelerikButton>
+                <TelerikButton Size="ComponentSize.Small" FillMode="ButtonFillMode.Flat" OnClick="@OnCloseClicked">X</TelerikButton>
+            </div>
+        </div>
+    </WindowTitle>
+    <WindowContent>
+        <div class="welcome-token-window-content">
+            <section class="welcome-token-permissions-section">
+                <div class="welcome-token-permissions-title">Application permissions</div>
+                @if (PermissionItems.Count > 0)
+                {
+                    <div class="welcome-token-permissions-list">
+                        @foreach (var permission in PermissionItems)
+                        {
+                            <article class="welcome-token-permission-card">
+                                <div class="welcome-token-permission-header">
+                                    <div class="welcome-token-permission-name">@permission.DisplayName</div>
+                                    @if (!string.IsNullOrWhiteSpace(permission.ApplicationSlug) || permission.ApplicationGuid != Guid.Empty)
+                                    {
+                                        <div class="welcome-token-permission-meta">
+                                            @if (!string.IsNullOrWhiteSpace(permission.ApplicationSlug))
+                                            {
+                                                <span>@permission.ApplicationSlug</span>
+                                            }
+                                            @if (permission.ApplicationGuid != Guid.Empty)
+                                            {
+                                                <span>@permission.ApplicationGuid</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                @if (permission.Actions.Count > 0)
+                                {
+                                    <div class="welcome-token-permission-actions">
+                                        @foreach (var action in permission.Actions.OrderBy(action => action))
+                                        {
+                                            <span class="welcome-token-permission-action">@action</span>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="welcome-token-permission-empty">No actions</div>
+                                }
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="welcome-token-permission-empty">No application permissions found.</div>
+                }
+            </section>
+
+            <div class="welcome-token-tree-wrapper">
+                <TelerikTreeView Data="@TreeItems" Class="welcome-token-tree">
+                    <TreeViewBindings>
+                        <TreeViewBinding TextField="Text" ItemsField="Items" />
+                    </TreeViewBindings>
+                </TelerikTreeView>
+            </div>
+        </div>
+    </WindowContent>
+</TelerikWindow>

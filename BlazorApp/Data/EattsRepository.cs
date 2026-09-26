@@ -3,6 +3,7 @@ using BlazorApp.Models;
 using EATTS.Client;
 using EATTS.Common.Models;
 using Midland.Core.SimpleMessageBus;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestEase;
 using System.Security.Cryptography;

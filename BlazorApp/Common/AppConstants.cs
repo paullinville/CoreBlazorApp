@@ -11,6 +11,8 @@ public static class AppConstants
     public const string WarningColor = "warning";
     public const string ErrorColor = "error";
 
+    public const string DevelopmentEnvironment = "development";
+
     public const string MidlandOrange = "#dc6b12";
 
     public static string ToThemeColor(NotificationThemeColor themeColor)

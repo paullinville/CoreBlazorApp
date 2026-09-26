@@ -148,6 +148,7 @@ public abstract class ClientRepositoryAsyncBase<TApi> where TApi : IApiClient
 
     protected TApi CreateClient()
     {
+        _eventBus.Publish(new BeforeApiCallEvent(_httpClient));
         return new RestClient(_httpClient) { JsonSerializerSettings = _jsonSettings }.For<TApi>();
     }
 }

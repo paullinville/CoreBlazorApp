@@ -3,6 +3,7 @@ using EmployeeData.Client;
 using EmployeeData.Common.Models;
 using Midland.Core.Client;
 using Midland.Core.SimpleMessageBus;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace BlazorApp.Data;
@@ -14,8 +15,8 @@ public class EmployeeRepository : BlazorClientRepositoryBase<IEmployeeDataApiCli
     private Task<MidlandUserGeneralModel>? _currentUser;
     private readonly ISecurityModelToken _securityToken;
 
-    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings, JsonSerializerSettings jsonSettings, ISecurityModelToken securityToken)
-        : base(httpClient, bus, clientSettings, jsonSettings)
+    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings, JsonSerializerSettings jsonSettings, ISecurityModelToken securityToken, IConfiguration configuration)
+        : base(httpClient, bus, clientSettings, jsonSettings, configuration)
     {
         _securityToken = securityToken;
     }
