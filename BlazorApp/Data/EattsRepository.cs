@@ -14,8 +14,13 @@ public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEat
 {
     private readonly IEmployeeRepository _empRepo;
 
-    public EattsRepository(HttpClient httpClient, IEventChannelBus eventBus, ClientSettings clientSettings, IEmployeeRepository empRepo, JsonSerializerSettings jsonSerializerSettings)
-        : base(httpClient, eventBus, clientSettings, jsonSerializerSettings)
+    public EattsRepository(HttpClient httpClient,
+                           IEventChannelBus eventBus,
+                           ClientSettings clientSettings,
+                           IEmployeeRepository empRepo,
+                           JsonSerializerSettings jsonSerializerSettings,
+                           IConfiguration config)
+        : base(httpClient, eventBus, clientSettings, jsonSerializerSettings, config)
     {
         _empRepo = empRepo;
     }

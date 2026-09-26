@@ -15,7 +15,12 @@ public class EmployeeRepository : BlazorClientRepositoryBase<IEmployeeDataApiCli
     private Task<MidlandUserGeneralModel>? _currentUser;
     private readonly ISecurityModelToken _securityToken;
 
-    public EmployeeRepository(HttpClient httpClient, IEventChannelBus bus, ClientSettings clientSettings, JsonSerializerSettings jsonSettings, ISecurityModelToken securityToken, IConfiguration configuration)
+    public EmployeeRepository(HttpClient httpClient,
+                              IEventChannelBus bus,
+                              ClientSettings clientSettings,
+                              JsonSerializerSettings jsonSettings,
+                              ISecurityModelToken securityToken,
+                              IConfiguration configuration)
         : base(httpClient, bus, clientSettings, jsonSettings, configuration)
     {
         _securityToken = securityToken;
