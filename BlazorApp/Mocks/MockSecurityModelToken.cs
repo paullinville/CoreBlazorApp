@@ -3,6 +3,7 @@ using Midland.Core.Common;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
+using Midland.Core.SimpleMessageBus;
 
 namespace BlazorApp.Data;
 
@@ -10,18 +11,27 @@ public class MockSecurityModelToken : ISecurityModelToken
 {
     private readonly string _mockToken;
     private readonly JwtSecurityToken _token;
+    private readonly IEventChannelBus _eventBus;
 
-    public MockSecurityModelToken(IConfiguration configuration)
+    private static int _tokenChangeCount = 0;
+
+    public MockSecurityModelToken(IConfiguration configuration, IEventChannelBus eventBus)
     {
         _mockToken = configuration["MockToken"] ?? throw new InvalidOperationException("MockToken key is missing from appsettings.Local.json.");
         _token = new JwtSecurityTokenHandler().ReadJwtToken(_mockToken);
+        this._eventBus = eventBus;
     }
 
     public IUserTokenRequestModel ApiListRequest { get; set; } = new UserTokenRequestModel();
 
-    public Task<JwtSecurityToken> GetSecurityToken()
+    public async Task<JwtSecurityToken> GetSecurityToken()
     {
-        return Task.FromResult(_token);
+        if ((_tokenChangeCount > 4))
+        {
+            await _eventBus.PublishAsync(new SecurityTokenUpdatedEvent(_token, _token));
+            _tokenChangeCount = 0;
+        }
+        return _token;
     }
 
     public Task<string> GetToken()
