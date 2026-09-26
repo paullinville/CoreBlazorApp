@@ -37,7 +37,7 @@
                                 @if (permission.Actions.Count > 0)
                                 {
                                     <div class="welcome-token-permission-actions">
-                                        @foreach (var action in permission.Actions)
+                                        @foreach (var action in permission.Actions.OrderBy(action => action))
                                         {
                                             <span class="welcome-token-permission-action">@action</span>
                                         }
