@@ -1,5 +1,6 @@
 ﻿using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
+using RestEase;
 
 namespace Midland.Core.Client;
 

@@ -70,14 +70,14 @@ public partial class MainLayout : IDisposable
 
     public string? EnvironmentBannerText => ClientSettings.Environment?.Trim().ToLowerInvariant() switch
     {
-        "development" => "Development",
+        AppConstants.DevelopmentEnvironment => "Development",
         "deployment" => "UAT",
         _ => null
     };
 
     public string EnvironmentBannerColor => ClientSettings.Environment?.Trim().ToLowerInvariant() switch
     {
-        "development" => "#99FF99",
+        AppConstants.DevelopmentEnvironment => "#99FF99",
         "deployment" => "#9999FF",
         _ => string.Empty
     };
