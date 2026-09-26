@@ -3,39 +3,15 @@
 <PageTitle>@PageTitleText</PageTitle>
 
 
-    <SearchCriteriaExpansionPanel Title="Search Criteria">
-    <div class="search-grid-3">
-        <div>
-            <label>First Name</label>
-            <TelerikTextBox Width="100%" />
+<TelerikExpansionPanel Title="Search Criteria" Expanded="@IsSearchCriteriaExpanded" ExpandedChanged="@OnSearchCriteriaExpandedChanged" Width="100%">
+    <Content>
+        <div class="k-form k-form-sm">
+            <div class="form-submit-actions">
+                <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@OnSearchClickedAsync">Search</TelerikButton>
+            </div>
         </div>
-
-        <div>
-            <label>Last Name</label>
-            <TelerikTextBox Width="100%" />
-        </div>
-
-        <div>
-            <label>Status</label>
-                <TelerikTextBox Width="100%" />
-        </div>
-
-        <div>
-            <label>Start Date</label>
-                <TelerikTextBox Width="100%" />
-        </div>
-
-        <div>
-            <label>End Date</label>
-                <TelerikTextBox Width="100%" />
-        </div>
-
-        <div>
-            <label>Category</label>
-                <TelerikTextBox Width="100%" />
-        </div>
-    </div>
-</SearchCriteriaExpansionPanel>
+    </Content>
+</TelerikExpansionPanel>
 
 
     <TelerikExpansionPanel Title="Results" Expanded="@IsResultsExpanded" ExpandedChanged="@OnResultsExpandedChanged" AnimationDuration="0" Width="100%">

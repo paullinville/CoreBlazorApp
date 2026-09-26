@@ -211,4 +211,11 @@ public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEat
 
         return found;
     }
+
+    //public async Task<List<EntryOccurrenceSearchView>> SearchEntries(EntryOccurrenceSearchCriteria criteria)
+    //{
+    //    var response = await Client.Getoccurrence(criteria.ToQueryString());
+    //    var found = await ProcessResponseAsync(response);
+    //    return found.Results.Values().ToList();
+    //}
 }
