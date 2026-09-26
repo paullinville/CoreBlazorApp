@@ -116,7 +116,7 @@
 
     @if (IsWelcomeWindowVisible)
     {
-        <TelerikWindow Width="760px" Height="520px" Modal="true" Visible="@IsWelcomeWindowVisible" VisibleChanged="@OnWelcomeWindowVisibleChanged">
+        <TelerikWindow Width="760px" Height="520px" Modal="true" Id="welcome-window" Visible="@IsWelcomeWindowVisible" VisibleChanged="@OnWelcomeWindowVisibleChanged">
             <WindowTitle>
                 <div class="welcome-window-title">
                     <span>Users Application Information</span>
@@ -127,7 +127,13 @@
                 </div>
             </WindowTitle>
             <WindowContent>
-                <pre class="welcome-token-json">@DecodedTokenJson</pre>
+                <div class="welcome-token-tree-wrapper">
+                    <TelerikTreeView Data="@DecodedTokenTreeItems" Class="welcome-token-tree">
+                        <TreeViewBindings>
+                            <TreeViewBinding TextField="Text" ItemsField="Items" />
+                        </TreeViewBindings>
+                    </TelerikTreeView>
+                </div>
             </WindowContent>
         </TelerikWindow>
     }

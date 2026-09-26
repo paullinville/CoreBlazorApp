@@ -278,9 +278,23 @@ body:not(.dark-theme) .appbar.k-appbar.k-appbar-base {
 
 .welcome-window-content {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     min-height: 100%;
     font-weight: 600;
+}
+
+.welcome-token-tree-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-top: 0.25rem;
+}
+
+.welcome-token-tree {
+    width: 100%;
+    height: 100%;
+    font-size: 0.8rem;
+    line-height: 1.35;
 }
 
 .welcome-window-title {
@@ -298,14 +312,6 @@ body:not(.dark-theme) .appbar.k-appbar.k-appbar-base {
     gap: 4px;
 }
 
-.welcome-token-json {
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-family: Consolas, "Courier New", monospace;
-    font-size: 0.8rem;
-    line-height: 1.35;
-}
 
 .appbar-actions-row {
     display: flex;
