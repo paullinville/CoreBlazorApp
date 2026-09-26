@@ -3,6 +3,7 @@ namespace BlazorApp.Layout;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
+using BlazorApp.Components;
 using BlazorApp.Data;
 using BlazorApp.Common;
 using Midland.Core.Client;
@@ -29,7 +30,9 @@ public partial class MainLayout : IDisposable
 
     public string DecodedTokenJson { get; set; } = string.Empty;
 
-    public List<TokenTreeItem> DecodedTokenTreeItems { get; set; } = [];
+    public List<TokenTreeItem> DecodedTokenTreeItems { get; set; } = new();
+
+    public List<TokenPermissionItem> DecodedTokenPermissions { get; set; } = new();
 
     public List<MenuItem> MenuItems { get; } =
     [
@@ -160,6 +163,21 @@ public partial class MainLayout : IDisposable
         DecodedTokenTreeItems = jsonNode is null
             ? []
             : [BuildTreeItem(rootLabel, jsonNode)];
+        DecodedTokenPermissions = ExtractTokenPermissions(jsonNode);
+    }
+
+    private static List<TokenPermissionItem> ExtractTokenPermissions(JsonNode? jsonNode)
+    {
+        if (jsonNode is JsonObject jsonObject && jsonObject["permissions"] is JsonArray permissionsArray)
+        {
+            return permissionsArray
+                .Select(permissionNode => permissionNode?.Deserialize<TokenPermissionItem>())
+                .Where(permission => permission is not null)
+                .Select(permission => permission!)
+                .ToList();
+        }
+
+        return [];
     }
 
     private static TokenTreeItem BuildTreeItem(string text, JsonNode? node)
@@ -392,12 +410,5 @@ public partial class MainLayout : IDisposable
         public string Text { get; set; }
         public string Url { get; set; }
         public string Icon { get; set; }
-    }
-
-    public class TokenTreeItem
-    {
-        public string Text { get; set; }
-
-        public List<TokenTreeItem> Items { get; set; } = [];
     }
 }
