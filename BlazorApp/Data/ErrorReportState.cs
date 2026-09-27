@@ -2,7 +2,7 @@ using Midland.Core.Common;
 
 namespace BlazorApp.Data;
 
-public class ErrorReportState
+public class ErrorReportState : IErrorReportState
 {
     public ErrorResponse? PendingErrorResponse { get; private set; }
 

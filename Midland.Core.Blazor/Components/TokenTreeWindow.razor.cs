@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorApp.Components;
+namespace Midland.Core.Blazor.Components;
 
 public partial class TokenTreeWindow
 {

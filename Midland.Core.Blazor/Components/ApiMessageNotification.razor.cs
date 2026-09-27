@@ -1,11 +1,10 @@
-using BlazorApp.Common;
 using Microsoft.AspNetCore.Components;
 using Midland.Core.Client;
 using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
 using Telerik.Blazor.Components;
 
-namespace BlazorApp.Components;
+namespace Midland.Core.Blazor.Components;
 
 public partial class ApiMessageNotification : ISubscriber
 {
@@ -43,7 +42,7 @@ public partial class ApiMessageNotification : ISubscriber
             Notification.Show(new NotificationModel
             {
                 Text = message,
-                ThemeColor = AppConstants.InfoColor,
+                ThemeColor = "info",
                 CloseAfter = 10000,
                 ShowIcon = false,
             });

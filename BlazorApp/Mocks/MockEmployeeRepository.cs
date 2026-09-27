@@ -1,4 +1,5 @@
 using BlazorApp.Data;
+using EmployeeData.Common;
 using EmployeeData.Common.Models;
 using Midland.Core.Client;
 using Midland.Core.Common;

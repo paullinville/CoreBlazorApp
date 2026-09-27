@@ -1,6 +1,7 @@
 using BlazorApp;
 using BlazorApp.Common;
 using BlazorApp.Data;
+using EmployeeData.Common;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Midland.Core.Client;
@@ -82,6 +83,7 @@ else
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
 builder.Services.AddScoped<ApplicationErrorHandler>();
 builder.Services.AddScoped<ErrorReportState>();
+builder.Services.AddScoped<IErrorReportState>(sp => sp.GetRequiredService<ErrorReportState>());
 builder.Services.AddTelerikBlazor();
 builder.Services.AddScoped<ThemeService>();
 

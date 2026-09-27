@@ -1,4 +1,4 @@
-namespace BlazorApp.Components;
+namespace Midland.Core.Blazor.Components;
 
 public class TokenTreeItem
 {

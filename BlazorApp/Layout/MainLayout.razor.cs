@@ -6,6 +6,8 @@ using Microsoft.JSInterop;
 using BlazorApp.Components;
 using BlazorApp.Data;
 using BlazorApp.Common;
+using EmployeeData.Common;
+using Midland.Core.Blazor.Components;
 using Midland.Core.Client;
 using System.Text.Json;
 using System.Text.Json.Nodes;

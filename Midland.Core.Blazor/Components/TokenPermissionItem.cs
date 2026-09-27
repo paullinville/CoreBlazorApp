@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace BlazorApp.Components;
+namespace Midland.Core.Blazor.Components;
 
 public class TokenPermissionItem
 {

@@ -1,16 +1,17 @@
-using BlazorApp.Common;
-using BlazorApp.Data;
 using Microsoft.AspNetCore.Components;
 using Midland.Core.Client;
 using Midland.Core.Common;
 using Midland.Core.SimpleMessageBus;
 using Telerik.Blazor.Components;
 
-namespace BlazorApp.Components;
+namespace Midland.Core.Blazor.Components;
 
 public partial class ApiNotification : ISubscriber
 {
     private const string ReportableMarker = "\u2063";
+    private const string InfoColor = "info";
+    private const string WarningColor = "warning";
+    private const string ErrorColor = "error";
 
     public TelerikNotification ValidationNotification { get; set; } = default!;
 
@@ -25,7 +26,7 @@ public partial class ApiNotification : ISubscriber
     private NavigationManager NavigationManager { get; set; } = default!;
 
     [Inject]
-    private ErrorReportState ErrorReportState { get; set; } = default!;
+    private IErrorReportState ErrorReportState { get; set; } = default!;
 
     public void ChannelNotification<T>(IChannelEvent<T> Evt)
     {
@@ -71,19 +72,19 @@ public partial class ApiNotification : ISubscriber
 
         if (errorResponse.Code == ErrorCodes.ApplicationUnhandledException)
         {
-            ShowNotification(GeneralNotification, errorResponse.Description, AppConstants.WarningColor, isReportable: true);
+            ShowNotification(GeneralNotification, errorResponse.Description, WarningColor, isReportable: true);
         }
         else
         {
             foreach (var error in errorResponse.Errors.Values())
             {
-                ShowNotification(GeneralNotification, $"{error.Name}({error.Type}): {error.Value}", AppConstants.ErrorColor, isReportable: true);
+                ShowNotification(GeneralNotification, $"{error.Name}({error.Type}): {error.Value}", ErrorColor, isReportable: true);
             }
         }
 
         foreach (var message in errorResponse.Messages.Values())
         {
-            ShowNotification(GeneralNotification, message, AppConstants.InfoColor, isReportable: true);
+            ShowNotification(GeneralNotification, message, InfoColor, isReportable: true);
         }
     }
 
@@ -93,7 +94,7 @@ public partial class ApiNotification : ISubscriber
 
         foreach (var error in errorResponse.Errors.Values())
         {
-            ShowNotification(ValidationNotification, $"{error.Name}: {error.Value}", AppConstants.WarningColor);
+            ShowNotification(ValidationNotification, $"{error.Name}: {error.Value}", WarningColor);
         }
     }
 
@@ -103,7 +104,7 @@ public partial class ApiNotification : ISubscriber
 
         foreach (var error in errorResponse.Errors.Values())
         {
-            ShowNotification(GeneralNotification, $"{error.Name}({error.Type}): {error.Value}", AppConstants.WarningColor);
+            ShowNotification(GeneralNotification, $"{error.Name}({error.Type}): {error.Value}", WarningColor);
         }
     }
 
