@@ -16,6 +16,8 @@ namespace BlazorApp.Pages
 
         private string PageTitleText => FormatPageTitle("Home");
 
+        private int? SelectedUserRef { get; set; }
+
         private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)
             ? pageTitle
             : $"{Settings.ApplicationName} - {pageTitle}";

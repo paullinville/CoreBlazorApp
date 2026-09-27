@@ -9,6 +9,12 @@
 
     <p>ApiHost: @Settings.ApiHost</p>
 
+    <div>
+        <label>UserSelect example</label>
+        <UserSelect Placeholder="Type at least 2 characters"
+                    @bind-Value="SelectedUserRef" />
+    </div>
+
     <div class="form-submit-actions">
         <button type="button" class="btn btn-danger" @onclick="OnAppErrorClickedAsync">App Error</button>
         <button type="button" class="btn btn-primary" @onclick="OnApiErrorClickedAsync">API error</button>
