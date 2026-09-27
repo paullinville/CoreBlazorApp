@@ -684,6 +684,10 @@ body.dark-theme .report-error-icon:hover {
     min-height: 0;
 }
 
+.home-report-page .entry-occurrence-link {
+    text-decoration: underline;
+}
+
 .home-report-footer-actions {
     display: flex;
     justify-content: flex-end;

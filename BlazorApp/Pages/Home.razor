@@ -24,7 +24,7 @@
                     @{
                         var occurrence = (EntryOccurrenceSummaryModel)context;
                     }
-                    <a href="#" @onclick:preventDefault="true" @onclick="@(() => OpenOccurrenceDetailsAsync(occurrence.EntryOccurrenceRef))">@occurrence.EntryOccurrenceRef</a>
+                    <a class="entry-occurrence-link" href="#" @onclick:preventDefault="true" @onclick="@(() => OpenOccurrenceDetailsAsync(occurrence.EntryOccurrenceRef))">@occurrence.EntryOccurrenceRef</a>
                 </Template>
             </GridColumn>
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryRef)" Title="Entry Ref" />
