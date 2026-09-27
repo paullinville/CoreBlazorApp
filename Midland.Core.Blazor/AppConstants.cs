@@ -23,11 +23,3 @@ public static class AppConstants
         };
     }
 }
-
-public enum NotificationThemeColor
-{
-    Info,
-    Success,
-    Warning,
-    Error
-}

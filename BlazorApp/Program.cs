@@ -80,6 +80,7 @@ else
     builder.Services.AddHttpClient<ISecurityModelApiRepository, SecurityModelApiRepository>(client => client.BaseAddress = new Uri($"{settings.ApiHost}SecurityModel/")).AddHttpMessageHandler<UserTokenMessageHandler>();
 }
 
+builder.Services.AddScoped<Midland.Core.Blazor.IUsers>(sp => sp.GetRequiredService<IEmployeeRepository>());
 builder.Services.AddSingleton<IEventChannelBus, EventChannelBus>();
 builder.Services.AddScoped<ApplicationErrorHandler>();
 builder.Services.AddScoped<ErrorReportState>();

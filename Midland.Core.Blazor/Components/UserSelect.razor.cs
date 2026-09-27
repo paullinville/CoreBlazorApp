@@ -8,7 +8,7 @@ namespace Midland.Core.Blazor.Components;
 public partial class UserSelect
 {
     [Inject]
-    private IEmployeeRepository EmployeeRepository { get; set; } = default!;
+    private IUsers EmployeeRepository { get; set; } = default!;
 
     [Parameter]
     public int? Value { get; set; }

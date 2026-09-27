@@ -5,10 +5,8 @@ using Midland.Core.Common;
 
 namespace EmployeeData.Common;
 
-public interface IEmployeeRepository
+public interface IEmployeeRepository : Midland.Core.Blazor.IUsers
 {
-    Task<List<UserSelectModelExpanded>> GetActiveSelectionUsers();
-
     Task<List<MidlandUserGeneralModel>> GetActiveUsers();
 
     Task<List<UserSelectModelExpanded>> GetUsersBy(string name);
