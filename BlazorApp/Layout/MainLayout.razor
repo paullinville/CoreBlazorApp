@@ -123,9 +123,7 @@
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
         <GlobalErrorBoundaryBase>
-            <ApiErrorNotification />
-            <ApiValidationNotification />
-            <ApiSecurityNotification />
+            <ApiNotification />
             <ApiMessageNotification />
             @Body
         </GlobalErrorBoundaryBase>
