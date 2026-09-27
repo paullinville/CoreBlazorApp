@@ -20,6 +20,11 @@ namespace BlazorApp.Pages
         private string PageTitleText => FormatPageTitle("Home");
 
         private List<EntryOccurrenceSummaryModel> ReportGridData { get; set; } = new List<EntryOccurrenceSummaryModel>();
+        private int? SelectedUserRef { get; set; }
+
+        private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)
+            ? pageTitle
+            : $"{Settings.ApplicationName} - {pageTitle}";
 
         private TelerikGrid<EntryOccurrenceSummaryModel>? ReportGrid { get; set; }
 
@@ -102,9 +107,5 @@ namespace BlazorApp.Pages
             IsOccurrenceWindowVisible = isVisible;
             return Task.CompletedTask;
         }
-
-        private string FormatPageTitle(string pageTitle) => Settings.ApplicationName.IsNullOrBlank()
-            ? pageTitle
-            : $"{Settings.ApplicationName} - {pageTitle}";
     }
 }

@@ -18,13 +18,13 @@
         <div class="k-form k-form-sm">
             <div class="k-form-field k-mb-2">
                 <label for="report-subject">Subject</label>
-                <TelerikTextBox Size="ComponentSize.Small" Id="report-subject" @bind-Value="@Report.Subject" Placeholder="Brief summary of the issue" ReadOnly="@(PendingErrorResponse is not null)" />
+                <TelerikTextBox Size="ComponentSize.Small" Id="report-subject" @bind-Value="@Report.Subject" Placeholder="Brief summary of the issue" ReadOnly="@SubjectAndDescriptionReadOnly" />
                 <ValidationMessage For="@(() => Report.Subject)" />
             </div>
 
             <div class="k-form-field k-mb-2">
                 <label for="report-description">Description</label>
-                <TelerikTextArea Size="ComponentSize.Small" Id="report-description" @bind-Value="@Report.Description" Rows="6" Placeholder="What happened? What did you expect to happen?" ReadOnly="@(PendingErrorResponse is not null)" />
+                <TelerikTextArea Size="ComponentSize.Small" Id="report-description" @bind-Value="@Report.Description" Rows="6" Placeholder="What happened? What did you expect to happen?" ReadOnly="@SubjectAndDescriptionReadOnly" />
                 <ValidationMessage For="@(() => Report.Description)" />
             </div>
 

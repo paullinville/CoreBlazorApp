@@ -1,0 +1,15 @@
+@using EmployeeData.Common.Models
+
+<TelerikComboBox Data="@Users"
+                 TItem="UserSelectModelExpanded"
+                 TValue="int?"
+                 Value="@Value"
+                 ValueChanged="@OnValueChanged"
+                 ValueExpression="@ValueExpression"
+                 TextField="@nameof(UserSelectModelExpanded.FullName)"
+                 ValueField="@nameof(UserSelectModelExpanded.UserRef)"
+                 Placeholder="@Placeholder"
+                 Filterable="true"
+                 FilterOperator="@StringFilterOperator.Contains"
+                 Enabled="@Enabled"
+                 Width="100%" />

@@ -5,8 +5,10 @@ namespace BlazorApp.Common;
 public class ClientSettings
 {
     public string ApplicationName { get; set; } = "";
+    public string ApplicationOrigin { get => applicationOrigin ?? ApplicationName; set => applicationOrigin = value; }
     public string? Environment { get; set; }
     private string? securityModelHost;
+    private string applicationOrigin;
 
     public string ApiHost { get; set; } = "";
 
