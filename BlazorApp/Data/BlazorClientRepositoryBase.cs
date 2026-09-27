@@ -1,5 +1,6 @@
 ﻿using BlazorApp.Common;
 using Midland.Core.Api;
+using Midland.Core.Blazor;
 using Midland.Core.Client;
 using Midland.Core.SimpleMessageBus;
 using Newtonsoft.Json;

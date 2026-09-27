@@ -26,4 +26,9 @@
     <ProjectReference Include="..\Midland.Core.SimpleMessageBus\Midland.Core.SimpleMessageBus.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

@@ -70,16 +70,9 @@ public partial class ApiNotification : ISubscriber
         LatestErrorResponse = errorResponse;
         await InvokeAsync(StateHasChanged);
 
-        if (errorResponse.Code == ErrorCodes.ApplicationUnhandledException)
+        foreach (var error in errorResponse.Errors.Values())
         {
-            ShowNotification(GeneralNotification, errorResponse.Description, WarningColor, isReportable: true);
-        }
-        else
-        {
-            foreach (var error in errorResponse.Errors.Values())
-            {
-                ShowNotification(GeneralNotification, $"{error.Name}({error.Type}): {error.Value}", ErrorColor, isReportable: true);
-            }
+            ShowNotification(GeneralNotification, $"{error.Name}({error.Type}): {error.Value}", ErrorColor, isReportable: true);
         }
 
         foreach (var message in errorResponse.Messages.Values())
@@ -94,7 +87,7 @@ public partial class ApiNotification : ISubscriber
 
         foreach (var error in errorResponse.Errors.Values())
         {
-            ShowNotification(ValidationNotification, $"{error.Name}: {error.Value}", WarningColor);
+            ShowNotification(GeneralNotification, $"{error.Name}: {error.Value}", AppConstants.MidlandOrange);
         }
     }
 
