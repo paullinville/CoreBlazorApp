@@ -123,10 +123,8 @@
                       CloseClicked="@OnCloseWelcomeWindowClicked" />
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
-        @* <GlobalErrorBoundaryBase> *@
-            <ApiErrorNotification />
-            <ApiValidationNotification />
-            <ApiSecurityNotification />
+        <GlobalErrorBoundaryBase>
+            <ApiNotification />
             <ApiMessageNotification />
             @Body
         @* </GlobalErrorBoundaryBase> *@
