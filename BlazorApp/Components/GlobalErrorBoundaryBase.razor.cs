@@ -10,11 +10,15 @@ using Telerik.Blazor.Components;
 
 public class GlobalErrorBoundaryBase : ErrorBoundary, IDisposable
 {
+    private string? _lastExceptionSignature;
+    private int _consecutiveExceptionCount;
+
     [Inject] protected NavigationManager Nav { get; set; }
     [Inject] protected IEattsApiRepository EattsRepo { get; set; }
     [Inject] protected IEventChannelBus EventChannelBus { get; set; }
     [Inject] protected ClientSettings ClientSettings { get; set; }
     [Inject] protected IEmployeeRepository EmployeeRepo { get; set; }
+    [Inject] protected ErrorReportState ErrorReportState { get; set; }
 
     // Dialog state
     protected bool ShowEattsDialog { get; set; }
@@ -29,6 +33,17 @@ public class GlobalErrorBoundaryBase : ErrorBoundary, IDisposable
 
     protected override async Task OnErrorAsync(Exception exception)
     {
+        var exceptionSignature = $"{exception.GetType().FullName}:{exception.Message}";
+        if (string.Equals(_lastExceptionSignature, exceptionSignature, StringComparison.Ordinal))
+        {
+            _consecutiveExceptionCount++;
+        }
+        else
+        {
+            _lastExceptionSignature = exceptionSignature;
+            _consecutiveExceptionCount = 1;
+        }
+
         var errorResponse = new ErrorResponse
         {
             Code = ErrorCodes.ApplicationUnhandledException,
@@ -45,6 +60,38 @@ public class GlobalErrorBoundaryBase : ErrorBoundary, IDisposable
                                                                           "",
                                                                           errorResponse));
         await EventChannelBus.PublishAsync(new ApplicationErrorEvent(errorResponse));
+
+        if (_consecutiveExceptionCount >= 2)
+        {
+            var exceptionPreview = string.Join(Environment.NewLine,
+                                               exception.ToString()
+                                                        .Split(["\r\n", "\n", "\r"], StringSplitOptions.RemoveEmptyEntries)
+                                                        .Take(3));
+
+            var recurringErrorResponse = new ErrorResponse
+            {
+                Code = ErrorCodes.ApplicationUnhandledException,
+                Title = "Reoccurring exception",
+                Description = $"Entry Ref: {eattsResponse.EntryRef}{Environment.NewLine}" +
+                              $"Occurrence Ref: {eattsResponse.OccurrenceRef}{Environment.NewLine}" +
+                              $"Exception Type: {exception.GetType().FullName}{Environment.NewLine}" +
+                              $"Exception Text:{Environment.NewLine}{exceptionPreview}",
+                Errors = [],
+                Messages = []
+            };
+
+            await InvokeAsync(() =>
+            {
+                _lastExceptionSignature = null;
+                _consecutiveExceptionCount = 0;
+                ErrorReportState.SetPendingError(recurringErrorResponse,
+                                                 $"An exception has occurred, and reported, multiple times for {ClientSettings.ApplicationName}.",
+                                                 readOnlySubjectAndDescription: true);
+                Nav.NavigateTo("/report-error");
+            });
+
+            return;
+        }
 
         // Update UI to show dialog — must be done on renderer thread
         await InvokeAsync(() =>

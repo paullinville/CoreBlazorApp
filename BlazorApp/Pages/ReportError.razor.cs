@@ -22,27 +22,37 @@ public partial class ReportError
 
     private ErrorResponse? PendingErrorResponse { get; set; }
 
+    private bool SubjectAndDescriptionReadOnly { get; set; }
+
     [Inject] public ILogger<ReportError> Logger { get; set; } = default!;
 
     [Inject] public IEattsApiRepository EattsApiRepository { get; set; } = default!;
+
+    [Inject] public IEmployeeRepository EmployeeRepository { get; set; } = default!;
 
     [Inject] public ErrorReportState ErrorReportState { get; set; } = default!;
 
     protected override void OnInitialized()
     {
         PendingErrorResponse = ErrorReportState.ConsumePendingError();
+        SubjectAndDescriptionReadOnly = ErrorReportState.ConsumeReadOnlySubjectAndDescription();
+
         if (PendingErrorResponse is not null)
         {
-            Report.Subject = string.IsNullOrWhiteSpace(PendingErrorResponse.Code)
-                ? "Application Error"
-                : $"Application Error ({PendingErrorResponse.Code})";
+            Report.Subject = !string.IsNullOrWhiteSpace(PendingErrorResponse.Title)
+                ? PendingErrorResponse.Title
+                : string.IsNullOrWhiteSpace(PendingErrorResponse.Code)
+                    ? "Application Error"
+                    : $"Application Error ({PendingErrorResponse.Code})";
             Report.Description = BuildDescription(PendingErrorResponse);
+            Report.AdditionalNotes = ErrorReportState.ConsumePendingAdditionalNotes() ?? string.Empty;
             Report.UserCreated = false;
         }
     }
 
     private async Task SubmitReport()
     {
+        var currentUser = await EmployeeRepository.CurrentUser;
         var errorResponse = PendingErrorResponse ?? new ErrorResponse
         {
             Code = ErrorCodes.UserCreatedEntry,
@@ -64,10 +74,10 @@ public partial class ReportError
 
         var entryModel = new EattsEntryModel(
             ApplicationInventoryRef: null,
-            Origin: typeof(ReportError).Assembly.GetName().Name ?? "Application",
+            Origin: Settings.ApplicationOrigin,
             Key: entryKey,
-            UserRef: null,
-            CallerId: "web-client",
+            UserRef: currentUser.UserRef,
+            CallerId: currentUser.UserId,//TODO Research what this should be when it is an employee.
             ErrorResponse: errorResponse);
 
         try
@@ -84,6 +94,7 @@ public partial class ReportError
 
             Report = new ErrorReportModel();
             PendingErrorResponse = null;
+            SubjectAndDescriptionReadOnly = false;
         }
         catch (Exception ex)
         {
