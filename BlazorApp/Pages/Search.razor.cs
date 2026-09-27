@@ -1,4 +1,5 @@
 using BlazorApp.Common;
+using EATTS.Common.Models;
 using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
 
@@ -20,6 +21,8 @@ public partial class Search
     private bool ShowResultsGrid { get; set; }
 
     private const int ResultsPanelLoadIndicatorMs = 650;
+
+    private EntryOccurrenceSearchCriteria CriteriaInput { get; } = new();
 
     private List<SearchResultItem> GridData { get; } = [];
 
