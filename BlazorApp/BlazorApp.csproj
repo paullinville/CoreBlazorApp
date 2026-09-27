@@ -33,10 +33,6 @@
   <ItemGroup>
     <Content Update="wwwroot\*.json" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
   </ItemGroup>
-
-
-
-
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties UseCdnSupport="False" UseFontIcons="False" />
