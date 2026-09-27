@@ -1,0 +1,36 @@
+.error-notification .notification-row,
+.validation-notification .notification-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.error-notification .notification-text,
+.validation-notification .notification-text {
+    text-align: left;
+    flex: 1;
+}
+
+.error-notification .report-link {
+    text-decoration: underline;
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+.validation-notification {
+    z-index: 10000 !important;
+    left: 50% !important;
+    top: 30% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+    .validation-notification .k-notification.k-notification-warning {
+        background-color: #dc6b12;
+        border-color: #dc6b12;
+        color: #000000;
+    }
+
+        .validation-notification .k-notification.k-notification-warning .k-notification-content {
+            color: #000000;
+        }

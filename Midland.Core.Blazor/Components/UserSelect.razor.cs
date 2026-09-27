@@ -1,9 +1,9 @@
-using BlazorApp.Data;
+using EmployeeData.Common;
 using EmployeeData.Common.Models;
 using Microsoft.AspNetCore.Components;
 using System.Linq.Expressions;
 
-namespace BlazorApp.Components;
+namespace Midland.Core.Blazor.Components;
 
 public partial class UserSelect
 {
@@ -17,7 +17,7 @@ public partial class UserSelect
     public EventCallback<int?> ValueChanged { get; set; }
 
     [Parameter]
-    public Expression<Func<int?>>? ValueExpression { get; set; }
+    public Expression<Func<int?>> ValueExpression { get; set; } = default!;
 
     [Parameter]
     public string Placeholder { get; set; } = "Select a user";

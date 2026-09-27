@@ -1,8 +1,4 @@
-using CsvHelper.Configuration.Attributes;
-using Midland.Core.Api;
-using Midland.Core.Common;
-
-namespace BlazorApp.Common;
+namespace Midland.Core.Blazor;
 
 public static class AppConstants
 {

@@ -395,7 +395,6 @@ body:not(.dark-theme) .appbar.k-appbar.k-appbar-base {
     gap: 4px;
 }
 
-
 .appbar-actions-row {
     display: flex;
     align-items: center;
@@ -713,35 +712,6 @@ body.dark-theme .report-error-icon:hover {
     overflow-wrap: break-word;
 }
 
-.error-notification .notification-row,
-.validation-notification .notification-row {
-    display: flex;
-    justify-content: space-between; /* text left, link right */
-    align-items: center;
-    width: 100%;
-}
-
-.error-notification .notification-text,
-.validation-notification .notification-text {
-    text-align: left;
-    flex: 1; /* ensures it occupies left side */
-}
-
-.error-notification .report-link {
-    text-decoration: underline;
-    cursor: pointer;
-    margin-left: 12px;
-}
-
-.validation-notification .k-notification.k-notification-warning {
-    background-color: #dc6b12;
-    border-color: #dc6b12;
-    color: #000000;
-}
-
-.validation-notification .k-notification.k-notification-warning .k-notification-content {
-    color: #000000;
-}
 
 .occurrence-tile-section {
     height: 100%;

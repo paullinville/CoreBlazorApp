@@ -1,5 +1,6 @@
 ﻿using BlazorApp.Common;
 using EmployeeData.Client;
+using EmployeeData.Common;
 using EmployeeData.Common.Models;
 using Midland.Core.Client;
 using Midland.Core.SimpleMessageBus;

@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EATTS.Common\EATTS.Common.csproj" />
     <ProjectReference Include="..\EmployeeData.Common\EmployeeData.Common.csproj" />
+    <ProjectReference Include="..\Midland.Core.Blazor\Midland.Core.Blazor.csproj" />
     <ProjectReference Include="..\Midland.Core.Client\Midland.Core.Client.csproj" />
     <ProjectReference Include="..\Midland.Core.Common\Midland.Core.Common.csproj" />
     <ProjectReference Include="..\Midland.Core.SimpleMessageBus\Midland.Core.SimpleMessageBus.csproj" />
@@ -32,13 +33,6 @@
   <ItemGroup>
     <Content Update="wwwroot\*.json" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\Notifications\" />
-  </ItemGroup>
-
-
-
-
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties UseCdnSupport="False" UseFontIcons="False" />
