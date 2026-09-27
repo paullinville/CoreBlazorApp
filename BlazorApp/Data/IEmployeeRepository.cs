@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using EmployeeData.Common.Models;
-using Midland.Core.Common;
+using Midland.Core.Blazor;
 
-namespace EmployeeData.Common;
+namespace BlazorApp.Common;
 
-public interface IEmployeeRepository : Midland.Core.Blazor.IUsers
+public interface IEmployeeRepository : IUsers
 {
     Task<List<MidlandUserGeneralModel>> GetActiveUsers();
 
