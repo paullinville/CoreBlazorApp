@@ -7,10 +7,26 @@
         <div class="k-form k-form-sm search-grid-3">
             <div class="search-grid-column">
                 <div>
+                    <label for="entry-occurrence-origin">Origin</label>
+                    <ApplicationSummaryComboBox Data="@ApplicationOptions"
+                                                @bind-Value="CriteriaInput.Origin"
+                                                Placeholder="Select origin"
+                                                Width="100%"
+                                                AdditionalAttributes="@(new Dictionary<string, object> { ["id"] = "entry-occurrence-origin" })" />
+                </div>
+
+                <div>
                     <label for="entry-occurrence-caller-id">Caller Id</label>
                     <TelerikTextBox Id="entry-occurrence-caller-id" Size="ComponentSize.Small" @bind-Value="CriteriaInput.CallerId" />
                 </div>
 
+                <div>
+                    <label for="entry-occurrence-ref">Occurrence Ref</label>
+                    <TelerikNumericTextBox Id="entry-occurrence-ref" Size="ComponentSize.Small" @bind-Value="CriteriaInput.OccurrenceRef" Decimals="0" Format="n0" />
+                </div>
+            </div>
+
+            <div class="search-grid-column">
                 <div>
                     <label for="entry-occurrence-is-error">Is Error</label>
                     <TriStateBooleanCheckBox Id="entry-occurrence-is-error"
@@ -19,8 +35,36 @@
                 </div>
 
                 <div>
-                    <label for="entry-occurrence-ref">Occurrence Ref</label>
-                    <TelerikNumericTextBox Id="entry-occurrence-ref" Size="ComponentSize.Small" @bind-Value="CriteriaInput.OccurrenceRef" Decimals="0" Format="n0" />
+                    <label for="entry-occurrence-user-ref">User</label>
+                    <UserSelect Id="entry-occurrence-user-ref"
+                                @bind-Value="CriteriaInput.OccurrenceUserRef"
+                                Placeholder="Select user" />
+                </div>
+
+                <div>
+                    <label for="entry-occurrence-emails-sent">Support Tech Contacted</label>
+                    <UserSelect Id="entry-occurrence-emails-sent"
+                                @bind-Value="EmailsSentUserRef"
+                                SelectedUserChanged="@OnEmailsSentUserChanged"
+                                Placeholder="Select user" />
+                </div>
+            </div>
+
+            <div class="search-grid-column">
+                <div>
+                    <label for="entry-occurrence-date-start">Occurrence Date Start</label>
+                    <TelerikDateTimePicker Id="entry-occurrence-date-start"
+                                           @bind-Value="CriteriaInput.OccurrenceDateStart"
+                                           Format="MM/dd/yyyy hh:mm"
+                                           Size="ComponentSize.Small" />
+                </div>
+
+                <div>
+                    <label for="entry-occurrence-date-end">Occurrence Date End</label>
+                    <TelerikDateTimePicker Id="entry-occurrence-date-end"
+                                           @bind-Value="CriteriaInput.OccurrenceDateEnd"
+                                           Format="MM/dd/yyyy hh:mm"
+                                           Size="ComponentSize.Small" />
                 </div>
             </div>
 

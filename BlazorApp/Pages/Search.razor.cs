@@ -1,6 +1,9 @@
 using BlazorApp.Common;
+using BlazorApp.Data;
 using EATTS.Common.Models;
+using EmployeeData.Common.Models;
 using Microsoft.AspNetCore.Components;
+using SecurityModel.Common.Models;
 using Telerik.Blazor.Components;
 
 namespace BlazorApp.Pages;
@@ -9,6 +12,9 @@ public partial class Search
 {
     [Inject]
     public ClientSettings Settings { get; set; } = default!;
+
+    [Inject]
+    public IEattsApiRepository EattsApiRepository { get; set; } = default!;
 
     private string PageTitleText => FormatPageTitle("Search");
 
@@ -24,11 +30,31 @@ public partial class Search
 
     private EntryOccurrenceSearchCriteria CriteriaInput { get; } = new();
 
+    private List<ApplicationSummary> ApplicationOptions { get; set; } = [];
+
+    private int? EmailsSentUserRef { get; set; }
+
     private List<SearchResultItem> GridData { get; } = [];
 
     private TelerikGrid<SearchResultItem>? SearchResultsGrid { get; set; }
 
     private bool ExportAllPages { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ApplicationOptions = (await EattsApiRepository.GetAllApplicationOptions())
+            .Select(x => new ApplicationSummary
+            {
+                ApiName = x.ApiName
+            })
+            .ToList();
+    }
+
+    private Task OnEmailsSentUserChanged(UserSelectModelExpanded? selectedUser)
+    {
+        CriteriaInput.EmailsSent = selectedUser?.Email;
+        return Task.CompletedTask;
+    }
 
     private async Task ExportCurrentPageAsync()
     {
