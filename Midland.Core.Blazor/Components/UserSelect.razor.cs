@@ -11,10 +11,16 @@ public partial class UserSelect
     private IUsers EmployeeRepository { get; set; } = default!;
 
     [Parameter]
+    public string? Id { get; set; }
+
+    [Parameter]
     public int? Value { get; set; }
 
     [Parameter]
     public EventCallback<int?> ValueChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<UserSelectModelExpanded?> SelectedUserChanged { get; set; }
 
     [Parameter]
     public Expression<Func<int?>> ValueExpression { get; set; } = default!;
@@ -33,9 +39,11 @@ public partial class UserSelect
         await base.OnInitializedAsync();
     }
 
-    private Task OnValueChanged(int? value)
+    private async Task OnValueChanged(int? value)
     {
         Value = value;
-        return ValueChanged.InvokeAsync(value);
+        var selectedUser = Users.FirstOrDefault(x => x.UserRef == value);
+        await ValueChanged.InvokeAsync(value);
+        await SelectedUserChanged.InvokeAsync(selectedUser);
     }
 }
