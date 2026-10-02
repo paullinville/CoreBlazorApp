@@ -645,38 +645,41 @@ public class MockEattsRepository : IEattsApiRepository
         return Task.FromResult(detail);
     }
 
-    public Task<EntryOccurrenceDetailModel> GetOccurrenceDetail(int occurrenceRef)
+    public Task<EntryOccurrenceDetailModel?> GetOccurrenceDetail(int occurrenceRef)
     {
         var found = Occurrences.FirstOrDefault(x => x.EntryOccurrenceRef == occurrenceRef);
-        var detail = new EntryOccurrenceDetailModel
+        EntryOccurrenceDetailModel? detail = null;
+        if (found != null)
         {
-            EntryOccurrenceRef = found?.EntryOccurrenceRef ?? occurrenceRef,
-            EntryRef = found?.EntryRef ?? 0,
-            Date = found?.OccurrenceDate ?? DateTime.UtcNow,
-            Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
-            Origin = found?.Origin ?? "CoreBlazorApp",
-            CallerId = found?.CallerId ?? "mock-service",
-            EmailsSent = found?.EmailsSent ?? string.Empty,
-            OccurrenceCount = found?.OccurrenceCount ?? 0,
-            LastEntryOccurrenceRef = found?.LastEntryOccurrenceRef ?? 0,
-            GenericDescription = found?.Description ?? "Mock entry",
-            Key = found?.Key ?? $"OCC-{occurrenceRef}",
-            TokenSubject = found?.Subject ?? "core-app",
-            TokenType = found?.SubjectType ?? "Api",
-            Error = found?.IsError,
-            ErrorResponse = new ErrorResponse
+            detail = new EntryOccurrenceDetailModel
             {
-                Code = found?.IsError == true ? "Mock.Error" : "Mock.Info",
-                Title = "Mock Occurrence Detail",
+                EntryOccurrenceRef = found?.EntryOccurrenceRef ?? occurrenceRef,
+                EntryRef = found?.EntryRef ?? 0,
+                Date = found?.OccurrenceDate ?? DateTime.UtcNow,
                 Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
-                RequestId = (found?.RequestId ?? Guid.NewGuid()).ToString(),
-                RequestPath = $"/api/eatts/occurrence/{occurrenceRef}",
-                Messages = ["Mock response generated for occurrence detail."]
-            },
-            ErrorTypeCode = new ErrorTypeCode { ErrorTypeRef = 1, Name = found?.ErrorType ?? "General" },
-            ApiLogData =
-            [
-                new ApiLogDataModel
+                Origin = found?.Origin ?? "CoreBlazorApp",
+                CallerId = found?.CallerId ?? "mock-service",
+                EmailsSent = found?.EmailsSent ?? string.Empty,
+                OccurrenceCount = found?.OccurrenceCount ?? 0,
+                LastEntryOccurrenceRef = found?.LastEntryOccurrenceRef ?? 0,
+                GenericDescription = found?.Description ?? "Mock entry",
+                Key = found?.Key ?? $"OCC-{occurrenceRef}",
+                TokenSubject = found?.Subject ?? "core-app",
+                TokenType = found?.SubjectType ?? "Api",
+                Error = found?.IsError,
+                ErrorResponse = new ErrorResponse
+                {
+                    Code = found?.IsError == true ? "Mock.Error" : "Mock.Info",
+                    Title = "Mock Occurrence Detail",
+                    Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
+                    RequestId = (found?.RequestId ?? Guid.NewGuid()).ToString(),
+                    RequestPath = $"/api/eatts/occurrence/{occurrenceRef}",
+                    Messages = ["Mock response generated for occurrence detail."]
+                },
+                ErrorTypeCode = new ErrorTypeCode { ErrorTypeRef = 1, Name = found?.ErrorType ?? "General" },
+                ApiLogData =
+          [
+              new ApiLogDataModel
                 {
                     ApiLogRef = 1,
                     ApiName = "Mock API",
@@ -685,8 +688,9 @@ public class MockEattsRepository : IEattsApiRepository
                     RequestId = found?.RequestId ?? Guid.NewGuid(),
                     Server = "mock-server"
                 }
-            ]
-        };
+          ]
+            };
+        }
 
         return Task.FromResult(detail);
     }

@@ -7,9 +7,13 @@ using BlazorApp.Common;
 using BlazorApp.Components;
 using BlazorApp.Data;
 using EmployeeData.Common;
+using EATTS.Common.Models;
 using Midland.Core.Blazor;
 using Midland.Core.Blazor.Components;
 using Midland.Core.Client;
+using Midland.Core.Common;
+using Midland.Core.SimpleMessageBus;
+using Microsoft.AspNetCore.Components.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -26,6 +30,8 @@ public partial class MainLayout : IDisposable
     [Inject] public ClientSettings ClientSettings { get; set; }
     [Inject] public IEmployeeRepository EmployeeRepository { get; set; }
     [Inject] public ISecurityModelToken SecurityModelToken { get; set; }
+    [Inject] public IEattsApiRepository EattsApiRepository { get; set; }
+    [Inject] public IEventChannelBus EventChannelBus { get; set; }
 
     public string? WelcomeText { get; set; }
 
@@ -101,6 +107,12 @@ public partial class MainLayout : IDisposable
     };
 
     public bool ShowEnvironmentFrame => !string.IsNullOrEmpty(EnvironmentBannerText);
+
+    private int? GoToOccurrenceRef { get; set; }
+
+    private EntryOccurrenceDetailModel? SelectedOccurrenceDetail { get; set; }
+
+    private bool IsOccurrenceWindowVisible { get; set; }
 
     public string EnvironmentFrameStyle => ShowEnvironmentFrame
         ? $"--env-accent-color:{EnvironmentBannerColor}; --env-background-color:{(IsDarkTheme ? "#000000" : "#ffffff")};"
@@ -305,6 +317,47 @@ public partial class MainLayout : IDisposable
     {
         CloseReportMenu();
         NavigationManager.NavigateTo("/search");
+    }
+
+    private async Task OnGoToClickedAsync()
+    {
+        CloseReportMenu();
+
+        if (GoToOccurrenceRef is null || GoToOccurrenceRef <= 0)
+        {
+            return;
+        }
+
+        SelectedOccurrenceDetail = await EattsApiRepository.GetOccurrenceDetail(GoToOccurrenceRef.Value);
+        if (SelectedOccurrenceDetail is null)
+        {
+            IsOccurrenceWindowVisible = false;
+            EventChannelBus.Publish(new ResultsMessageEvent(new MidlandResult<object?>
+            {
+                Messages = ["Occurrence detail was not found."]
+            }));
+            return;
+        }
+
+        SelectedOccurrenceDetail.ApiLogData ??= [];
+        SelectedOccurrenceDetail.Notes ??= [];
+        IsOccurrenceWindowVisible = true;
+    }
+
+    private Task OnGoToInputKeyDown(KeyboardEventArgs args)
+    {
+        if (string.Equals(args.Key, "Enter", StringComparison.Ordinal))
+        {
+            return OnGoToClickedAsync();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private Task OnOccurrenceWindowVisibleChanged(bool isVisible)
+    {
+        IsOccurrenceWindowVisible = isVisible;
+        return Task.CompletedTask;
     }
 
     private async Task ToggleReportMenu()

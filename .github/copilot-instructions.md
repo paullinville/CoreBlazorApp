@@ -16,4 +16,5 @@
 - Never use try/catch when calling repository methods; repository errors must be handled by the established channel event flow. Do not handle repository-call errors in Razor page code-behind; rely on channel event-based error handling per project instructions.
 - Always use Telerik controls if available in the CoreBlazorApp codebase, rather than standard HTML elements or other control libraries. If an appropriate Telerik control is not available, ask the developer for a Telerik control to use. If they cannot provide one, then use a standard HTML element or other control library.
 - For TelerikTooltip, use the `<Template>` parameter, not `<TooltipTemplate>`, to define tooltip content.
+- For TelerikNumericTextBox in this codebase/version, use the Arrows property to control spinner buttons (not ShowSpinButton).
 

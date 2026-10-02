@@ -40,7 +40,20 @@
                 <button type="button" class="appbar-welcome appbar-welcome-button" @onclick="OnWelcomeClicked">@WelcomeText</button>
             }
 
-            <div class="appbar-actions-row">
+            <div class="appbar-actions-row" @onkeydown="OnGoToInputKeyDown">
+                <TelerikNumericTextBox Class="goto-occurrence-input"
+                                       @bind-Value="GoToOccurrenceRef"
+                                       Min="1"
+                                       Decimals="0"
+                                       Format="D"
+                                       Arrows="false" 
+                                        />
+                <button type="button" class="goto-icon" title="GoTo" aria-label="GoTo" @onclick="OnGoToClickedAsync">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m13 7 6 5-6 5" />
+                    </svg>
+                </button>
                 <a class="search-icon" href="/search" title="Search Grid" @onclick="CloseReportMenu">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="6" />
@@ -121,6 +134,8 @@
                       PermissionItems="@DecodedTokenPermissions"
                       CopyClicked="@OnCopyTokenClicked"
                       CloseClicked="@OnCloseWelcomeWindowClicked" />
+
+    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
         <GlobalErrorBoundaryBase>
