@@ -508,6 +508,21 @@ body.dark-theme .settings-icon:hover {
 
 .goto-occurrence-input {
     width: 7.5rem;
+    border: none !important;
+}
+
+.goto-occurrence-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    padding: 2px;
+    gap: 0;
+}
+
+body.dark-theme .goto-occurrence-group {
+    border-color: #dfe5ef;
+}
 }
 
 .goto-icon {
@@ -554,16 +569,24 @@ body.dark-theme .goto-icon:disabled {
 .appbar-goto-icon {
     width: 30px;
     height: 30px;
-    border-radius: 50%;
-    border: 1px solid #dfe5ef;
-    color: #dfe5ef;
-    background-color: #2f3a4a;
+    border-radius: 0;
+    border: none;
+    color: #333333;
+    background-color: transparent;
     padding: 0;
 }
 
     .appbar-goto-icon:hover {
-        background-color: #3a4759;
+        background-color: rgba(0, 0, 0, 0.08);
     }
+
+body.dark-theme .appbar-goto-icon {
+    color: #dfe5ef;
+}
+
+body.dark-theme .appbar-goto-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
 .search-icon {
     display: inline-flex;

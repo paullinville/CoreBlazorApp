@@ -371,6 +371,31 @@ public partial class MainLayout : IDisposable
         return Task.CompletedTask;
     }
 
+    private async Task OnGoToOccurrenceTextBoxPasteAsync()
+    {
+        try
+        {
+            // Read the clipboard data directly
+            var clipboardText = await JsRuntime.InvokeAsync<string>("navigator.clipboard.readText");
+
+            // Try to parse the clipboard content as an integer
+            if (!string.IsNullOrWhiteSpace(clipboardText) && int.TryParse(clipboardText.Trim(), out var occurrenceRef) && occurrenceRef > 0)
+            {
+                GoToOccurrenceRef = occurrenceRef;
+                await OpenOccurrenceDetailsAsync(occurrenceRef);
+            }
+        }
+        catch
+        {
+            // If clipboard access fails or doesn't parse as a number, just wait for binding update
+            await Task.Delay(100);
+            if (GoToOccurrenceRef is not null && GoToOccurrenceRef > 0)
+            {
+                await OnGoToClickedAsync();
+            }
+        }
+    }
+
     private Task OnOccurrenceWindowVisibleChanged(bool isVisible)
     {
         IsOccurrenceWindowVisible = isVisible;

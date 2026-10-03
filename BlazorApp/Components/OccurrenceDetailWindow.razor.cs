@@ -5,6 +5,8 @@ namespace BlazorApp.Components;
 
 public partial class OccurrenceDetailWindow
 {
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
     [Parameter] public EntryOccurrenceDetailModel? OccurrenceDetail { get; set; }
     [Parameter] public IReadOnlyList<int> OccurrenceRefs { get; set; } = [];
     [Parameter] public EventCallback<int> OccurrenceRefChanged { get; set; }
@@ -65,5 +67,16 @@ public partial class OccurrenceDetailWindow
         }
 
         return OccurrenceRefChanged.InvokeAsync(OccurrenceRefs[CurrentOccurrenceIndex + 1]);
+    }
+
+    private Task OnOpenOccurrenceClickedAsync()
+    {
+        if (OccurrenceDetail?.EntryOccurrenceRef is null or <= 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        NavigationManager.NavigateTo($"/occurrence-details/{OccurrenceDetail.EntryOccurrenceRef}");
+        return Task.CompletedTask;
     }
 }
