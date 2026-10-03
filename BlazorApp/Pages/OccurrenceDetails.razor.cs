@@ -16,6 +16,7 @@ public partial class OccurrenceDetails
     private EntryOccurrenceDetailModel? OccurrenceDetail { get; set; }
     private bool IsLoading { get; set; }
     private bool IsOccurrenceWindowVisible { get; set; }
+    private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
     private string? SelectedOccurrenceAction { get; set; }
     private List<string> ComboItems { get; set; } = [];
     private string CurrentUserEmail { get; set; } = string.Empty;
@@ -63,6 +64,17 @@ public partial class OccurrenceDetails
         await LoadOccurrenceDetailAsync(selectedOccurrenceRef);
     }
 
+    private async Task OnWindowOccurrenceRefChangedAsync(int occurrenceRef)
+    {
+        if (occurrenceRef <= 0)
+        {
+            return;
+        }
+
+        SelectedOccurrenceAction = occurrenceRef.ToString();
+        await LoadOccurrenceDetailAsync(occurrenceRef);
+    }
+
     private async Task LoadOccurrenceDetailAsync(int occurrenceRef)
     {
         if (occurrenceRef <= 0)
@@ -105,11 +117,16 @@ public partial class OccurrenceDetails
         };
 
         var page = await EattsApiRepository.GetEntryOccurrenceDetail(criteria);
-        ComboItems = page?.Results?
-            .Select(r => r.EntryOccurrenceRef.ToString())
-            .Where(r => !r.IsNullOrBlank())
+        var occurrenceRefs = page?.Results?
+            .Select(r => r.EntryOccurrenceRef)
+            .Where(r => r > 0)
             .Distinct()
             .ToList() ?? [];
+
+        OccurrenceRefsForWindow = occurrenceRefs;
+        ComboItems = occurrenceRefs
+            .Select(r => r.ToString())
+            .ToList();
     }
 
     private Task OnOccurrenceWindowVisibleChanged(bool isVisible)

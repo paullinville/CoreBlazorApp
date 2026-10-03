@@ -40,7 +40,7 @@
             <div><strong>Last Entry Occurrence Ref:</strong> @OccurrenceDetail.LastEntryOccurrenceRef</div>
         </div>
 
-        <OccurrenceDetailWindow OccurrenceDetail="@OccurrenceDetail" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
+        <OccurrenceDetailWindow OccurrenceDetail="@OccurrenceDetail" OccurrenceRefs="@OccurrenceRefsForWindow" OccurrenceRefChanged="@OnWindowOccurrenceRefChangedAsync" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
 
         <TelerikExpansionPanel Title="API Log Data" Expanded="true" Width="100%">
             <Content>

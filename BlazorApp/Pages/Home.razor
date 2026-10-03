@@ -37,5 +37,5 @@
         </GridColumns>
     </TelerikGrid>
 
-    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
+    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" OccurrenceRefs="@OccurrenceRefsForWindow" OccurrenceRefChanged="@OpenOccurrenceDetailsAsync" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
 </div>

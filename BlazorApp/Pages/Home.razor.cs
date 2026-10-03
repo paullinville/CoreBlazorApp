@@ -30,6 +30,8 @@ namespace BlazorApp.Pages
 
         private EntryOccurrenceDetailModel? SelectedOccurrenceDetail { get; set; }
 
+        private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
+
         private bool IsOccurrenceWindowVisible { get; set; }
 
         private string CurrentUserEmail { get; set; } = string.Empty;
@@ -99,6 +101,11 @@ namespace BlazorApp.Pages
 
             SelectedOccurrenceDetail.ApiLogData ??= [];
             SelectedOccurrenceDetail.Notes ??= [];
+            OccurrenceRefsForWindow = ReportGridData
+                .Select(x => x.EntryOccurrenceRef)
+                .Where(x => x > 0)
+                .Distinct()
+                .ToList();
             IsOccurrenceWindowVisible = true;
         }
 

@@ -174,7 +174,7 @@
                       CopyClicked="@OnCopyTokenClicked"
                       CloseClicked="@OnCloseWelcomeWindowClicked" />
 
-    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
+    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" OccurrenceRefs="@OccurrenceRefsForWindow" OccurrenceRefChanged="@OpenOccurrenceDetailsAsync" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
 
     <main class="content @(ShowEnvironmentFrame ? "environment-content-frame" : string.Empty)" style="@(ShowEnvironmentFrame ? EnvironmentFrameStyle : null)">
         <GlobalErrorBoundaryBase>

@@ -111,6 +111,8 @@ public partial class MainLayout : IDisposable
 
     private EntryOccurrenceDetailModel? SelectedOccurrenceDetail { get; set; }
 
+    private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
+
     private bool IsOccurrenceWindowVisible { get; set; }
 
     public string EnvironmentFrameStyle => ShowEnvironmentFrame
@@ -327,7 +329,17 @@ public partial class MainLayout : IDisposable
             return;
         }
 
-        SelectedOccurrenceDetail = await EattsApiRepository.GetOccurrenceDetail(GoToOccurrenceRef.Value);
+        await OpenOccurrenceDetailsAsync(GoToOccurrenceRef.Value);
+    }
+
+    private async Task OpenOccurrenceDetailsAsync(int occurrenceRef)
+    {
+        if (occurrenceRef <= 0)
+        {
+            return;
+        }
+
+        SelectedOccurrenceDetail = await EattsApiRepository.GetOccurrenceDetail(occurrenceRef);
         if (SelectedOccurrenceDetail is null)
         {
             IsOccurrenceWindowVisible = false;
@@ -340,6 +352,12 @@ public partial class MainLayout : IDisposable
 
         SelectedOccurrenceDetail.ApiLogData ??= [];
         SelectedOccurrenceDetail.Notes ??= [];
+
+        if (!OccurrenceRefsForWindow.Contains(occurrenceRef))
+        {
+            OccurrenceRefsForWindow = [occurrenceRef];
+        }
+
         IsOccurrenceWindowVisible = true;
     }
 
