@@ -1,9 +1,14 @@
-@page "/occurrence-details/{occurenceRef:int}"
+@page "/occurrence-details/{occurrenceRef:int}"
+@page "/occurrence-details"
 @using EATTS.Common.Models
 
 <PageTitle>@PageTitleText</PageTitle>
 
 <div class="dense-page">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+        <TelerikComboBox Data="@ComboItems" @bind-Value="@SelectedOccurrenceAction" TItem="string" TValue="string" Placeholder="Select Or Enter occurrence ref" Width="260px" OnChange="@OnOccurrenceRefChanged" OnBlur="@OnOccurrenceRefBlur" />
+    </div>
+
     @if (IsLoading)
     {
         <div class="results-panel-loader">
@@ -18,9 +23,6 @@
     else
     {
         <div class="k-form k-form-sm">
-            <div class="form-submit-actions">
-                <TelerikButton Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@OpenOccurrenceWindow">View Details Window</TelerikButton>
-            </div>
             <div><strong>Occurrence Ref:</strong> @OccurrenceDetail.EntryOccurrenceRef</div>
             <div><strong>Entry Ref:</strong> @OccurrenceDetail.EntryRef</div>
             <div><strong>Date:</strong> @OccurrenceDetail.Date</div>

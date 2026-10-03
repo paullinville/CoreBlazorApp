@@ -1,5 +1,6 @@
 :root {
     --kendo-font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
+    --midland-orange: #dc6b12;
 }
 
 body {
@@ -108,7 +109,7 @@ body {
     text-align: center;
     font-size: 3.9rem;
     font-weight: 700;
-    color: #dc6b12;
+    color: var(--midland-orange);
     inset: calc(20vh + 9.75rem + 50px) 0 auto 0;
     display: none;
 }
@@ -528,6 +529,28 @@ body.dark-theme .settings-icon:hover {
 body.dark-theme .goto-icon:hover {
     background-color: rgba(255, 255, 255, 0.15);
 }
+
+.occurrence-details-goto-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    padding: 0;
+}
+
+.appbar-goto-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #dfe5ef;
+    color: #dfe5ef;
+    background-color: #2f3a4a;
+    padding: 0;
+}
+
+    .appbar-goto-icon:hover {
+        background-color: #3a4759;
+    }
 
 .search-icon {
     display: inline-flex;

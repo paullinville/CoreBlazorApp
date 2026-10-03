@@ -5,6 +5,8 @@ namespace BlazorApp.Components;
 
 public partial class OccurrenceDetailWindow
 {
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
     [Parameter] public EntryOccurrenceDetailModel? OccurrenceDetail { get; set; }
     [Parameter] public bool IsVisible { get; set; }
     [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
@@ -19,5 +21,17 @@ public partial class OccurrenceDetailWindow
     {
         IsVisible = isVisible;
         await IsVisibleChanged.InvokeAsync(isVisible);
+    }
+
+    private async Task OnGoToOccurrenceDetailsAsync()
+    {
+        if (OccurrenceDetail?.EntryOccurrenceRef is null or <= 0)
+        {
+            return;
+        }
+
+        IsVisible = false;
+        await IsVisibleChanged.InvokeAsync(false);
+        NavigationManager.NavigateTo($"/occurrence-details/{OccurrenceDetail.EntryOccurrenceRef}");
     }
 }

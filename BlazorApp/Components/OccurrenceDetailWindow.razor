@@ -5,11 +5,26 @@
     <TelerikWindow Visible="@IsVisible"
                    VisibleChanged="@OnVisibleChangedAsync"
                    Modal="true"
-                   Width="1750px"
-                   Height="1000px"
+                   Width="1400px"
+                   Height="850px"
                    Resizable="true"
                    Draggable="true">
-        <WindowTitle>Occurrence Details</WindowTitle>
+        <WindowTitle>
+            <span style="display:inline-flex; align-items:center; gap:0.5rem;">
+                <span>Occurrence Details</span>
+                <button id="occurrence-details-goto-button" type="button" class="goto-icon" title="GoTo" aria-label="GoTo" @onclick="OnGoToOccurrenceDetailsAsync">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m13 7 6 5-6 5" />
+                    </svg>
+                </button>
+            </span>
+            <TelerikTooltip TargetSelector="#occurrence-details-goto-button" Position="TooltipPosition.Top">
+                <Template>
+                    <div>Go to details page.</div>
+                </Template>
+            </TelerikTooltip>
+        </WindowTitle>
         <WindowActions>
             <WindowAction Name="Close" />
         </WindowActions>
@@ -38,7 +53,9 @@
                                                         <tbody class="k-table-tbody">
                                                             <tr class="k-table-row">
                                                                 <td class="k-table-td">Occurrenc#</td>
-                                                                <td class="k-table-td">@OccurrenceDetail.EntryOccurrenceRef</td>
+                                                                <td class="k-table-td">
+                                                                    <a style="text-decoration:underline;" href="@($"/occurrence-details/{OccurrenceDetail.EntryOccurrenceRef}")">@OccurrenceDetail.EntryOccurrenceRef</a>
+                                                                </td>
                                                             </tr>
                                                             <tr class="k-table-row">
                                                                 <td class="k-table-td">Entry#</td>

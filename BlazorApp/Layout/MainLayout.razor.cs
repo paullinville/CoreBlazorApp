@@ -46,8 +46,7 @@ public partial class MainLayout : IDisposable
     public List<MenuItem> MenuItems { get; } =
     [
         new() { Text = "Home", Url = "/" },
-        new() { Text = "Products", Url = "/products" },
-        new() { Text = "Settings", Url = "/settings" }
+        new() { Text = "Details", Url = "/occurrence-details" }
     ];
 
     public List<ReportMenuItem> ReportMenuItems { get; } =
