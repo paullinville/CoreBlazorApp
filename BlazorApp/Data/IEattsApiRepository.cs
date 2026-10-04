@@ -58,4 +58,6 @@ public interface IEattsApiRepository
     Task<List<ApiLogDataModel>> FindApiLogData(ApiLogCriteria criteria);
 
     Task<SupportOptionsOverrideGetModel> GetSupportOptionOverrideByEntryRef(int supportOptionsOverrideRef);
+
+    Task<List<EntryOccurrenceSearchView>> SearchOccurrences(EntryOccurrenceSearchCriteria criteria);
 }

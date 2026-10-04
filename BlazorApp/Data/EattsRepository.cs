@@ -100,6 +100,14 @@ public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEat
         return x.Results.Values().ToList();
     }
 
+    public async Task<List<EntryOccurrenceSearchView>> SearchOccurrences(EntryOccurrenceSearchCriteria criteria)
+    {
+        var response = await Client.GetEntryOccurrenceViewDetail(1);
+
+        var x = await ProcessResponseAsync(response);
+        return [new EntryOccurrenceSearchView()];
+    }
+
     public async Task<List<ApplicationOptionsGetModel>> GetAllApplicationOptions()
     {
         var response = await Client.GetAllApplicationOptionsList();

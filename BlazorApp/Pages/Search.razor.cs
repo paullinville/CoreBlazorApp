@@ -34,7 +34,7 @@ public partial class Search
 
     private int? EmailsSentUserRef { get; set; }
 
-    private List<EntryOccurrenceSearchView> GridData { get; } = [];
+    private List<EntryOccurrenceSearchView> GridData { get; set; } = [];
 
     private TelerikGrid<EntryOccurrenceSearchView>? SearchResultsGrid { get; set; }
 
@@ -87,6 +87,7 @@ public partial class Search
     private async Task OnSearchClickedAsync()
     {
         IsSearchCriteriaExpanded = false;
+        GridData = await EattsApiRepository.SearchOccurrences(this.CriteriaInput);
         await OnResultsExpandedChanged(true);
         await InvokeAsync(StateHasChanged);
     }

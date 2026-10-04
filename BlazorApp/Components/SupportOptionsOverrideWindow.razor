@@ -1,0 +1,71 @@
+@using EATTS.Common.Models
+
+<TelerikWindow Visible="@IsVisible"
+               VisibleChanged="@OnWindowVisibleChangedAsync"
+               Modal="true"
+               Width="700px"
+               Height="575px"
+               Resizable="true"
+               Draggable="true">
+    <WindowTitle>
+        Entry Ref @EntryRef - Support Options
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        @if (IsSupportOptionsLoading)
+        {
+            <p>Loading support options...</p>
+        }
+        else
+        {
+            <EditForm Model="@SupportOptionsOverride" OnValidSubmit="@SaveSupportOptionsAsync">
+                <DataAnnotationsValidator />
+
+                <div class="k-form k-form-sm">
+                    <div class="k-form-field k-mb-2">
+                        <label for="support-window-flood-count">Flood Count</label>
+                        <TelerikNumericTextBox Id="support-window-flood-count" @bind-Value="@SupportOptionsOverride.FloodCount" Min="1" Decimals="0" Format="n0" Arrows="true" Size="ComponentSize.Small" />
+                        <ValidationMessage For="@(() => SupportOptionsOverride.FloodCount)" />
+                    </div>
+
+                    <div class="k-form-field k-mb-2">
+                        <label for="support-window-flood-time">Flood Time (minutes)</label>
+                        <TelerikNumericTextBox Id="support-window-flood-time" @bind-Value="@SupportOptionsOverride.FloodTime" Min="1" Decimals="0" Format="n0" Arrows="true" Size="ComponentSize.Small" />
+                        <ValidationMessage For="@(() => SupportOptionsOverride.FloodTime)" />
+                    </div>
+
+                    <div class="k-form-field k-mb-2">
+                        <label for="support-window-flood-email">Flood Email</label>
+                        <UserMultiSelect Id="support-window-flood-email"
+                                         @bind-Value="SelectedFloodEmailUserRefs"
+                                         SelectedUsersChanged="@OnFloodEmailUsersChanged"
+                                         Placeholder="Select users" />
+                        <ValidationMessage For="@(() => SupportOptionsOverride.FloodEmail)" />
+                    </div>
+
+                    <div class="k-form-field k-mb-2">
+                        <label for="support-window-other-email">Other Email</label>
+                        <UserMultiSelect Id="support-window-other-email"
+                                         @bind-Value="SelectedOtherEmailUserRefs"
+                                         SelectedUsersChanged="@OnOtherEmailUsersChanged"
+                                         Placeholder="Select users" />
+                        <ValidationMessage For="@(() => SupportOptionsOverride.OtherEmail)" />
+                    </div>
+
+                    <div class="k-form-field k-mb-2">
+                        <label for="support-window-reason">Reason</label>
+                        <TelerikTextArea Size="ComponentSize.Small" Id="support-window-reason" @bind-Value="@SupportOptionsOverride.Reason" Rows="4" />
+                        <ValidationMessage For="@(() => SupportOptionsOverride.Reason)" />
+                    </div>
+
+                    <div class="form-submit-actions">
+                        <TelerikButton Class="cancel-action" Size="ComponentSize.Small" OnClick="@CancelSupportOptionsWindowAsync">Cancel</TelerikButton>
+                        <TelerikButton Class="primary-action" Size="ComponentSize.Small" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" ButtonType="@ButtonType.Submit">Save</TelerikButton>
+                    </div>
+                </div>
+            </EditForm>
+        }
+    </WindowContent>
+</TelerikWindow>
