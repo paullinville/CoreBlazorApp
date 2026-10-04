@@ -572,6 +572,38 @@ public class MockEattsRepository : IEattsApiRepository
         return Task.FromResult(result.OrderByDescending(x => x.OccurrenceDate).ToList());
     }
 
+    public Task<List<EntryOccurrenceSearchView>> SearchOccurrences(EntryOccurrenceSearchCriteria criteria)
+    {
+        var results = Occurrences
+            .Take(20)
+            .Select(x => new EntryOccurrenceSearchView
+            {
+                EntryRef = x.EntryRef,
+                EntryOccurrenceRef = x.EntryOccurrenceRef,
+                LastEntryOccurrenceRef = x.LastEntryOccurrenceRef,
+                EntryOccurrenceCount = x.OccurrenceCount,
+                EntryGenericDescription = x.Description ?? string.Empty,
+                EntryOccurrenceDescription = x.OccurrenceDescription ?? string.Empty,
+                EntryOccurrenceOrigin = x.Origin ?? string.Empty,
+                EntryOccurrenceCallerId = x.CallerId ?? string.Empty,
+                EntryKey = x.Key ?? string.Empty,
+                TokenSubject = x.Subject ?? string.Empty,
+                TokenSubjectType = string.Equals(x.SubjectType, "Api", StringComparison.OrdinalIgnoreCase) ? 1 : 2,
+                EntryOccurrenceUserRef = x.UserRef,
+                IsError = x.IsError,
+                ErrorTypeDescription = x.ErrorType ?? string.Empty,
+                EntryOccurrenceEmailsSent = x.EmailsSent ?? string.Empty,
+                EntryOccurrenceDate = x.OccurrenceDate,
+                LastEntryOccurrenceDate = x.LastOccurrenceDate,
+                RequestId = x.RequestId,
+                EntryOccurrenceErrorResponse = "{}"
+            })
+            .OrderByDescending(x => x.EntryOccurrenceDate)
+            .ToList();
+
+        return Task.FromResult(results);
+    }
+
     public Task<PageResultsModel<EntryOccurrenceSummaryModel>> GetEntryOccurrenceDetail(EntryOccurrenceSearchCriteria criteria)
     {
         var pageNumber = criteria?.PageNumber > 0 ? criteria.PageNumber : 1;

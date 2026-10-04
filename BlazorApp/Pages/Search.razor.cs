@@ -1,6 +1,5 @@
 using BlazorApp.Common;
 using BlazorApp.Data;
-using EATTS.Common.Models;
 using EmployeeData.Common.Models;
 using Microsoft.AspNetCore.Components;
 using SecurityModel.Common.Models;
@@ -81,6 +80,14 @@ public partial class Search
     private Task OnSearchCriteriaExpandedChanged(bool value)
     {
         IsSearchCriteriaExpanded = value;
+
+        if (value)
+        {
+            IsResultsExpanded = false;
+            ShowResultsGrid = false;
+            IsResultsLoading = false;
+        }
+
         return Task.CompletedTask;
     }
 
@@ -103,6 +110,7 @@ public partial class Search
             return Task.CompletedTask;
         }
 
+        IsSearchCriteriaExpanded = false;
         IsResultsLoading = true;
         ShowResultsGrid = false;
         _ = ShowResultsGridAfterDelayAsync();

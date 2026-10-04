@@ -1,5 +1,5 @@
 @page "/search"
-
+where
 <PageTitle>@PageTitleText</PageTitle>
 
 <TelerikExpansionPanel Title="Search Criteria" Expanded="@IsSearchCriteriaExpanded" ExpandedChanged="@OnSearchCriteriaExpandedChanged" Width="100%">
@@ -105,6 +105,13 @@
                     No results found.
                 </NoDataTemplate>
                 <GridColumns>
+                    <GridColumn Field="@nameof(EntryOccurrenceSearchView.EntryOccurrenceRef)" Title="Occurrence Ref" />
+                    <GridColumn Field="@nameof(EntryOccurrenceSearchView.EntryRef)" Title="Entry Ref" />
+                    <GridColumn Field="@nameof(EntryOccurrenceSearchView.IsError)" Title="Is Error" />
+                    <GridColumn Field="@nameof(EntryOccurrenceSearchView.EntryOccurrenceOrigin)" Title="Origin" />
+                    <GridColumn Field="@nameof(EntryOccurrenceSearchView.TokenSubject)" Title="Subject" />
+                    <GridColumn Field="@nameof(EntryOccurrenceSearchView.EntryOccurrenceDescription)" Title="Description" />
+                    <GridColumn Field="@nameof(EntryOccurrenceSearchView.EntryOccurrenceDate)" Title="Occurrence Date" DisplayFormat="{0:g}" />
                 </GridColumns>
             </TelerikGrid>
         }
