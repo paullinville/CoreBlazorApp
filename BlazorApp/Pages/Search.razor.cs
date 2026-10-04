@@ -34,9 +34,9 @@ public partial class Search
 
     private int? EmailsSentUserRef { get; set; }
 
-    private List<SearchResultItem> GridData { get; } = [];
+    private List<EntryOccurrenceSearchView> GridData { get; } = [];
 
-    private TelerikGrid<SearchResultItem>? SearchResultsGrid { get; set; }
+    private TelerikGrid<EntryOccurrenceSearchView>? SearchResultsGrid { get; set; }
 
     private bool ExportAllPages { get; set; }
 
@@ -120,11 +120,4 @@ public partial class Search
     private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)
         ? pageTitle
         : $"{Settings.ApplicationName} - {pageTitle}";
-
-    private class SearchResultItem
-    {
-        public string Primary { get; set; } = string.Empty;
-
-        public string Secondary { get; set; } = string.Empty;
-    }
 }

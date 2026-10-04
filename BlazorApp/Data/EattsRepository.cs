@@ -144,9 +144,16 @@ public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEat
         return await ProcessResponseAsync(response);
     }
 
+    public async Task<SupportOptionsOverrideGetModel> GetSupportOptionOverrideByEntryRef(int entryRef)
+    {
+        var response = await Client.GetSupportOptionOverrideByEntryRef(entryRef);
+
+        return await ProcessResponseAsync(response);
+    }
+
     public async Task<SupportOptionsOverrideGetModel> GetSupportOptionOverride(int supportOptionsOverrideRef)
     {
-        var response = await Client.GetSupportOptionOverride(supportOptionsOverrideRef);
+        var response = await Client.GetSupportOptionOverrideByEntryRef(supportOptionsOverrideRef);
 
         return await ProcessResponseAsync(response);
     }

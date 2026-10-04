@@ -1,6 +1,7 @@
 using BlazorApp.Common;
 using BlazorApp.Data;
 using EATTS.Common.Models;
+using EmployeeData.Common.Models;
 using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
 
@@ -33,6 +34,20 @@ namespace BlazorApp.Pages
         private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
 
         private bool IsOccurrenceWindowVisible { get; set; }
+
+        private SupportOptionsOverrideGetModel SupportOptionsOverride { get; set; } = new();
+
+        private int? SelectedEntryRefForSupportOptions { get; set; }
+
+        private bool IsSupportOptionsWindowVisible { get; set; }
+
+        private bool IsSupportOptionsLoading { get; set; }
+
+        private List<UserSelectModelExpanded> ActiveSelectionUsers { get; set; } = [];
+
+        private List<int> SelectedFloodEmailUserRefs { get; set; } = [];
+
+        private List<int> SelectedOtherEmailUserRefs { get; set; } = [];
 
         private string CurrentUserEmail { get; set; } = string.Empty;
 
@@ -83,6 +98,123 @@ namespace BlazorApp.Pages
             state.Skip = 0;
             state.SortDescriptors?.Clear();
             await ReportGrid.SetStateAsync(state);
+        }
+
+        private async Task OpenSupportOptionsWindowAsync(int entryRef)
+        {
+            if (entryRef <= 0)
+            {
+                return;
+            }
+
+            SelectedEntryRefForSupportOptions = entryRef;
+            IsSupportOptionsWindowVisible = true;
+            IsSupportOptionsLoading = true;
+
+            SupportOptionsOverride = await EattsApiRepository.GetSupportOptionOverrideByEntryRef(entryRef)
+                ?? new SupportOptionsOverrideGetModel() { EntryRef = entryRef };
+
+            await EnsureActiveSelectionUsersAsync();
+            SelectedFloodEmailUserRefs = ResolveUserRefsByEmail(SupportOptionsOverride.FloodEmail);
+            SelectedOtherEmailUserRefs = ResolveUserRefsByEmail(SupportOptionsOverride.OtherEmail);
+
+            IsSupportOptionsLoading = false;
+        }
+
+        private async Task SaveSupportOptionsAsync()
+        {
+            var model = new SupportOptionsOverridePostModel
+            {
+                EntryRef = SupportOptionsOverride.EntryRef,
+                DoNotSendEmail = SupportOptionsOverride.DoNotSendEmail,
+                FloodCount = SupportOptionsOverride.FloodCount,
+                FloodTime = SupportOptionsOverride.FloodTime,
+                FloodEmail = SupportOptionsOverride.FloodEmail,
+                OtherEmail = SupportOptionsOverride.OtherEmail,
+                Reason = SupportOptionsOverride.Reason
+            };
+
+            var updated = SupportOptionsOverride.SupportOptionsOverrideRef > 0
+                ? await EattsApiRepository.PutSupportOptionOverride(SupportOptionsOverride.SupportOptionsOverrideRef, model)
+                : await EattsApiRepository.PostSupportOptionOverride(model);
+
+            SupportOptionsOverride = updated ?? SupportOptionsOverride;
+            await CancelSupportOptionsWindowAsync();
+        }
+
+        private Task CancelSupportOptionsWindowAsync()
+        {
+            IsSupportOptionsWindowVisible = false;
+            IsSupportOptionsLoading = false;
+            SelectedEntryRefForSupportOptions = null;
+            SelectedFloodEmailUserRefs = [];
+            SelectedOtherEmailUserRefs = [];
+            return Task.CompletedTask;
+        }
+
+        private Task OnSupportOptionsWindowVisibleChanged(bool isVisible)
+        {
+            if (!isVisible)
+            {
+                return CancelSupportOptionsWindowAsync();
+            }
+
+            IsSupportOptionsWindowVisible = true;
+            return Task.CompletedTask;
+        }
+
+        private async Task EnsureActiveSelectionUsersAsync()
+        {
+            if (ActiveSelectionUsers.Count > 0)
+            {
+                return;
+            }
+
+            ActiveSelectionUsers = (await EmployeeRepository.GetActiveSelectionUsers())
+                .Values()
+                .Where(x => x.UserRef > 0 && x.Email.IsNotNullOrBlank())
+                .GroupBy(x => x.UserRef)
+                .Select(x => x.First())
+                .OrderBy(x => x.FullName)
+                .ToList();
+        }
+
+        private List<int> ResolveUserRefsByEmail(string? emails)
+        {
+            if (emails.IsNullOrBlank())
+            {
+                return [];
+            }
+
+            var selectedEmails = emails
+                .Split([';', ','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            return ActiveSelectionUsers
+                .Where(x => x.Email.IsNotNullOrBlank() && selectedEmails.Contains(x.Email))
+                .Select(x => x.UserRef)
+                .Distinct()
+                .ToList();
+        }
+
+        private void OnFloodEmailUsersChanged(List<UserSelectModelExpanded> selectedUsers)
+        {
+            SelectedFloodEmailUserRefs = selectedUsers?.Values().Select(x => x.UserRef).Distinct().ToList() ?? [];
+            SupportOptionsOverride.FloodEmail = string.Join(";", selectedUsers
+                .Values()
+                .Select(x => x.Email)
+                .Where(x => x.IsNotNullOrBlank())
+                .Distinct(StringComparer.OrdinalIgnoreCase));
+        }
+
+        private void OnOtherEmailUsersChanged(List<UserSelectModelExpanded> selectedUsers)
+        {
+            SelectedOtherEmailUserRefs = selectedUsers?.Values().Select(x => x.UserRef).Distinct().ToList() ?? [];
+            SupportOptionsOverride.OtherEmail = string.Join(";", selectedUsers
+                .Values()
+                .Select(x => x.Email)
+                .Where(x => x.IsNotNullOrBlank())
+                .Distinct(StringComparer.OrdinalIgnoreCase));
         }
 
         private async Task OpenOccurrenceDetailsAsync(int occurrenceRef)

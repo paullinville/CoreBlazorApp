@@ -711,6 +711,11 @@ public class MockEattsRepository : IEattsApiRepository
         return Task.FromResult(SupportOptionOverrides.FirstOrDefault(x => x.SupportOptionsOverrideRef == supportOptionsOverrideRef));
     }
 
+    public Task<SupportOptionsOverrideGetModel> GetSupportOptionOverrideByEntryRef(int entryRef)
+    {
+        return Task.FromResult(SupportOptionOverrides.FirstOrDefault(x => x.EntryRef == entryRef));
+    }
+
     public Task<SupportOptionsOverrideGetModel> PostSupportOptionOverride(SupportOptionsOverridePostModel model)
     {
         var nextRef = SupportOptionOverrides.Select(x => x.SupportOptionsOverrideRef).DefaultIfEmpty(0).Max() + 1;

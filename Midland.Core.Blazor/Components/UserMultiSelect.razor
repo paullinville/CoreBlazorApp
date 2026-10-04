@@ -1,0 +1,16 @@
+@using EmployeeData.Common.Models
+
+<TelerikMultiSelect Id="@Id"
+                    Data="@Users"
+                    TItem="UserSelectModelExpanded"
+                    TValue="int"
+                    Value="@Value"
+                    ValueChanged="@OnValueChanged"
+                    ValueExpression="@ValueExpression"
+                    ValueField="@nameof(UserSelectModelExpanded.UserRef)"
+                    TextField="@nameof(UserSelectModelExpanded.FullName)"
+                    Placeholder="@Placeholder"
+                    Filterable="true"
+                    FilterOperator="@StringFilterOperator.Contains"
+                    Enabled="@Enabled"
+                    Width="100%" />
