@@ -151,7 +151,7 @@ public class MockEattsRepository : IEattsApiRepository
     ];
 
     private static readonly List<EntryOccurrenceSummaryModel> Occurrences =
-        Enumerable.Range(1, 20)
+        Enumerable.Range(1, 50)
             .Select(index => new EntryOccurrenceSummaryModel
             {
                 EntryOccurrenceRef = 2000 + index,
@@ -575,7 +575,7 @@ public class MockEattsRepository : IEattsApiRepository
     public Task<List<EntryOccurrenceSearchView>> SearchOccurrences(EntryOccurrenceSearchCriteria criteria)
     {
         var results = Occurrences
-            .Take(20)
+            .Take(31)
             .Select(x => new EntryOccurrenceSearchView
             {
                 EntryRef = x.EntryRef,
