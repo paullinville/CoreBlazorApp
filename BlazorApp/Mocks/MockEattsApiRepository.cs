@@ -151,7 +151,7 @@ public class MockEattsRepository : IEattsApiRepository
     ];
 
     private static readonly List<EntryOccurrenceSummaryModel> Occurrences =
-        Enumerable.Range(1, 20)
+        Enumerable.Range(1, 50)
             .Select(index => new EntryOccurrenceSummaryModel
             {
                 EntryOccurrenceRef = 2000 + index,
@@ -572,6 +572,38 @@ public class MockEattsRepository : IEattsApiRepository
         return Task.FromResult(result.OrderByDescending(x => x.OccurrenceDate).ToList());
     }
 
+    public Task<List<EntryOccurrenceSearchView>> SearchOccurrences(EntryOccurrenceSearchCriteria criteria)
+    {
+        var results = Occurrences
+            .Take(31)
+            .Select(x => new EntryOccurrenceSearchView
+            {
+                EntryRef = x.EntryRef,
+                EntryOccurrenceRef = x.EntryOccurrenceRef,
+                LastEntryOccurrenceRef = x.LastEntryOccurrenceRef,
+                EntryOccurrenceCount = x.OccurrenceCount,
+                EntryGenericDescription = x.Description ?? string.Empty,
+                EntryOccurrenceDescription = x.OccurrenceDescription ?? string.Empty,
+                EntryOccurrenceOrigin = x.Origin ?? string.Empty,
+                EntryOccurrenceCallerId = x.CallerId ?? string.Empty,
+                EntryKey = x.Key ?? string.Empty,
+                TokenSubject = x.Subject ?? string.Empty,
+                TokenSubjectType = string.Equals(x.SubjectType, "Api", StringComparison.OrdinalIgnoreCase) ? 1 : 2,
+                EntryOccurrenceUserRef = x.UserRef,
+                IsError = x.IsError,
+                ErrorTypeDescription = x.ErrorType ?? string.Empty,
+                EntryOccurrenceEmailsSent = x.EmailsSent ?? string.Empty,
+                EntryOccurrenceDate = x.OccurrenceDate,
+                LastEntryOccurrenceDate = x.LastOccurrenceDate,
+                RequestId = x.RequestId,
+                EntryOccurrenceErrorResponse = "{}"
+            })
+            .OrderByDescending(x => x.EntryOccurrenceDate)
+            .ToList();
+
+        return Task.FromResult(results);
+    }
+
     public Task<PageResultsModel<EntryOccurrenceSummaryModel>> GetEntryOccurrenceDetail(EntryOccurrenceSearchCriteria criteria)
     {
         var pageNumber = criteria?.PageNumber > 0 ? criteria.PageNumber : 1;
@@ -645,38 +677,41 @@ public class MockEattsRepository : IEattsApiRepository
         return Task.FromResult(detail);
     }
 
-    public Task<EntryOccurrenceDetailModel> GetOccurrenceDetail(int occurrenceRef)
+    public Task<EntryOccurrenceDetailModel?> GetOccurrenceDetail(int occurrenceRef)
     {
         var found = Occurrences.FirstOrDefault(x => x.EntryOccurrenceRef == occurrenceRef);
-        var detail = new EntryOccurrenceDetailModel
+        EntryOccurrenceDetailModel? detail = null;
+        if (found != null)
         {
-            EntryOccurrenceRef = found?.EntryOccurrenceRef ?? occurrenceRef,
-            EntryRef = found?.EntryRef ?? 0,
-            Date = found?.OccurrenceDate ?? DateTime.UtcNow,
-            Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
-            Origin = found?.Origin ?? "CoreBlazorApp",
-            CallerId = found?.CallerId ?? "mock-service",
-            EmailsSent = found?.EmailsSent ?? string.Empty,
-            OccurrenceCount = found?.OccurrenceCount ?? 0,
-            LastEntryOccurrenceRef = found?.LastEntryOccurrenceRef ?? 0,
-            GenericDescription = found?.Description ?? "Mock entry",
-            Key = found?.Key ?? $"OCC-{occurrenceRef}",
-            TokenSubject = found?.Subject ?? "core-app",
-            TokenType = found?.SubjectType ?? "Api",
-            Error = found?.IsError,
-            ErrorResponse = new ErrorResponse
+            detail = new EntryOccurrenceDetailModel
             {
-                Code = found?.IsError == true ? "Mock.Error" : "Mock.Info",
-                Title = "Mock Occurrence Detail",
+                EntryOccurrenceRef = found?.EntryOccurrenceRef ?? occurrenceRef,
+                EntryRef = found?.EntryRef ?? 0,
+                Date = found?.OccurrenceDate ?? DateTime.UtcNow,
                 Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
-                RequestId = (found?.RequestId ?? Guid.NewGuid()).ToString(),
-                RequestPath = $"/api/eatts/occurrence/{occurrenceRef}",
-                Messages = ["Mock response generated for occurrence detail."]
-            },
-            ErrorTypeCode = new ErrorTypeCode { ErrorTypeRef = 1, Name = found?.ErrorType ?? "General" },
-            ApiLogData =
-            [
-                new ApiLogDataModel
+                Origin = found?.Origin ?? "CoreBlazorApp",
+                CallerId = found?.CallerId ?? "mock-service",
+                EmailsSent = found?.EmailsSent ?? string.Empty,
+                OccurrenceCount = found?.OccurrenceCount ?? 0,
+                LastEntryOccurrenceRef = found?.LastEntryOccurrenceRef ?? 0,
+                GenericDescription = found?.Description ?? "Mock entry",
+                Key = found?.Key ?? $"OCC-{occurrenceRef}",
+                TokenSubject = found?.Subject ?? "core-app",
+                TokenType = found?.SubjectType ?? "Api",
+                Error = found?.IsError,
+                ErrorResponse = new ErrorResponse
+                {
+                    Code = found?.IsError == true ? "Mock.Error" : "Mock.Info",
+                    Title = "Mock Occurrence Detail",
+                    Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
+                    RequestId = (found?.RequestId ?? Guid.NewGuid()).ToString(),
+                    RequestPath = $"/api/eatts/occurrence/{occurrenceRef}",
+                    Messages = ["Mock response generated for occurrence detail."]
+                },
+                ErrorTypeCode = new ErrorTypeCode { ErrorTypeRef = 1, Name = found?.ErrorType ?? "General" },
+                ApiLogData =
+          [
+              new ApiLogDataModel
                 {
                     ApiLogRef = 1,
                     ApiName = "Mock API",
@@ -685,8 +720,9 @@ public class MockEattsRepository : IEattsApiRepository
                     RequestId = found?.RequestId ?? Guid.NewGuid(),
                     Server = "mock-server"
                 }
-            ]
-        };
+          ]
+            };
+        }
 
         return Task.FromResult(detail);
     }
@@ -705,6 +741,11 @@ public class MockEattsRepository : IEattsApiRepository
     public Task<SupportOptionsOverrideGetModel> GetSupportOptionOverride(int supportOptionsOverrideRef)
     {
         return Task.FromResult(SupportOptionOverrides.FirstOrDefault(x => x.SupportOptionsOverrideRef == supportOptionsOverrideRef));
+    }
+
+    public Task<SupportOptionsOverrideGetModel> GetSupportOptionOverrideByEntryRef(int entryRef)
+    {
+        return Task.FromResult(SupportOptionOverrides.FirstOrDefault(x => x.EntryRef == entryRef));
     }
 
     public Task<SupportOptionsOverrideGetModel> PostSupportOptionOverride(SupportOptionsOverridePostModel model)

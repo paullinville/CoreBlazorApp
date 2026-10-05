@@ -54,5 +54,10 @@ public interface IEattsApiRepository
     Task<SupportOptionsEditModel> GetSupportOptions();
 
     Task<SupportOptionsEditModel> UpdateSupportOptions(SupportOptionsEditModel model);
+
     Task<List<ApiLogDataModel>> FindApiLogData(ApiLogCriteria criteria);
+
+    Task<SupportOptionsOverrideGetModel> GetSupportOptionOverrideByEntryRef(int supportOptionsOverrideRef);
+
+    Task<List<EntryOccurrenceSearchView>> SearchOccurrences(EntryOccurrenceSearchCriteria criteria);
 }

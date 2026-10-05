@@ -3,6 +3,17 @@
     display: block !important;
 }
 
+::deep .k-expander-content {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+}
+
+::deep .k-expander.k-expanded .k-expander-content {
+    max-height: none !important;
+    height: auto !important;
+}
+
 .search-grid-3 {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr));

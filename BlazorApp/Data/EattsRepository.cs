@@ -100,6 +100,14 @@ public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEat
         return x.Results.Values().ToList();
     }
 
+    public async Task<List<EntryOccurrenceSearchView>> SearchOccurrences(EntryOccurrenceSearchCriteria criteria)
+    {
+        var response = await Client.GetEntryOccurrenceViewDetail(1);
+
+        var x = await ProcessResponseAsync(response);
+        return [new EntryOccurrenceSearchView()];
+    }
+
     public async Task<List<ApplicationOptionsGetModel>> GetAllApplicationOptions()
     {
         var response = await Client.GetAllApplicationOptionsList();
@@ -144,9 +152,16 @@ public class EattsRepository : BlazorClientRepositoryBase<IEATTSApiClient>, IEat
         return await ProcessResponseAsync(response);
     }
 
+    public async Task<SupportOptionsOverrideGetModel> GetSupportOptionOverrideByEntryRef(int entryRef)
+    {
+        var response = await Client.GetSupportOptionOverrideByEntryRef(entryRef);
+
+        return await ProcessResponseAsync(response);
+    }
+
     public async Task<SupportOptionsOverrideGetModel> GetSupportOptionOverride(int supportOptionsOverrideRef)
     {
-        var response = await Client.GetSupportOptionOverride(supportOptionsOverrideRef);
+        var response = await Client.GetSupportOptionOverrideByEntryRef(supportOptionsOverrideRef);
 
         return await ProcessResponseAsync(response);
     }

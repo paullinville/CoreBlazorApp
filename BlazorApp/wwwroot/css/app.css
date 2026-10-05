@@ -1,5 +1,6 @@
 :root {
     --kendo-font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
+    --midland-orange: #dc6b12;
 }
 
 body {
@@ -108,7 +109,7 @@ body {
     text-align: center;
     font-size: 3.9rem;
     font-weight: 700;
-    color: #dc6b12;
+    color: var(--midland-orange);
     inset: calc(20vh + 9.75rem + 50px) 0 auto 0;
     display: none;
 }
@@ -503,6 +504,88 @@ body.dark-theme .report-icon:hover {
 
 body.dark-theme .settings-icon:hover {
     background-color: rgba(255, 255, 255, 0.15);
+}
+
+.goto-occurrence-input {
+    width: 7.5rem;
+    border: none !important;
+}
+
+.goto-occurrence-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    padding: 2px;
+    gap: 0;
+}
+
+body.dark-theme .goto-occurrence-group {
+    border-color: #dfe5ef;
+}
+}
+
+.goto-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: inherit;
+    padding: 4px;
+    border: none;
+    border-radius: 4px;
+    background: none;
+}
+
+    .goto-icon:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .goto-icon:disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+    }
+
+    .goto-icon:disabled:hover {
+        background: none;
+    }
+
+body.dark-theme .goto-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-theme .goto-icon:disabled {
+    opacity: 0.45;
+}
+
+.occurrence-details-goto-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    padding: 0;
+}
+
+.appbar-goto-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 0;
+    border: none;
+    color: #333333;
+    background-color: transparent;
+    padding: 0;
+}
+
+    .appbar-goto-icon:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+body.dark-theme .appbar-goto-icon {
+    color: #dfe5ef;
+}
+
+body.dark-theme .appbar-goto-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .search-icon {

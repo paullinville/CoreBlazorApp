@@ -19,6 +19,7 @@
 }
 
 .validation-notification {
+    --midland-orange: #dc6b12;
     z-index: 10000 !important;
     left: 50% !important;
     top: 30% !important;
@@ -26,8 +27,8 @@
 }
 
     .validation-notification .k-notification.k-notification-warning {
-        background-color: #dc6b12;
-        border-color: #dc6b12;
+        background-color: var(--midland-orange);
+        border-color: var(--midland-orange);
         color: #000000;
     }
 

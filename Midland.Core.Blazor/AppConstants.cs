@@ -9,7 +9,9 @@ public static class AppConstants
 
     public const string DevelopmentEnvironment = "development";
 
-    public const string MidlandOrange = "#dc6b12";
+    public const string MidlandOrange = "#FF5B00";
+
+    public const string MidlandOrangeCompliment = "#00A6FF";
 
     public static string ToThemeColor(NotificationThemeColor themeColor)
     {

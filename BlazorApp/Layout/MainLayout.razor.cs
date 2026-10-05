@@ -7,9 +7,13 @@ using BlazorApp.Common;
 using BlazorApp.Components;
 using BlazorApp.Data;
 using EmployeeData.Common;
+using EATTS.Common.Models;
 using Midland.Core.Blazor;
 using Midland.Core.Blazor.Components;
 using Midland.Core.Client;
+using Midland.Core.Common;
+using Midland.Core.SimpleMessageBus;
+using Microsoft.AspNetCore.Components.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -26,6 +30,8 @@ public partial class MainLayout : IDisposable
     [Inject] public ClientSettings ClientSettings { get; set; }
     [Inject] public IEmployeeRepository EmployeeRepository { get; set; }
     [Inject] public ISecurityModelToken SecurityModelToken { get; set; }
+    [Inject] public IEattsApiRepository EattsApiRepository { get; set; }
+    [Inject] public IEventChannelBus EventChannelBus { get; set; }
 
     public string? WelcomeText { get; set; }
 
@@ -40,8 +46,7 @@ public partial class MainLayout : IDisposable
     public List<MenuItem> MenuItems { get; } =
     [
         new() { Text = "Home", Url = "/" },
-        new() { Text = "Products", Url = "/products" },
-        new() { Text = "Settings", Url = "/settings" }
+        new() { Text = "Details", Url = "/occurrence-details" }
     ];
 
     public List<ReportMenuItem> ReportMenuItems { get; } =
@@ -101,6 +106,14 @@ public partial class MainLayout : IDisposable
     };
 
     public bool ShowEnvironmentFrame => !string.IsNullOrEmpty(EnvironmentBannerText);
+
+    private int? GoToOccurrenceRef { get; set; }
+
+    private EntryOccurrenceDetailModel? SelectedOccurrenceDetail { get; set; }
+
+    private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
+
+    private bool IsOccurrenceWindowVisible { get; set; }
 
     public string EnvironmentFrameStyle => ShowEnvironmentFrame
         ? $"--env-accent-color:{EnvironmentBannerColor}; --env-background-color:{(IsDarkTheme ? "#000000" : "#ffffff")};"
@@ -305,6 +318,88 @@ public partial class MainLayout : IDisposable
     {
         CloseReportMenu();
         NavigationManager.NavigateTo("/search");
+    }
+
+    private async Task OnGoToClickedAsync()
+    {
+        CloseReportMenu();
+
+        if (GoToOccurrenceRef is null || GoToOccurrenceRef <= 0)
+        {
+            return;
+        }
+
+        await OpenOccurrenceDetailsAsync(GoToOccurrenceRef.Value);
+    }
+
+    private async Task OpenOccurrenceDetailsAsync(int occurrenceRef)
+    {
+        if (occurrenceRef <= 0)
+        {
+            return;
+        }
+
+        SelectedOccurrenceDetail = await EattsApiRepository.GetOccurrenceDetail(occurrenceRef);
+        if (SelectedOccurrenceDetail is null)
+        {
+            IsOccurrenceWindowVisible = false;
+            EventChannelBus.Publish(new ResultsMessageEvent(new MidlandResult<object?>
+            {
+                Messages = ["Occurrence detail was not found."]
+            }));
+            return;
+        }
+
+        SelectedOccurrenceDetail.ApiLogData ??= [];
+        SelectedOccurrenceDetail.Notes ??= [];
+
+        if (!OccurrenceRefsForWindow.Contains(occurrenceRef))
+        {
+            OccurrenceRefsForWindow = [occurrenceRef];
+        }
+
+        IsOccurrenceWindowVisible = true;
+    }
+
+    private Task OnGoToInputKeyDown(KeyboardEventArgs args)
+    {
+        if (string.Equals(args.Key, "Enter", StringComparison.Ordinal))
+        {
+            return OnGoToClickedAsync();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private async Task OnGoToOccurrenceTextBoxPasteAsync()
+    {
+        try
+        {
+            // Read the clipboard data directly
+            var clipboardText = await JsRuntime.InvokeAsync<string>("navigator.clipboard.readText");
+
+            // Try to parse the clipboard content as an integer
+            if (!string.IsNullOrWhiteSpace(clipboardText) && int.TryParse(clipboardText.Trim(), out var occurrenceRef) && occurrenceRef > 0)
+            {
+                GoToOccurrenceRef = occurrenceRef;
+                await OpenOccurrenceDetailsAsync(occurrenceRef);
+            }
+        }
+        catch
+        {
+            // If clipboard access fails or doesn't parse as a number, just wait for binding update
+            await Task.Delay(100);
+            if (GoToOccurrenceRef is not null && GoToOccurrenceRef > 0)
+            {
+                await OnGoToClickedAsync();
+            }
+        }
+    }
+
+    private Task OnOccurrenceWindowVisibleChanged(bool isVisible)
+    {
+        IsOccurrenceWindowVisible = isVisible;
+        return Task.CompletedTask;
     }
 
     private async Task ToggleReportMenu()

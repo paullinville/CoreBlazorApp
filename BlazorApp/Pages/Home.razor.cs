@@ -30,7 +30,13 @@ namespace BlazorApp.Pages
 
         private EntryOccurrenceDetailModel? SelectedOccurrenceDetail { get; set; }
 
+        private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
+
         private bool IsOccurrenceWindowVisible { get; set; }
+
+        private int? SelectedEntryRefForSupportOptions { get; set; }
+
+        private bool IsSupportOptionsWindowVisible { get; set; }
 
         private string CurrentUserEmail { get; set; } = string.Empty;
 
@@ -83,6 +89,29 @@ namespace BlazorApp.Pages
             await ReportGrid.SetStateAsync(state);
         }
 
+        private Task OpenSupportOptionsWindowAsync(int entryRef)
+        {
+            if (entryRef <= 0)
+            {
+                return Task.CompletedTask;
+            }
+
+            SelectedEntryRefForSupportOptions = entryRef;
+            IsSupportOptionsWindowVisible = true;
+            return Task.CompletedTask;
+        }
+
+        private Task OnSupportOptionsWindowVisibleChanged(bool isVisible)
+        {
+            IsSupportOptionsWindowVisible = isVisible;
+            if (!isVisible)
+            {
+                SelectedEntryRefForSupportOptions = null;
+            }
+
+            return Task.CompletedTask;
+        }
+
         private async Task OpenOccurrenceDetailsAsync(int occurrenceRef)
         {
             if (occurrenceRef <= 0)
@@ -99,6 +128,11 @@ namespace BlazorApp.Pages
 
             SelectedOccurrenceDetail.ApiLogData ??= [];
             SelectedOccurrenceDetail.Notes ??= [];
+            OccurrenceRefsForWindow = ReportGridData
+                .Select(x => x.EntryOccurrenceRef)
+                .Where(x => x > 0)
+                .Distinct()
+                .ToList();
             IsOccurrenceWindowVisible = true;
         }
 

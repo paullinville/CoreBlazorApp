@@ -1,6 +1,5 @@
 using BlazorApp.Common;
 using BlazorApp.Data;
-using EATTS.Common.Models;
 using EmployeeData.Common.Models;
 using Microsoft.AspNetCore.Components;
 using SecurityModel.Common.Models;
@@ -18,27 +17,29 @@ public partial class Search
 
     private string PageTitleText => FormatPageTitle("Search");
 
-    private bool IsSearchCriteriaExpanded { get; set; } = true;
-
-    private bool IsResultsExpanded { get; set; } = false;
-
-    private bool IsResultsLoading { get; set; }
-
-    private bool ShowResultsGrid { get; set; }
-
-    private const int ResultsPanelLoadIndicatorMs = 650;
-
     private EntryOccurrenceSearchCriteria CriteriaInput { get; } = new();
 
     private List<ApplicationSummary> ApplicationOptions { get; set; } = [];
 
     private int? EmailsSentUserRef { get; set; }
 
-    private List<SearchResultItem> GridData { get; } = [];
+    private List<int?> PageSizeOptions { get; } = new() { 10, 20, 35, 50, 100 };
 
-    private TelerikGrid<SearchResultItem>? SearchResultsGrid { get; set; }
+    private List<EntryOccurrenceSearchView> GridData { get; set; } = [];
+
+    private TelerikGrid<EntryOccurrenceSearchView>? SearchResultsGrid { get; set; }
 
     private bool ExportAllPages { get; set; }
+
+    private EntryOccurrenceDetailModel? SelectedOccurrenceDetail { get; set; }
+
+    private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
+
+    private bool IsOccurrenceWindowVisible { get; set; }
+
+    private int? SelectedEntryRefForSupportOptions { get; set; }
+
+    private bool IsSupportOptionsWindowVisible { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,53 +79,67 @@ public partial class Search
         await SearchResultsGrid.SaveAsExcelFileAsync();
     }
 
-    private Task OnSearchCriteriaExpandedChanged(bool value)
+    private async Task OnSearchClickedAsync()
     {
-        IsSearchCriteriaExpanded = value;
+        GridData = await EattsApiRepository.SearchOccurrences(this.CriteriaInput);
+        // Change the grid key to force grid reset when new search results arrive
+    }
+
+    private async Task OpenOccurrenceDetailsAsync(int occurrenceRef)
+    {
+        if (occurrenceRef <= 0)
+        {
+            return;
+        }
+
+        SelectedOccurrenceDetail = await EattsApiRepository.GetOccurrenceDetail(occurrenceRef);
+        if (SelectedOccurrenceDetail is null)
+        {
+            IsOccurrenceWindowVisible = false;
+            return;
+        }
+
+        SelectedOccurrenceDetail.ApiLogData ??= [];
+        SelectedOccurrenceDetail.Notes ??= [];
+        OccurrenceRefsForWindow = GridData
+            .Select(x => x.EntryOccurrenceRef)
+            .Where(x => x > 0)
+            .Distinct()
+            .ToList();
+        IsOccurrenceWindowVisible = true;
+    }
+
+    private Task OnOccurrenceWindowVisibleChanged(bool isVisible)
+    {
+        IsOccurrenceWindowVisible = isVisible;
         return Task.CompletedTask;
     }
 
-    private async Task OnSearchClickedAsync()
+    private Task OpenSupportOptionsWindowAsync(int entryRef)
     {
-        IsSearchCriteriaExpanded = false;
-        await OnResultsExpandedChanged(true);
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private Task OnResultsExpandedChanged(bool value)
-    {
-        IsResultsExpanded = value;
-
-        if (!value)
+        if (entryRef <= 0)
         {
-            ShowResultsGrid = false;
-            IsResultsLoading = false;
             return Task.CompletedTask;
         }
 
-        IsResultsLoading = true;
-        ShowResultsGrid = false;
-        _ = ShowResultsGridAfterDelayAsync();
-
+        SelectedEntryRefForSupportOptions = entryRef;
+        IsSupportOptionsWindowVisible = true;
         return Task.CompletedTask;
     }
 
-    private async Task ShowResultsGridAfterDelayAsync()
+    private Task OnSupportOptionsWindowVisibleChanged(bool isVisible)
     {
-        await Task.Delay(ResultsPanelLoadIndicatorMs);
-        ShowResultsGrid = true;
-        IsResultsLoading = false;
-        await InvokeAsync(StateHasChanged);
+        IsSupportOptionsWindowVisible = isVisible;
+        if (!isVisible)
+        {
+            SelectedEntryRefForSupportOptions = null;
+        }
+
+        return Task.CompletedTask;
     }
 
     private string FormatPageTitle(string pageTitle) => string.IsNullOrWhiteSpace(Settings.ApplicationName)
         ? pageTitle
         : $"{Settings.ApplicationName} - {pageTitle}";
 
-    private class SearchResultItem
-    {
-        public string Primary { get; set; } = string.Empty;
-
-        public string Secondary { get; set; } = string.Empty;
-    }
 }

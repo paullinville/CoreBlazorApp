@@ -27,7 +27,14 @@
                     <a class="entry-occurrence-link" href="#" @onclick:preventDefault="true" @onclick="@(() => OpenOccurrenceDetailsAsync(occurrence.EntryOccurrenceRef))">@occurrence.EntryOccurrenceRef</a>
                 </Template>
             </GridColumn>
-            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryRef)" Title="Entry Ref" />
+            <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.EntryRef)" Title="Entry Ref">
+                <Template>
+                    @{
+                        var occurrence = (EntryOccurrenceSummaryModel)context;
+                    }
+                    <a class="entry-occurrence-link" href="#" @onclick:preventDefault="true" @onclick="@(() => OpenSupportOptionsWindowAsync(occurrence.EntryRef))">@occurrence.EntryRef</a>
+                </Template>
+            </GridColumn>
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.OccurrenceDescription)" Title="Description" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.CallerId)" Title="Caller Id" />
             <GridColumn Field="@nameof(EntryOccurrenceSummaryModel.Subject)" Title="Subject" />
@@ -37,5 +44,9 @@
         </GridColumns>
     </TelerikGrid>
 
-    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
+    <SupportOptionsOverrideWindow EntryRef="@SelectedEntryRefForSupportOptions"
+                                  IsVisible="@IsSupportOptionsWindowVisible"
+                                  IsVisibleChanged="@OnSupportOptionsWindowVisibleChanged" />
+
+    <OccurrenceDetailWindow OccurrenceDetail="@SelectedOccurrenceDetail" OccurrenceRefs="@OccurrenceRefsForWindow" OccurrenceRefChanged="@OpenOccurrenceDetailsAsync" IsVisible="@IsOccurrenceWindowVisible" IsVisibleChanged="@OnOccurrenceWindowVisibleChanged" />
 </div>
