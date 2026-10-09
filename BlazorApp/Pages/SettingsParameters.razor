@@ -3,4 +3,14 @@
 <PageTitle>@PageTitleText</PageTitle>
 
 <div class="dense-page">
+    <TelerikTabStrip>
+        <TabStripTab Title="Logs" Class="@LogsTabClass">
+            <div>
+                <TelerikButton Size="ComponentSize.Small" OnClick="@ToggleHasLogs">@(HasLogs ? "Hide Logs" : "Show Logs")</TelerikButton>
+            </div>
+        </TabStripTab>
+        <TabStripTab Title="Parameter">
+            <div></div>
+        </TabStripTab>
+    </TelerikTabStrip>
 </div>

@@ -1,0 +1,4 @@
+::deep .k-tabstrip-items .logs-tab-active,
+::deep .k-tabstrip-items .logs-tab-active .k-link {
+    background-color: green;
+}
