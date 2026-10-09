@@ -1,0 +1,5 @@
+::deep .k-tabstrip-items .occurrence-logs-tab-active,
+::deep .k-tabstrip-items .occurrence-logs-tab-active > .k-link,
+::deep .k-tabstrip-items .occurrence-logs-tab-active > .k-link > .k-link-text {
+    background-color: green !important;
+}

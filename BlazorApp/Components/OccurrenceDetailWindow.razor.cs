@@ -15,6 +15,8 @@ public partial class OccurrenceDetailWindow
 
     private IReadOnlyList<ApiLogDataModel> LogEntries => OccurrenceDetail?.ApiLogData ?? [];
 
+    private string LogsTabClass => LogEntries.Count > 0 ? "occurrence-logs-tab-active" : string.Empty;
+
     private string StackTraceText => OccurrenceDetail?.ErrorResponse?.Details?.StackTrace is null
         ? string.Empty
         : string.Join(Environment.NewLine, OccurrenceDetail.ErrorResponse.Details.StackTrace.Values());

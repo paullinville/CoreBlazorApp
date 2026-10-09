@@ -699,6 +699,7 @@ public class MockEattsRepository : IEattsApiRepository
                 TokenSubject = found?.Subject ?? "core-app",
                 TokenType = found?.SubjectType ?? "Api",
                 Error = found?.IsError,
+
                 ErrorResponse = new ErrorResponse
                 {
                     Code = found?.IsError == true ? "Mock.Error" : "Mock.Info",
@@ -706,6 +707,10 @@ public class MockEattsRepository : IEattsApiRepository
                     Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
                     RequestId = (found?.RequestId ?? Guid.NewGuid()).ToString(),
                     RequestPath = $"/api/eatts/occurrence/{occurrenceRef}",
+                    Details = new ErrorException
+                    {
+                        StackTrace = new StackTrace(Environment.StackTrace)
+                    },
                     Messages = ["Mock response generated for occurrence detail."]
                 },
                 ErrorTypeCode = new ErrorTypeCode { ErrorTypeRef = 1, Name = found?.ErrorType ?? "General" },
@@ -724,6 +729,10 @@ public class MockEattsRepository : IEattsApiRepository
             };
         }
 
+        if (occurrenceRef % 2 == 0)
+        {
+            detail.ApiLogData.Clear();
+        }
         return Task.FromResult(detail);
     }
 

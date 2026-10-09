@@ -165,14 +165,35 @@
 
                             <DockManagerContentPane Id="occurrence-stacktrace-pane" HeaderText="Stack Trace" Size="50%" AllowFloat="false" Unpinnable="false" Closeable="false">
                                 <Content>
-                                    @if (StackTraceText.IsNotNullOrBlank())
-                                    {
-                                        <pre class="occurrence-stack-trace-block">@StackTraceText</pre>
-                                    }
-                                    else
-                                    {
-                                        <div class="occurrence-tile-section">No stack trace available.</div>
-                                    }
+                                    <TelerikTabStrip>
+                                        <TabStripTab Title="Stack Trace">
+                                            @if (StackTraceText.IsNotNullOrBlank())
+                                            {
+                                                <pre class="occurrence-stack-trace-block">@StackTraceText</pre>
+                                            }
+                                            else
+                                            {
+                                                <div class="occurrence-tile-section">No stack trace available.</div>
+                                            }
+                                        </TabStripTab>
+                                        @if (LogEntries.Count > 0)
+                                        {
+                                            <TabStripTab Title="Logs" Class="@LogsTabClass">
+                                                <div class="occurrence-tile-section">
+                                                    <TelerikGrid TItem="ApiLogDataModel" Data="@LogEntries" Size="ComponentSize.Small" Pageable="false" Sortable="true" Resizable="true" Height="100%">
+                                                        <GridColumns>
+                                                            <GridColumn Field="@nameof(ApiLogDataModel.ApiLogRef)" Title="ApiLogRef" />
+                                                            <GridColumn Field="@nameof(ApiLogDataModel.ApiName)" Title="ApiName" />
+                                                            <GridColumn Field="@nameof(ApiLogDataModel.LogDate)" Title="LogDate" DisplayFormat="{0:g}" />
+                                                            <GridColumn Field="@nameof(ApiLogDataModel.Server)" Title="Server" />
+                                                            <GridColumn Field="@nameof(ApiLogDataModel.Error)" Title="Error" />
+                                                            <GridColumn Field="@nameof(ApiLogDataModel.RequestId)" Title="RequestId" />
+                                                        </GridColumns>
+                                                    </TelerikGrid>
+                                                </div>
+                                            </TabStripTab>
+                                        }
+                                    </TelerikTabStrip>
                                 </Content>
                             </DockManagerContentPane>
                         </Panes>
