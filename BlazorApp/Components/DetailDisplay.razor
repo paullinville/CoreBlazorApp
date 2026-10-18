@@ -1,0 +1,88 @@
+@if (DetailModel is null)
+{
+    <TelerikTileLayout Columns="1"
+                       ColumnWidth="1fr"
+                       RowHeight="auto"
+                       Width="@Width"
+                       @attributes="AdditionalAttributes">
+        <TileLayoutItems>
+            <TileLayoutItem ColSpan="1" RowSpan="1">
+                <HeaderTemplate>
+                    <span>@Title</span>
+                </HeaderTemplate>
+                <Content>
+                    <div class="k-text-secondary">No detail available.</div>
+                </Content>
+            </TileLayoutItem>
+        </TileLayoutItems>
+    </TelerikTileLayout>
+}
+else
+{
+    <TelerikTileLayout Columns="2"
+                       ColumnWidth="1fr"
+                       RowHeight="auto"
+                       Width="@Width"
+                       @attributes="AdditionalAttributes">
+        <TileLayoutItems>
+            <TileLayoutItem ColSpan="1" RowSpan="1">
+                <HeaderTemplate>
+                    <span>@DetailModel.ExceptionType</span>
+                </HeaderTemplate>
+                <Content>
+                    <div class="error-details" style="--error-detail-label-width:@ErrorDetailLabelColumnWidth;">
+                        <div class="error-detail-row">
+                            <span class="error-detail-label">Source:</span>
+                            <span class="error-detail-value">@DisplayText(DetailModel.Source)</span>
+                        </div>
+                        <div class="error-detail-row">
+                            <span class ="error-detail-label">Target:</span>
+                            <span class="error-detail-value">@DisplayText(DetailModel.Target)</span>
+                        </div>
+                        <div class="error-detail-row">
+                            <span class="error-detail-label">Message:</span>
+                            <span class="error-detail-value">@DisplayText(DetailModel.ExceptionMessage)</span>
+                        </div>
+                        @foreach (var entry in ExceptionPropertiesEntries.Values())
+                        {
+                            <div class="error-detail-row">
+                                <span class="error-detail-label">@entry.Key:</span>
+                                <span class="error-detail-value">@DisplayText(entry.Value)</span>
+                            </div>
+                        }
+                    </div>
+                </Content>
+            </TileLayoutItem>
+
+            @if (HasData)
+            {
+                <TileLayoutItem ColSpan="1" RowSpan="1">
+                    <HeaderTemplate>
+                        <span>Data</span>
+                    </HeaderTemplate>
+                    <Content>
+                        <table class="k-table k-table-md">
+                            <thead class="k-table-thead">
+                                <tr class="k-table-row">
+                                    <th class="k-table-th">Name</th>
+                                    <th class="k-table-th">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody class="k-table-tbody">
+                                @foreach (var entry in ExceptionData.Values())
+                                {
+                                    <tr class="k-table-row">
+                                        <td class="k-table-td">@DisplayText(entry.Name)</td>
+                                        <td class="k-table-td">@DisplayText(entry.Value)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </Content>
+                </TileLayoutItem>
+            }
+
+          
+        </TileLayoutItems>
+    </TelerikTileLayout>
+}

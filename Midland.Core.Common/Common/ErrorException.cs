@@ -21,7 +21,7 @@ public class ErrorException : Detail
 
     public Dictionary<string, string> Data { get; set; }
 
-    public string FullDescription
+    internal string FullDescription
     {
         get
         {

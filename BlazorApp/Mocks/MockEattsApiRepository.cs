@@ -707,11 +707,113 @@ public class MockEattsRepository : IEattsApiRepository
                     Description = found?.OccurrenceDescription ?? "Mock occurrence detail",
                     RequestId = (found?.RequestId ?? Guid.NewGuid()).ToString(),
                     RequestPath = $"/api/eatts/occurrence/{occurrenceRef}",
+                    RequestQuery = $"occurrenceRef={occurrenceRef}",
+                    TraceId = $"trace-{occurrenceRef:D6}",
                     Details = new ErrorException
                     {
-                        StackTrace = new StackTrace(Environment.StackTrace)
+                        ExceptionType = found?.IsError == true ? typeof(InvalidOperationException).FullName : typeof(ApplicationException).FullName,
+                        ExceptionMessage = found?.IsError == true
+                            ? $"Mock exception for occurrence {occurrenceRef}."
+                            : $"Mock informational detail for occurrence {occurrenceRef}.",
+                        ExceptionData = new Dictionary<string, string>
+                        {
+                            ["Main Exception Data OccurrenceRef"] = occurrenceRef.ToString(),
+                            ["Main Exception Data EntryRef"] = (found?.EntryRef ?? 0).ToString(),
+                            ["Main Exception Data ErrorState"] = found?.IsError == true ? "Error" : "Info"
+                        },
+                        Source = "MockEattsApiRepository",
+                        Target = nameof(GetOccurrenceDetail),
+                        Data = new Dictionary<string, string>
+                        {
+                            ["Main Data 1 OccurrenceRef"] = occurrenceRef.ToString(),
+                            ["Main Data 1 EntryRef"] = (found?.EntryRef ?? 0).ToString(),
+                            ["Main Data 1 ErrorState"] = found?.IsError == true ? "Error" : "Info"
+                        },
+                        Headers =
+                        [
+                            $"X-Mock-Occurrence:{occurrenceRef}",
+                            $"X-Mock-Entry:{found?.EntryRef ?? 0}"
+                        ],
+                        InnerDetails = new ExceptionDetails
+                        {
+                            new Detail
+                            {
+                                Source = "MockEattsApiRepository",
+                                ExceptionType = typeof(TimeoutException).FullName,
+                                ExceptionMessage = "Detail 1 The mock downstream service timed out.",
+                                Target = "MockDownstreamService.SendAsync",
+                                ExceptionData = new Dictionary<string, string>
+                                {
+                                    ["Exception Data 1 RetryAfterSeconds"] = "30",
+                                    ["Exception Data 1 Endpoint"] = "/api/mock/downstream"
+                                },
+                                ExceptionProperties = new Dictionary<string, string>
+                                {
+                                    ["Exception Properties 1 StatusCode"] = "504",
+                                    ["Exception Properties 1 IsTransient"] = "true"
+                                }
+                            },
+                            new Detail
+                            {
+                                Source = "MockValidationPipeline",
+                                ExceptionType = typeof(InvalidOperationException).FullName,
+                                ExceptionMessage = "Detail 2 The mocked validation pipeline reported a recoverable issue.",
+                                Target = "MockValidationPipeline.Validate",
+                                ExceptionData = new Dictionary<string, string>
+                                {
+                                    ["Exception Data 2 Rule"] = "MockOccurrenceRule",
+                                    ["Exception Data 2 Severity"] = "Warning"
+                                },
+                                ExceptionProperties = new Dictionary<string, string>
+                                {
+                                    ["Exception Properties 2 RuleId"] = "MOCK-001",
+                                    ["Exception Properties 2 RuleName"] = "Occurrence Detail Validation"
+                                }
+                            }
+                        },
+                        StackTrace = new StackTrace(new[]
+                        {
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680 MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680 MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680 MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at MockEattsApiRepository.BuildMockErrorResponse(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 703"
+                        }),
+                        ExceptionProperties = new Dictionary<string, string>
+                        {
+                            ["Main Data Severity"] = found?.IsError == true ? "Error" : "Information",
+                            ["Main Data Category"] = "OccurrenceDetails",
+                            ["Main Data CorrelationId"] = (found?.RequestId ?? Guid.NewGuid()).ToString()
+                        }
                     },
-                    Messages = ["Mock response generated for occurrence detail."]
+                    Messages = ["Mock response generated for occurrence detail.", "The error details payload is fully populated for UI rendering."],
+                    Errors =
+                    [
+                        new ErrorResultError
+                        {
+                            Type = found?.IsError == true ? "Error" : "Info",
+                            Name = "OccurrenceDetail",
+                            Value = found?.OccurrenceDescription ?? "Mock occurrence detail"
+                        }
+                    ]
                 },
                 ErrorTypeCode = new ErrorTypeCode { ErrorTypeRef = 1, Name = found?.ErrorType ?? "General" },
                 ApiLogData =
@@ -732,6 +834,7 @@ public class MockEattsRepository : IEattsApiRepository
         if (occurrenceRef % 2 == 0)
         {
             detail.ApiLogData.Clear();
+            detail.ErrorResponse.Details.InnerDetails.Clear();
         }
         return Task.FromResult(detail);
     }

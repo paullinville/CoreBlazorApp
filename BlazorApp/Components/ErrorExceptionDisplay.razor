@@ -1,0 +1,76 @@
+@if (DetailData is null)
+{
+    <TelerikTileLayout Columns="1"
+                       ColumnWidth="1fr"
+                       RowHeight="auto"
+                       Width="@Width"
+                       @attributes="AdditionalAttributes">
+        <TileLayoutItems>
+            <TileLayoutItem ColSpan="1" RowSpan="1">
+                <HeaderTemplate>
+                    <span>@Title</span>
+                </HeaderTemplate>
+                <Content>
+                    <div class="k-text-secondary">No exception details available.</div>
+                </Content>
+            </TileLayoutItem>
+        </TileLayoutItems>
+    </TelerikTileLayout>
+}
+else
+{
+    if(AllExceptionDetails.Count > 1)
+    {
+        <div class="error-exception-carousel">
+            <TelerikCarousel TItem="Detail" Data="@AllExceptionDetails" Width="@Width" Height="420px" Pageable="true" Arrows="false" AutomaticPageChange="false">
+                <Template Context="detail">
+                    <DetailDisplay DetailModel="@detail" Title="Inner Detail" Width="100%" @attributes="AdditionalAttributes" />
+                </Template>
+            </TelerikCarousel>
+        </div>
+    }
+    else
+    {
+        <DetailDisplay DetailModel="@AllExceptionDetails.First()" Title="Inner Detail" Width="100%" @attributes="AdditionalAttributes" />
+    }
+
+    @if (HasStackTrace || HasHeaders)
+    {
+        <TelerikTileLayout Columns="4"
+                           ColumnWidth="1fr"
+                           RowHeight="auto"
+                           Width="@Width">
+            <TileLayoutItems>
+                @if (HasHeaders)
+                {
+                    <TileLayoutItem ColSpan="2" RowSpan="1">
+                        <HeaderTemplate>
+                            <span>Headers</span>
+                        </HeaderTemplate>
+                        <Content>
+                            <ul class="exception-value-list">
+                                @foreach (var header in Headers.Values())
+                                {
+                                    <li>@header</li>
+                                }
+                            </ul>
+                        </Content>
+                    </TileLayoutItem>
+                }
+                @if (HasStackTrace)
+                {
+                    <TileLayoutItem ColSpan="4" RowSpan="1">
+                        <HeaderTemplate>
+                            <span>Stack Trace</span>
+                        </HeaderTemplate>
+                        <Content>
+                            <div class="exception-stack-trace-container">
+                                <pre class="exception-stack-trace">@string.Join(Environment.NewLine, StackTraceLines.Values())</pre>
+                            </div>
+                        </Content>
+                    </TileLayoutItem>
+                }
+            </TileLayoutItems>
+        </TelerikTileLayout>
+    }
+}

@@ -7,6 +7,7 @@
 - Use the CSS variable name `--midland-orange` for the shared orange accent color.
 
 ## Project-Specific Rules
+- Only modify or add classes within the BlazorApp and Midland.Core.Blazor projects; do not change other projects in this workspace.
 - Only change the CoreBlazorApp project in future; do not modify other projects because they are referenced NuGet packages.
 
 ## Code Style

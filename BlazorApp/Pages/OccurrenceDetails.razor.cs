@@ -1,5 +1,6 @@
 using BlazorApp.Common;
 using BlazorApp.Data;
+using BlazorApp.Models;
 using EATTS.Common.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -14,6 +15,7 @@ public partial class OccurrenceDetails
     [Parameter] public int OccurrenceRef { get; set; }
 
     private EntryOccurrenceDetailModel? OccurrenceDetail { get; set; }
+
     private bool IsLoading { get; set; }
     private bool IsOccurrenceWindowVisible { get; set; }
     private IReadOnlyList<int> OccurrenceRefsForWindow { get; set; } = [];
@@ -24,6 +26,8 @@ public partial class OccurrenceDetails
     private string PageTitleText => Settings.ApplicationName.IsNullOrBlank()
         ? "Occurrence Details"
         : $"{Settings.ApplicationName} - Occurrence Details";
+
+    private ErrorExceptionDetailDataModel? CurrentErrorExceptionDetailData;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -94,6 +98,7 @@ public partial class OccurrenceDetails
 
         OccurrenceDetail.ApiLogData ??= new List<ApiLogDataModel>();
         OccurrenceDetail.Notes ??= new List<EntryNoteDetail>();
+        CurrentErrorExceptionDetailData = new ErrorExceptionDetailDataModel(OccurrenceDetail?.ErrorResponse?.Details);
         IsLoading = false;
     }
 
