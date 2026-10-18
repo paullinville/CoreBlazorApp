@@ -42,4 +42,12 @@
     border: 1px solid currentColor !important;
     border-radius: 4px;
     padding: 2px 6px;
+    opacity: 0.35;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.error-exception-carousel:hover ::deep .k-scrollview-nav,
+.error-exception-carousel ::deep .k-scrollview-nav:hover,
+.error-exception-carousel ::deep .k-scrollview-nav:focus-within {
+    opacity: 1;
 }
