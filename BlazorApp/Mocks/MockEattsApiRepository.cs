@@ -773,7 +773,7 @@ public class MockEattsRepository : IEattsApiRepository
                         },
                         StackTrace = new StackTrace(new[]
                         {
-                            $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
+                            $"at DrewXEET.GetOccurrenceDetail(Int32 occurrenceRef) in RGWORLS.cs:line 680",
                             $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680 MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
                             $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680 MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
                             $"at MockEattsApiRepository.GetOccurrenceDetail(Int32 occurrenceRef) in MockEattsApiRepository.cs:line 680",
@@ -835,6 +835,9 @@ public class MockEattsRepository : IEattsApiRepository
         {
             detail.ApiLogData.Clear();
             detail.ErrorResponse.Details.InnerDetails.Clear();
+            detail.ErrorResponse.Details.Headers.Clear();
+            detail.ErrorResponse.Details.Data.Clear();
+            detail.ErrorResponse.Details.ExceptionData.Clear();
         }
         return Task.FromResult(detail);
     }

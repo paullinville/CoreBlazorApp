@@ -22,7 +22,7 @@ else
     if(AllExceptionDetails.Count > 1)
     {
         <div class="error-exception-carousel">
-            <TelerikCarousel TItem="Detail" Data="@AllExceptionDetails" Width="@Width" Height="420px" Pageable="true" Arrows="false" AutomaticPageChange="false">
+            <TelerikCarousel TItem="Detail" Data="@AllExceptionDetails" Width="@Width" Height="420px" Pageable="true" Arrows="true" AutomaticPageChange="false">
                 <Template Context="detail">
                     <DetailDisplay DetailModel="@detail" Title="Inner Detail" Width="100%" @attributes="AdditionalAttributes" />
                 </Template>
@@ -43,7 +43,7 @@ else
             <TileLayoutItems>
                 @if (HasHeaders)
                 {
-                    <TileLayoutItem ColSpan="2" RowSpan="1">
+                    <TileLayoutItem ColSpan="1" RowSpan="1">
                         <HeaderTemplate>
                             <span>Headers</span>
                         </HeaderTemplate>
@@ -59,7 +59,7 @@ else
                 }
                 @if (HasStackTrace)
                 {
-                    <TileLayoutItem ColSpan="4" RowSpan="1">
+                    <TileLayoutItem ColSpan="@StackTraceWidth" RowSpan="1">
                         <HeaderTemplate>
                             <span>Stack Trace</span>
                         </HeaderTemplate>

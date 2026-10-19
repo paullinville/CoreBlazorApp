@@ -17,4 +17,5 @@ public partial class ErrorExceptionDisplay
 
     private bool HasStackTrace => StackTraceLines.Count > 0;
     private bool HasHeaders => Headers.Count > 0;
+    private int StackTraceWidth => Headers.Count > 0 ? 3 : 4;
 }
